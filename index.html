@@ -391,8 +391,9 @@
     </div>
   </div>
 
-  <script>
+    <script>
     const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
+    const STORAGE_KEY = 'roy-gayle-fill-my-glove-state-v1';
 
     const baseSpots = [
       { id: 1, amount: 20, x: 265, y: 122 },
@@ -424,6 +425,36 @@
       { id: 'kruse-farms-12u-baseball', name: 'Kruse Farms 12U Baseball', paymentUrl: PAYPAL_DONATE_URL, filled: [] }
     ];
 
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+
+        const saved = JSON.parse(raw);
+        if (!saved || typeof saved !== 'object') return;
+
+        teams.forEach(team => {
+          const filled = saved[team.id];
+          if (!Array.isArray(filled)) return;
+          team.filled = filled.filter(id => Number.isInteger(id));
+        });
+      } catch (error) {
+        console.warn('Unable to load saved fundraiser state.', error);
+      }
+    }
+
+    function saveState() {
+      try {
+        const payload = teams.reduce((acc, team) => {
+          acc[team.id] = team.filled;
+          return acc;
+        }, {});
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (error) {
+        console.warn('Unable to save fundraiser state.', error);
+      }
+    }
+
     let activeTeamId = teams[0].id;
     let selectedSpotId = null;
 
@@ -449,90 +480,7 @@
       return 500;
     }
 
-    function calcRaised(team) {
-      return baseSpots
-        .filter(spot => team.filled.includes(spot.id))
-        .reduce((sum, spot) => sum + spot.amount, 0);
-    }
-
-    function renderTeamButtons() {
-      teamButtons.innerHTML = '';
-      teams.forEach(team => {
-        const button = document.createElement('button');
-        button.textContent = team.name;
-        if (team.id === activeTeamId) button.classList.add('active');
-        button.addEventListener('click', () => {
-          activeTeamId = team.id;
-          selectedSpotId = null;
-          renderAll();
-        });
-        teamButtons.appendChild(button);
-      });
-    }
-
-    function renderStats() {
-      const team = getActiveTeam();
-      const goal = calcGoal();
-      const raised = calcRaised(team);
-      const spotsLeft = baseSpots.length - team.filled.length;
-      const pct = Math.min(100, Math.round((raised / goal) * 100));
-
-      goalValue.textContent = `$${goal}`;
-      raisedValue.textContent = `$${raised}`;
-      spotsLeftValue.textContent = spotsLeft;
-      progressBar.style.width = `${pct}%`;
-      progressPct.textContent = `${pct}%`;
-    }
-
-    function renderSpots() {
-      const team = getActiveTeam();
-      spotsLayer.innerHTML = '';
-
-      baseSpots.forEach(spot => {
-        const div = document.createElement('button');
-        div.className = 'spot';
-        div.textContent = `$${spot.amount}`;
-        div.style.left = `${spot.x}px`;
-        div.style.top = `${spot.y}px`;
-        div.type = 'button';
-
-        const isFilled = team.filled.includes(spot.id);
-        const isSelected = selectedSpotId === spot.id;
-
-        if (isFilled) {
-          div.classList.add('filled');
-          div.setAttribute('aria-label', `$${spot.amount} donation spot filled`);
-        } else {
-          div.setAttribute('aria-label', `$${spot.amount} donation spot available`);
-        }
-
-        div.addEventListener('click', () => {
-          selectedSpotId = spot.id;
-          renderAll();
-        });
-
-        if (isSelected) div.classList.add('selected');
-
-        spotsLayer.appendChild(div);
-      });
-    }
-
-    function renderSelection() {
-      const team = getActiveTeam();
-      const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
-
-      if (!selectedSpot) {
-        selectedAmount.textContent = '--';
-        selectedHelper.textContent = 'Select an open or filled spot on the glove.';
-        checkoutButton.disabled = true;
-        markPaidButton.disabled = true;
-        unmarkPaidButton.disabled = true;
-        return;
-      }
-
-      const isFilled = team.filled.includes(selectedSpot.id);
-      selectedAmount.textContent = `$${selectedSpot.amount}`;
-
+@@ -536,54 +567,58 @@
       if (isFilled) {
         selectedHelper.textContent = `${team.name} spot is currently marked paid. Use Unmark Paid Spot if you need to reopen it.`;
         checkoutButton.disabled = true;
@@ -558,6 +506,7 @@
       if (!selectedSpotId) return;
       if (!team.filled.includes(selectedSpotId)) {
         team.filled.push(selectedSpotId);
+        saveState();
       }
       renderAll();
     });
@@ -566,6 +515,7 @@
       const team = getActiveTeam();
       if (!selectedSpotId) return;
       team.filled = team.filled.filter(id => id !== selectedSpotId);
+      saveState();
       renderAll();
     });
 
@@ -573,6 +523,7 @@
       const team = getActiveTeam();
       team.filled = [];
       selectedSpotId = null;
+      saveState();
       renderAll();
     });
 
@@ -583,6 +534,7 @@
       renderSelection();
     }
 
+    loadSavedState();
     renderAll();
   </script>
 </body>
