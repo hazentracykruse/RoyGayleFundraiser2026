@@ -318,7 +318,7 @@
   <div class="page">
     <div class="hero">
       <h1>Roy Gayle Fill My Glove Fundraiser</h1>
-      <p>A fun digital fundraiser for Roy Gayle Baseball and Softball teams. Donors click a donation spot on the glove, complete payment, and that spot becomes filled.</p>
+      <p>A fun digital fundraiser for Roy Gayle Baseball and Softball teams. Supporters choose a donation amount on the glove to help each team reach its $500 goal.</p>
     </div>
 
     <div class="topbar">
@@ -328,7 +328,7 @@
         <div class="stats">
           <div class="stat">
             <div class="label">Goal</div>
-            <div class="value" id="goalValue">$0</div>
+            <div class="value" id="goalValue">$500</div>
           </div>
           <div class="stat">
             <div class="label">Raised</div>
@@ -350,7 +350,7 @@
 
       <div class="panel">
         <h2>How It Works</h2>
-        <p style="margin-top:0; line-height:1.6; text-align:center;">Pick a donation amount from the glove. In the real version, each circle would be connected to Stripe or PayPal. Once payment clears, that donation spot would be marked as filled for everyone.</p>
+        <p style="margin-top:0; line-height:1.6; text-align:center;">Choose a team, click an open amount on the glove, and continue to donate. This free version is designed for manual updates, so donation spots can be marked paid by Roy Gayle as gifts come in.</p>
         <div class="team-links">
           <a class="team-link" href="#">Baseball Teams</a>
           <a class="team-link" href="#">Softball Teams</a>
@@ -394,7 +394,7 @@
         <div class="selected-amount" id="selectedAmount">--</div>
         <div class="helper" id="selectedHelper">Select an open spot on the glove to continue.</div>
         <button class="checkout" id="checkoutButton" disabled>Continue to Donate</button>
-        <button class="secondary" id="demoFillButton" disabled>Demo: Mark Spot as Paid</button>
+        <button class="secondary" id="markPaidButton" disabled>Mark Spot as Paid</button>
 
         <div class="legend">
           <div class="legend-row"><span class="legend-dot"></span> Open donation spot</div>
@@ -402,13 +402,15 @@
         </div>
 
         <div class="mini-note">
-          This prototype shows the look and feel. For the real Roy Gayle version, each team would have its own page, every donation circle would connect to Stripe or PayPal, and a successful payment would update the glove automatically.
+          This free Roy Gayle version is built for easy manual updates. When a donation comes in through PayPal, Roy Gayle can mark that amount as paid so the glove fills visually and the total updates.
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
+
     const baseSpots = [
       { id: 1, amount: 20, x: 265, y: 122 },
       { id: 2, amount: 10, x: 334, y: 120 },
@@ -438,26 +440,26 @@
       {
         id: 'pinto-8u-baseball',
         name: 'Pinto 8U Baseball',
-        paymentUrl: 'https://example.com/pay/pinto-8u-baseball',
-        filled: [2, 5, 11, 16],
+        paymentUrl: PAYPAL_DONATE_URL,
+        filled: [],
       },
       {
         id: 'mustang-10u-baseball',
         name: 'Mustang 10U Baseball',
-        paymentUrl: 'https://example.com/pay/mustang-10u-baseball',
-        filled: [1, 7, 8, 13, 19],
+        paymentUrl: PAYPAL_DONATE_URL,
+        filled: [],
       },
       {
         id: 'mustang-10u-softball',
         name: 'Mustang 10U Softball',
-        paymentUrl: 'https://example.com/pay/mustang-10u-softball',
-        filled: [3, 6, 9, 14, 18],
+        paymentUrl: PAYPAL_DONATE_URL,
+        filled: [],
       },
       {
         id: 'pony-14u-softball',
         name: 'Pony 14U Softball',
-        paymentUrl: 'https://example.com/pay/pony-14u-softball',
-        filled: [4, 10, 15, 20, 21, 22],
+        paymentUrl: PAYPAL_DONATE_URL,
+        filled: [],
       }
     ];
 
@@ -474,14 +476,14 @@
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
-    const demoFillButton = document.getElementById('demoFillButton');
+    const markPaidButton = document.getElementById('markPaidButton');
 
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
     }
 
     function calcGoal() {
-      return baseSpots.reduce((sum, spot) => sum + spot.amount, 0);
+      return 500;
     }
 
     function calcRaised(team) {
@@ -510,7 +512,7 @@
       const goal = calcGoal();
       const raised = calcRaised(team);
       const spotsLeft = baseSpots.length - team.filled.length;
-      const pct = Math.round((raised / goal) * 100);
+      const pct = Math.min(100, Math.round((raised / goal) * 100));
 
       goalValue.textContent = `$${goal}`;
       raisedValue.textContent = `$${raised}`;
@@ -559,14 +561,14 @@
         selectedAmount.textContent = '--';
         selectedHelper.textContent = 'Select an open spot on the glove to continue.';
         checkoutButton.disabled = true;
-        demoFillButton.disabled = true;
+        markPaidButton.disabled = true;
         return;
       }
 
       selectedAmount.textContent = `$${selectedSpot.amount}`;
-      selectedHelper.textContent = `${team.name} donation selected. In the real version, clicking donate would open Stripe or PayPal checkout for this exact amount.`;
+      selectedHelper.textContent = `${team.name} donation selected. Use Continue to Donate to open PayPal, then come back and mark the spot paid after the gift is received.`;
       checkoutButton.disabled = false;
-      demoFillButton.disabled = false;
+      markPaidButton.disabled = false;
     }
 
     checkoutButton.addEventListener('click', () => {
@@ -574,10 +576,11 @@
       const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
       if (!selectedSpot) return;
 
-      alert(`Prototype only.\n\nTeam: ${team.name}\nDonation Amount: $${selectedSpot.amount}\n\nIn the live version, this button would open a payment page and reserve this spot after payment succeeds.`);
+      const url = team.paymentUrl || PAYPAL_DONATE_URL;
+      window.open(url, '_blank', 'noopener,noreferrer');
     });
 
-    demoFillButton.addEventListener('click', () => {
+    markPaidButton.addEventListener('click', () => {
       const team = getActiveTeam();
       if (!selectedSpotId) return;
       if (!team.filled.includes(selectedSpotId)) team.filled.push(selectedSpotId);
