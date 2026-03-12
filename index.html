@@ -338,97 +338,10 @@
 
       <div class="panel">
         <h2>How It Works</h2>
-
-<div class="how-grid">
-
-  <div class="how-step">
-    <div class="how-number">1</div>
-    <div>
-      <div class="how-title">Choose a Division</div>
-      <div class="how-text">Start by selecting a division like Shetland 6U Baseball, Mustang 10U Baseball, or Bronco 12U Softball.</div>
+        <p style="margin-top:0; line-height:1.6; text-align:center;">Choose a team, click an amount on the glove, and continue to donate through PayPal. After the donation is received, Roy Gayle can mark that spot as paid. If you click the wrong one, you can unmark it or reset the whole team.</p>
+      </div>
     </div>
-  </div>
 
-  <div class="how-step">
-    <div class="how-number">2</div>
-    <div>
-      <div class="how-title">Pick a Team</div>
-      <div class="how-text">Select the Roy Gayle team you want to support.</div>
-    </div>
-  </div>
-
-  <div class="how-step">
-    <div class="how-number">3</div>
-    <div>
-      <div class="how-title">Choose a Donation Spot</div>
-      <div class="how-text">Click any open amount on the glove to sponsor that spot.</div>
-    </div>
-  </div>
-
-  <div class="how-step">
-    <div class="how-number">4</div>
-    <div>
-      <div class="how-title">Donate</div>
-      <div class="how-text">Complete your donation through the Roy Gayle PayPal link.</div>
-    </div>
-  </div>
-
-</div>
-
-<div class="how-note">
-@media (max-width: 980px) {
- .how-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-top:10px;
-}
-
-.how-step{
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-  background:#f7fafc;
-  padding:12px;
-  border-radius:12px;
-}
-
-.how-number{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  background:#0f4c81;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:14px;
-  flex-shrink:0;
-}
-
-.how-title{
-  font-weight:bold;
-  margin-bottom:2px;
-}
-
-.how-text{
-  font-size:14px;
-  color:#4b5563;
-  line-height:1.4;
-}
-
-.how-note{
-  margin-top:14px;
-  font-size:14px;
-  text-align:center;
-  color:#7c2d12;
-  background:#fff7ed;
-  padding:10px;
-  border-radius:10px;
-} 
-  Every team is working toward a $500 fundraising goal. Thank you for supporting Roy Gayle Baseball and Softball.
-</div>
     <div class="main">
       <div class="panel">
         <div class="glove-wrap">
@@ -509,67 +422,69 @@
     ];
 
     const teams = [
-      { id: 'bronco-12u-baseball-1', name: 'Red Devils', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-2', name: '425', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-3', name: 'Hawkins Kids', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-4', name: 'Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-5', name: 'Reedy', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-6', name: 'Dillavou', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-7', name: 'Stahl', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-8', name: 'Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-baseball-9', name: 'Red Devils 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-red-devils-1', name: 'Bronco Baseball (12U) Team 1 - Red Devils', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-425', name: 'Bronco Baseball (12U) Team 2 - 425', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-hawkins-kids', name: 'Bronco Baseball (12U) Team 3 - Hawkins Kids', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-larsen-and-larsen', name: 'Bronco Baseball (12U) Team 4 - Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-red-devils-2', name: 'Bronco Baseball (12U) Team 5 - Red Devils', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-reedy', name: 'Bronco Baseball (12U) Team 6 - Reedy', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-dillavou', name: 'Bronco Baseball (12U) Team 7 - Dillavou', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-stahl', name: 'Bronco Baseball (12U) Team 8 - Stahl', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-baseball-12u-lincoln-rental', name: 'Bronco Baseball (12U) Team 9 - Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
 
-      { id: 'bronco-12u-softball-1', name: 'MBS Mako's', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-softball-2', name: 'Bax Tee's', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-softball-3', name: 'Oregon Avalanche Spangler', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-12u-softball-4', name: 'Oregon Avalanche Anderson', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-girls-softball-12u-mbs-makos', name: 'Bronco Girls Softball (12U) Team 1 - BS - MBS Mako\'s', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-girls-softball-12u-bax-tees', name: 'Bronco Girls Softball (12U) Team 2 - BS - Bax Tee\'s', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-girls-softball-12u-oregon-avalanche-spangler', name: 'Bronco Girls Softball (12U) Team 3 - BS - Oregon Avalanche Spangler', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-girls-softball-12u-oregon-avalanche-anderson', name: 'Bronco Girls Softball (12U) Team 4 - BS - Oregon Avalanche Anderson', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
 
-      { id: 'mustang-10u-baseball-1', name: 'Crown FF', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-2', name: 'Lil Gators', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-3', name: 'Lombardi Club', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-4', name: 'Oregon J-Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-5', name: 'Gabe Smith's Team', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-6', name: 'Lonnies', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-7', name: 'Cubbies', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-8', name: 'Shaver', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-9', name: 'Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-baseball-10', name: 'Byron', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-crown-ff', name: 'Mustang Baseball (10U) Team 1 - Crown FF', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-lil-gators', name: 'Mustang Baseball (10U) Team 2 - Lil Gators', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-lombardi-club', name: 'Mustang Baseball (10U) Team 3 - Lombardi Club', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-oregon-j-hawks', name: 'Mustang Baseball (10U) Team 4 - Oregon J-Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-gabe-smith', name: 'Mustang Baseball (10U) Team 5 - Gabe Smith', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-lonnies', name: 'Mustang Baseball (10U) Team 6 - Lonnies', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-cubbies', name: 'Mustang Baseball (10U) Team 7 - Cubbies', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-shaver', name: 'Mustang Baseball (10U) Team 8 - Shaver', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-cherry-valley-feed', name: 'Mustang Baseball (10U) Team 9 - Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-baseball-10u-byron', name: 'Mustang Baseball (10U) Team 10 - Byron', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
 
-      { id: 'mustang-10u-softball-1', name: 'Krush Farm Krushers', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-10u-softball-2', name: 'Top Notch Building Supply', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-softball-10u-top-notch-building-supply', name: 'Mustang Softball (10U) Team 1 - MS - Top Notch Building Supply', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-softball-10u-kruse-farm-krushers', name: 'Mustang Softball (10U) Team 2 - MS - Kruse Farm Krushers', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
 
-      { id: 'pinto-8u-baseball-1', name: 'Coach Tiesel', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-2', name: 'Team Name 09', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-3', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-4', name: 'Coach Wallen', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-5', name: 'Team Name 08', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-6', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-7', name: 'Randee's Music', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-8', name: 'Convey All 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-9', name: 'Firefighters 413', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-10', name: 'Team Name 10', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-8u-baseball-11', name: '815 Control', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-coach-tiesel', name: 'Pinto Baseball (8U) Team 1 - Coach Tiesel', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-team-name-09', name: 'Pinto Baseball (8U) Team 2 - Team Name 09', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-dickerson-nieman', name: 'Pinto Baseball (8U) Team 3 - Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-coach-wallen', name: 'Pinto Baseball (8U) Team 4 - Coach wallen', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-team-name-08', name: 'Pinto Baseball (8U) Team 5 - Team Name 08', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-convey-all-1', name: 'Pinto Baseball (8U) Team 6 - Convey All', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-randees-music', name: 'Pinto Baseball (8U) Team 7 - Randee\'s Music', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-convey-all-2', name: 'Pinto Baseball (8U) Team 8 - Convey All', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-815-control', name: 'Pinto Baseball (8U) Team 9 - 815 Control', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-firefighters-413', name: 'Pinto Baseball (8U) Team 10 - Firefighters-413', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-baseball-8u-team-name-10', name: 'Pinto Baseball (8U) Team 11 - Team Name 10', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
 
-      { id: 'pony-14u-baseball-1', name: 'Ponds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-2', name: 'Oregon J Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-3', name: 'Rockford IceHogs', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-4', name: 'American Eagles', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-5', name: 'Kruse Farms', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-6', name: 'Byron Tigers', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-7', name: 'Oregon J Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-8', name: 'Red Birds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-9', name: 'PySB Firefighters', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-baseball-10', name: 'PPySB-PBPA', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-ponds-1', name: 'Pony Baseball (14U) Team 1 - Ponds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-oregon-j-hawks-1', name: 'Pony Baseball (14U) Team 2 - Oregon J Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-rockford-icehogs-1', name: 'Pony Baseball (14U) Team 3 - Rockford IceHogs', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-american-eagles-1', name: 'Pony Baseball (14U) Team 4 - American Eagles', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-kruse-farms-greenfield-1', name: 'Pony Baseball (14U) Team 5 - Kruse Farms (Greenfield)', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-byron-tigers', name: 'Pony Baseball (14U) Team 6 - Byron Tigers', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-oregon-j-hawks-2', name: 'Pony Baseball (14U) Team 7 - Oregon J Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-american-eagles-2', name: 'Pony Baseball (14U) Team 8 - American Eagles', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-ponds-2', name: 'Pony Baseball (14U) Team 9 - Ponds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-kruse-farms-greenfield-2', name: 'Pony Baseball (14U) Team 10 - Kruse Farms (Greenfield)', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-rockford-icehogs-2', name: 'Pony Baseball (14U) Team 11 - Rockford IceHogs', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-baseball-14u-redbirds', name: 'Pony Baseball (14U) Team 12 - RedBirds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
 
-      { id: 'pony-14u-softball-1', name: 'Red Birds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-14u-softball-2', name: 'Firefighters', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-softball-14u-firefighters', name: 'Pony Softball (14U) Team 1 - PySB - Firefighters', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-softball-14u-pbpa', name: 'Pony Softball (14U) Team 2 - PySB - PBPA', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
 
-      { id: 'shetland-6u-baseball-1', name: 'Reflections', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-6u-baseball-2', name: 'Control', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-6u-baseball-3', name: 'Shetland 6U Baseball Team 3', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-6u-baseball-4', name: 'Shetland 6U Baseball Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-6u-baseball-5', name: 'Shetland 6U Baseball Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-6u-baseball-6', name: 'Shetland 6U Baseball Team 6', paymentUrl: PAYPAL_DONATE_URL, filled: [] }
+      { id: 'shetland-baseball-6u-team-name-05', name: 'Shetland Baseball (6U) Team 1 - Team Name 05', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-baseball-6u-team-name-04', name: 'Shetland Baseball (6U) Team 2 - Team Name 04', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-baseball-6u-team-verfuerth', name: 'Shetland Baseball (6U) Team 3 - Team Verfuerth', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-baseball-6u-reflections-hair-salon', name: 'Shetland Baseball (6U) Team 4 - Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-baseball-6u-team-name-06', name: 'Shetland Baseball (6U) Team 5 - Team Name 06', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-baseball-6u-control-baseball', name: 'Shetland Baseball (6U) Team 6 - Control Baseball', paymentUrl: PAYPAL_DONATE_URL, filled: [] }
     ];
 
     function getDivisionName(teamName) {
