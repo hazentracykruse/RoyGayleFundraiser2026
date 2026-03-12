@@ -309,7 +309,9 @@
 
     <div class="topbar">
       <div class="panel">
-        <h2>Choose a Team</h2>
+        <h2>Choose a Division</h2>
+        <div class="controls" id="divisionButtons"></div>
+        <h2 style="font-size:22px; margin-top:10px;">Choose a Team</h2>
         <div class="controls" id="teamButtons"></div>
         <div class="stats">
           <div class="stat">
@@ -420,13 +422,84 @@
     ];
 
     const teams = [
-      { id: 'kruse-farm-krushers-10u-softball', name: 'Kruse Farm Krushers 10U Softball', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'kruse-farms-12u-baseball', name: 'Kruse Farms 12U Baseball', paymentUrl: PAYPAL_DONATE_URL, filled: [] }
+      { id: 'bronco-12u-baseball-1', name: 'Bronco 12U Baseball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-2', name: 'Bronco 12U Baseball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-3', name: 'Bronco 12U Baseball Team 3', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-4', name: 'Bronco 12U Baseball Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-5', name: 'Bronco 12U Baseball Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-6', name: 'Bronco 12U Baseball Team 6', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-7', name: 'Bronco 12U Baseball Team 7', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-8', name: 'Bronco 12U Baseball Team 8', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-baseball-9', name: 'Bronco 12U Baseball Team 9', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+
+      { id: 'bronco-12u-softball-1', name: 'Bronco 12U Softball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-softball-2', name: 'Bronco 12U Softball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-softball-3', name: 'Bronco 12U Softball Team 3', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'bronco-12u-softball-4', name: 'Bronco 12U Softball Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+
+      { id: 'mustang-10u-baseball-1', name: 'Mustang 10U Baseball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-2', name: 'Mustang 10U Baseball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-3', name: 'Mustang 10U Baseball Team 3', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-4', name: 'Mustang 10U Baseball Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-5', name: 'Mustang 10U Baseball Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-6', name: 'Mustang 10U Baseball Team 6', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-7', name: 'Mustang 10U Baseball Team 7', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-8', name: 'Mustang 10U Baseball Team 8', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-9', name: 'Mustang 10U Baseball Team 9', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball-10', name: 'Mustang 10U Baseball Team 10', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+
+      { id: 'mustang-10u-softball-1', name: 'Mustang 10U Softball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-softball-2', name: 'Mustang 10U Softball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+
+      { id: 'pinto-8u-baseball-1', name: 'Pinto 8U Baseball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-2', name: 'Pinto 8U Baseball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-3', name: 'Pinto 8U Baseball Team 3', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-4', name: 'Pinto 8U Baseball Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-5', name: 'Pinto 8U Baseball Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-6', name: 'Pinto 8U Baseball Team 6', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-7', name: 'Pinto 8U Baseball Team 7', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-8', name: 'Pinto 8U Baseball Team 8', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-9', name: 'Pinto 8U Baseball Team 9', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-10', name: 'Pinto 8U Baseball Team 10', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pinto-8u-baseball-11', name: 'Pinto 8U Baseball Team 11', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+
+      { id: 'pony-14u-baseball-1', name: 'Pony 14U Baseball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-2', name: 'Pony 14U Baseball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-3', name: 'Pony 14U Baseball Team 3', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-4', name: 'Pony 14U Baseball Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-5', name: 'Pony 14U Baseball Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-6', name: 'Pony 14U Baseball Team 6', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-7', name: 'Pony 14U Baseball Team 7', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-8', name: 'Pony 14U Baseball Team 8', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-9', name: 'Pony 14U Baseball Team 9', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-10', name: 'Pony 14U Baseball Team 10', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-11', name: 'Pony 14U Baseball Team 11', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-baseball-12', name: 'Pony 14U Baseball Team 12', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+
+      { id: 'pony-14u-softball-1', name: 'Pony 14U Softball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-softball-2', name: 'Pony 14U Softball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+
+      { id: 'shetland-6u-baseball-1', name: 'Shetland 6U Baseball Team 1', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-6u-baseball-2', name: 'Shetland 6U Baseball Team 2', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-6u-baseball-3', name: 'Shetland 6U Baseball Team 3', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-6u-baseball-4', name: 'Shetland 6U Baseball Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-6u-baseball-5', name: 'Shetland 6U Baseball Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'shetland-6u-baseball-6', name: 'Shetland 6U Baseball Team 6', paymentUrl: PAYPAL_DONATE_URL, filled: [] }
     ];
 
-    let activeTeamId = teams[0].id;
+    function getDivisionName(teamName) {
+      const marker = ' Team ';
+      const index = teamName.lastIndexOf(marker);
+      return index > -1 ? teamName.substring(0, index) : teamName;
+    }
+
+    const divisions = [...new Set(teams.map(team => getDivisionName(team.name)))];
+
+    let activeDivision = divisions[0];
+    let activeTeamId = teams.find(team => getDivisionName(team.name) === activeDivision).id;
     let selectedSpotId = null;
 
+    const divisionButtons = document.getElementById('divisionButtons');
     const teamButtons = document.getElementById('teamButtons');
     const spotsLayer = document.getElementById('spotsLayer');
     const goalValue = document.getElementById('goalValue');
@@ -455,9 +528,27 @@
         .reduce((sum, spot) => sum + spot.amount, 0);
     }
 
+    function renderDivisionButtons() {
+      divisionButtons.innerHTML = '';
+      divisions.forEach(division => {
+        const button = document.createElement('button');
+        button.textContent = division;
+        if (division === activeDivision) button.classList.add('active');
+        button.addEventListener('click', () => {
+          activeDivision = division;
+          const firstTeamInDivision = teams.find(team => getDivisionName(team.name) === division);
+          activeTeamId = firstTeamInDivision ? firstTeamInDivision.id : null;
+          selectedSpotId = null;
+          renderAll();
+        });
+        divisionButtons.appendChild(button);
+      });
+    }
+
     function renderTeamButtons() {
       teamButtons.innerHTML = '';
-      teams.forEach(team => {
+      const teamsInDivision = teams.filter(team => getDivisionName(team.name) === activeDivision);
+      teamsInDivision.forEach(team => {
         const button = document.createElement('button');
         button.textContent = team.name;
         if (team.id === activeTeamId) button.classList.add('active');
@@ -577,6 +668,7 @@
     });
 
     function renderAll() {
+      renderDivisionButtons();
       renderTeamButtons();
       renderStats();
       renderSpots();
