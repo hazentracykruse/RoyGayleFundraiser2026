@@ -175,7 +175,7 @@
       transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
       box-shadow: 0 6px 12px rgba(0,0,0,0.16);
     }
-    .spot:hover:not(.filled) {
+    .spot:hover {
       transform: scale(1.06);
     }
     .spot.selected {
@@ -185,8 +185,6 @@
     .spot.filled {
       background: #8b1e2d;
       color: #ffffff;
-      cursor: not-allowed;
-      opacity: .95;
     }
     .spot.filled::after {
       content: '✓';
@@ -234,9 +232,12 @@
       cursor: pointer;
       margin-bottom: 12px;
     }
-    .checkout:disabled {
+    .checkout:disabled,
+    .secondary:disabled {
       background: #9ca3af;
+      color: #ffffff;
       cursor: not-allowed;
+      border-color: #9ca3af;
     }
     .secondary {
       width: 100%;
@@ -248,7 +249,7 @@
       color: #374151;
       background: #ffffff;
       cursor: pointer;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .legend {
       background: #f7fafc;
@@ -281,21 +282,6 @@
       color: #7c2d12;
       font-size: 14px;
       line-height: 1.5;
-    }
-    .team-links {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .team-link {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-weight: bold;
-      background: #e8f1fa;
-      color: #0f4c81;
     }
     @media (max-width: 980px) {
       .topbar, .main {
@@ -350,12 +336,7 @@
 
       <div class="panel">
         <h2>How It Works</h2>
-        <p style="margin-top:0; line-height:1.6; text-align:center;">Choose a team, click an open amount on the glove, and continue to donate. This free version is designed for manual updates, so donation spots can be marked paid by Roy Gayle as gifts come in.</p>
-        <div class="team-links">
-          <a class="team-link" href="#">Baseball Teams</a>
-          <a class="team-link" href="#">Softball Teams</a>
-          <a class="team-link" href="#">League Fundraiser Info</a>
-        </div>
+        <p style="margin-top:0; line-height:1.6; text-align:center;">Choose a team, click an amount on the glove, and continue to donate through PayPal. After the donation is received, Roy Gayle can mark that spot as paid. If you click the wrong one, you can unmark it or reset the whole team.</p>
       </div>
     </div>
 
@@ -392,9 +373,11 @@
       <div class="panel action-card">
         <h2>Selected Donation</h2>
         <div class="selected-amount" id="selectedAmount">--</div>
-        <div class="helper" id="selectedHelper">Select an open spot on the glove to continue.</div>
+        <div class="helper" id="selectedHelper">Select an open or filled spot on the glove.</div>
         <button class="checkout" id="checkoutButton" disabled>Continue to Donate</button>
         <button class="secondary" id="markPaidButton" disabled>Mark Spot as Paid</button>
+        <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
+        <button class="secondary" id="resetTeamButton">Reset Current Team</button>
 
         <div class="legend">
           <div class="legend-row"><span class="legend-dot"></span> Open donation spot</div>
@@ -402,7 +385,7 @@
         </div>
 
         <div class="mini-note">
-          This free Roy Gayle version is built for easy manual updates. When a donation comes in through PayPal, Roy Gayle can mark that amount as paid so the glove fills visually and the total updates.
+          This free Roy Gayle version is built for easy manual updates. When a donation comes in through PayPal, mark that amount as paid so the glove fills visually and the total updates.
         </div>
       </div>
     </div>
@@ -437,30 +420,10 @@
     ];
 
     const teams = [
-      {
-        id: 'pinto-8u-baseball',
-        name: 'Pinto 8U Baseball',
-        paymentUrl: PAYPAL_DONATE_URL,
-        filled: [],
-      },
-      {
-        id: 'mustang-10u-baseball',
-        name: 'Mustang 10U Baseball',
-        paymentUrl: PAYPAL_DONATE_URL,
-        filled: [],
-      },
-      {
-        id: 'mustang-10u-softball',
-        name: 'Mustang 10U Softball',
-        paymentUrl: PAYPAL_DONATE_URL,
-        filled: [],
-      },
-      {
-        id: 'pony-14u-softball',
-        name: 'Pony 14U Softball',
-        paymentUrl: PAYPAL_DONATE_URL,
-        filled: [],
-      }
+      { id: 'pinto-8u-baseball', name: 'Pinto 8U Baseball', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-baseball', name: 'Mustang 10U Baseball', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'mustang-10u-softball', name: 'Mustang 10U Softball', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
+      { id: 'pony-14u-softball', name: 'Pony 14U Softball', paymentUrl: PAYPAL_DONATE_URL, filled: [] }
     ];
 
     let activeTeamId = teams[0].id;
@@ -477,6 +440,8 @@
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
     const markPaidButton = document.getElementById('markPaidButton');
+    const unmarkPaidButton = document.getElementById('unmarkPaidButton');
+    const resetTeamButton = document.getElementById('resetTeamButton');
 
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
@@ -541,13 +506,14 @@
           div.setAttribute('aria-label', `$${spot.amount} donation spot filled`);
         } else {
           div.setAttribute('aria-label', `$${spot.amount} donation spot available`);
-          div.addEventListener('click', () => {
-            selectedSpotId = spot.id;
-            renderAll();
-          });
         }
 
-        if (isSelected && !isFilled) div.classList.add('selected');
+        div.addEventListener('click', () => {
+          selectedSpotId = spot.id;
+          renderAll();
+        });
+
+        if (isSelected) div.classList.add('selected');
 
         spotsLayer.appendChild(div);
       });
@@ -555,27 +521,36 @@
 
     function renderSelection() {
       const team = getActiveTeam();
-      const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId && !team.filled.includes(spot.id));
+      const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
 
       if (!selectedSpot) {
         selectedAmount.textContent = '--';
-        selectedHelper.textContent = 'Select an open spot on the glove to continue.';
+        selectedHelper.textContent = 'Select an open or filled spot on the glove.';
         checkoutButton.disabled = true;
         markPaidButton.disabled = true;
+        unmarkPaidButton.disabled = true;
         return;
       }
 
+      const isFilled = team.filled.includes(selectedSpot.id);
       selectedAmount.textContent = `$${selectedSpot.amount}`;
-      selectedHelper.textContent = `${team.name} donation selected. Use Continue to Donate to open PayPal, then come back and mark the spot paid after the gift is received.`;
-      checkoutButton.disabled = false;
-      markPaidButton.disabled = false;
+
+      if (isFilled) {
+        selectedHelper.textContent = `${team.name} spot is currently marked paid. Use Unmark Paid Spot if you need to reopen it.`;
+        checkoutButton.disabled = true;
+        markPaidButton.disabled = true;
+        unmarkPaidButton.disabled = false;
+      } else {
+        selectedHelper.textContent = `${team.name} donation selected. Use Continue to Donate to open PayPal, then come back and mark the spot paid after the gift is received.`;
+        checkoutButton.disabled = false;
+        markPaidButton.disabled = false;
+        unmarkPaidButton.disabled = true;
+      }
     }
 
     checkoutButton.addEventListener('click', () => {
       const team = getActiveTeam();
-      const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
-      if (!selectedSpot) return;
-
+      if (!selectedSpotId) return;
       const url = team.paymentUrl || PAYPAL_DONATE_URL;
       window.open(url, '_blank', 'noopener,noreferrer');
     });
@@ -583,7 +558,22 @@
     markPaidButton.addEventListener('click', () => {
       const team = getActiveTeam();
       if (!selectedSpotId) return;
-      if (!team.filled.includes(selectedSpotId)) team.filled.push(selectedSpotId);
+      if (!team.filled.includes(selectedSpotId)) {
+        team.filled.push(selectedSpotId);
+      }
+      renderAll();
+    });
+
+    unmarkPaidButton.addEventListener('click', () => {
+      const team = getActiveTeam();
+      if (!selectedSpotId) return;
+      team.filled = team.filled.filter(id => id !== selectedSpotId);
+      renderAll();
+    });
+
+    resetTeamButton.addEventListener('click', () => {
+      const team = getActiveTeam();
+      team.filled = [];
       selectedSpotId = null;
       renderAll();
     });
