@@ -357,6 +357,10 @@
       <h1>Roy Gayle Fill My Glove Fundraiser</h1>
       <p>A fun digital fundraiser for Roy Gayle Baseball and Softball teams. Supporters choose a donation amount on the glove to help each team reach its $500 goal.</p>
       <div class="status-banner" id="syncStatus">Connecting to Firebase...</div>
+      <div class="panel" style="margin-top:18px; padding:18px;">
+        <h2 style="font-size:24px; margin-bottom:12px;">Top Fundraising Teams</h2>
+        <div id="leaderboardList" style="display:grid; gap:10px;"></div>
+      </div>
     </div>
 
     <div class="topbar">
@@ -546,6 +550,7 @@
     const checkoutButton = document.getElementById('checkoutButton');
     const markPaidButton = document.getElementById('markPaidButton');
     const syncStatus = document.getElementById('syncStatus');
+    const leaderboardList = document.getElementById('leaderboardList');
 
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
@@ -690,7 +695,62 @@
       }
     });
 
+    function renderLeaderboard() {
+      const ranked = teams.map(team => ({
+        ...team,
+        raised: calcRaised(team.id)
+      })).sort((a, b) => b.raised - a.raised).slice(0, 5);
+
+      leaderboardList.innerHTML = '';
+
+      ranked.forEach((team, index) => {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = '44px 1fr auto';
+        row.style.alignItems = 'center';
+        row.style.gap = '10px';
+        row.style.background = '#f7fafc';
+        row.style.padding = '10px 12px';
+        row.style.borderRadius = '12px';
+
+        const rank = document.createElement('div');
+        rank.textContent = `${index + 1}`;
+        rank.style.width = '32px';
+        rank.style.height = '32px';
+        rank.style.borderRadius = '50%';
+        rank.style.background = '#0f4c81';
+        rank.style.color = '#ffffff';
+        rank.style.display = 'flex';
+        rank.style.alignItems = 'center';
+        rank.style.justifyContent = 'center';
+        rank.style.fontWeight = 'bold';
+
+        const nameWrap = document.createElement('div');
+        const teamName = document.createElement('div');
+        teamName.textContent = `${team.division} — ${team.name}`;
+        teamName.style.fontWeight = 'bold';
+        teamName.style.fontSize = '14px';
+        const sub = document.createElement('div');
+        sub.textContent = `${Math.min(100, Math.round((team.raised / 500) * 100))}% of goal filled`;
+        sub.style.fontSize = '13px';
+        sub.style.color = '#6b7280';
+        nameWrap.appendChild(teamName);
+        nameWrap.appendChild(sub);
+
+        const amount = document.createElement('div');
+        amount.textContent = `$${team.raised}`;
+        amount.style.fontWeight = 'bold';
+        amount.style.color = '#8b1e2d';
+
+        row.appendChild(rank);
+        row.appendChild(nameWrap);
+        row.appendChild(amount);
+        leaderboardList.appendChild(row);
+      });
+    }
+
     function renderAll() {
+      renderLeaderboard();
       renderDivisionButtons();
       renderTeamButtons();
       renderStats();
