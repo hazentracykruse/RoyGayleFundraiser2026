@@ -36,6 +36,15 @@
       font-size: 18px;
       line-height: 1.5;
     }
+    .status-banner {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      text-align: center;
+      background: #e8f1fa;
+      color: #0f4c81;
+    }
     .topbar {
       display: grid;
       grid-template-columns: 1.3fr .7fr;
@@ -175,9 +184,7 @@
       transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
       box-shadow: 0 6px 12px rgba(0,0,0,0.16);
     }
-    .spot:hover {
-      transform: scale(1.06);
-    }
+    .spot:hover { transform: scale(1.06); }
     .spot.selected {
       outline: 5px solid #0f4c81;
       transform: scale(1.08);
@@ -283,10 +290,54 @@
       font-size: 14px;
       line-height: 1.5;
     }
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .how-step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #f7fafc;
+      padding: 12px;
+      border-radius: 12px;
+    }
+    .how-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #0f4c81;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .how-title {
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+    .how-text {
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.4;
+    }
+    .how-note {
+      margin-top: 14px;
+      font-size: 14px;
+      text-align: center;
+      color: #7c2d12;
+      background: #fff7ed;
+      padding: 10px;
+      border-radius: 10px;
+    }
     @media (max-width: 980px) {
-      .topbar, .main {
-        grid-template-columns: 1fr;
-      }
+      .topbar, .main { grid-template-columns: 1fr; }
+      .how-grid { grid-template-columns: 1fr; }
       .glove-wrap {
         min-height: auto;
         overflow-x: auto;
@@ -305,6 +356,7 @@
     <div class="hero">
       <h1>Roy Gayle Fill My Glove Fundraiser</h1>
       <p>A fun digital fundraiser for Roy Gayle Baseball and Softball teams. Supporters choose a donation amount on the glove to help each team reach its $500 goal.</p>
+      <div class="status-banner" id="syncStatus">Connecting to Firebase...</div>
     </div>
 
     <div class="topbar">
@@ -338,7 +390,13 @@
 
       <div class="panel">
         <h2>How It Works</h2>
-        <p style="margin-top:0; line-height:1.6; text-align:center;">Choose a team, click an amount on the glove, and continue to donate through PayPal. After the donation is received, Roy Gayle can mark that spot as paid. If you click the wrong one, you can unmark it or reset the whole team.</p>
+        <div class="how-grid">
+          <div class="how-step"><div class="how-number">1</div><div><div class="how-title">Choose a Division</div><div class="how-text">Start by selecting a division like 6U Shetland Baseball or 14U Pony Baseball.</div></div></div>
+          <div class="how-step"><div class="how-number">2</div><div><div class="how-title">Pick a Team</div><div class="how-text">Choose the specific Roy Gayle team you want to support inside that division.</div></div></div>
+          <div class="how-step"><div class="how-number">3</div><div><div class="how-title">Choose a Spot</div><div class="how-text">Click any open donation amount on the glove to sponsor that spot.</div></div></div>
+          <div class="how-step"><div class="how-number">4</div><div><div class="how-title">Donate Through PayPal</div><div class="how-text">Use the Roy Gayle PayPal button to donate. The saved status will update for everyone once marked paid.</div></div></div>
+        </div>
+        <div class="how-note">Every team is working toward a $500 fundraising goal. Thank you for supporting Roy Gayle Baseball and Softball.</div>
       </div>
     </div>
 
@@ -380,20 +438,30 @@
         <button class="secondary" id="markPaidButton" disabled>Mark Spot as Paid</button>
         <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
         <button class="secondary" id="resetTeamButton">Reset Current Team</button>
-
         <div class="legend">
           <div class="legend-row"><span class="legend-dot"></span> Open donation spot</div>
           <div class="legend-row"><span class="legend-dot red"></span> Filled donation spot</div>
         </div>
-
-        <div class="mini-note">
-          This free Roy Gayle version is built for easy manual updates. When a donation comes in through PayPal, mark that amount as paid so the glove fills visually and the total updates.
-        </div>
+        <div class="mini-note">This Firebase version syncs shared team progress for everyone viewing the page. For now, anyone with access to the page can mark spots paid unless you later add Firebase Auth.</div>
       </div>
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
+    import { getDatabase, ref, onValue, update, get } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyAKs9v1U5PNWRL3gpPoyDf2SbGHo5JVDc0',
+      authDomain: 'roy-gayle-fill-my-glove.firebaseapp.com',
+      databaseURL: 'https://roy-gayle-fill-my-glove-default-rtdb.firebaseio.com',
+      projectId: 'roy-gayle-fill-my-glove',
+      storageBucket: 'roy-gayle-fill-my-glove.firebasestorage.app',
+      messagingSenderId: '384975579344',
+      appId: '1:384975579344:web:c01043101d475e7ffe56d5',
+      measurementId: 'G-7RYJJ54D4S'
+    };
+
     const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
 
     const baseSpots = [
@@ -402,7 +470,7 @@
       { id: 3, amount: 25, x: 409, y: 130 },
       { id: 4, amount: 15, x: 189, y: 176 },
       { id: 5, amount: 30, x: 278, y: 180 },
-      { id: 6, amount: 5,  x: 362, y: 190 },
+      { id: 6, amount: 5, x: 362, y: 190 },
       { id: 7, amount: 20, x: 433, y: 200 },
       { id: 8, amount: 10, x: 223, y: 239 },
       { id: 9, amount: 15, x: 311, y: 256 },
@@ -428,21 +496,17 @@
       { id: 'pony-baseball-14u-american-eagles', division: '14U Pony Baseball', name: 'American Eagles', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'pony-baseball-14u-kruse-farms', division: '14U Pony Baseball', name: 'Kruse Farms', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'pony-baseball-14u-red-birds', division: '14U Pony Baseball', name: 'Red Birds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'pony-softball-14u-firefighters', division: '14U Pony Softball', name: 'Firefighters', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'pony-softball-14u-pbpa', division: '14U Pony Softball', name: 'PBPA', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'bronco-baseball-12u-red-devils', division: '12U Bronco Baseball', name: 'Red Devils', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'bronco-baseball-12u-425', division: '12U Bronco Baseball', name: '425', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'bronco-baseball-12u-hawkins-kids', division: '12U Bronco Baseball', name: 'Hawkins Kids', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'bronco-baseball-12u-larsen-and-larsen', division: '12U Bronco Baseball', name: 'Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'bronco-baseball-12u-lincoln-rental', division: '12U Bronco Baseball', name: 'Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'bronco-softball-12u-mbs-makos', division: '12U Bronco Softball', name: "MBS Mako's", paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'bronco-softball-12u-bax-tees', division: '12U Bronco Softball', name: "Bax Tee's", paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'bronco-softball-12u-oregon-avalanche-spangler', division: '12U Bronco Softball', name: 'Oregon Avalanche Spangler', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'bronco-softball-12u-oregon-avalanche-anderson', division: '12U Bronco Softball', name: 'Oregon Avalanche Anderson', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'mustang-baseball-10u-crown-ff', division: '10U Mustang Baseball', name: 'Crown FF', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'mustang-baseball-10u-lil-gators', division: '10U Mustang Baseball', name: 'Lil Gators', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'mustang-baseball-10u-oregon-j-hawks', division: '10U Mustang Baseball', name: 'Oregon J-Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
@@ -450,17 +514,13 @@
       { id: 'mustang-baseball-10u-cubbies', division: '10U Mustang Baseball', name: 'Cubbies', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'mustang-baseball-10u-cherry-valley-feed', division: '10U Mustang Baseball', name: 'Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'mustang-baseball-10u-byron', division: '10U Mustang Baseball', name: 'Byron', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'mustang-softball-10u-kruse-farm-krushers', division: '10U Mustang Softball', name: 'Kruse Farm Krushers', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'mustang-softball-10u-top-notch-building-supply', division: '10U Mustang Softball', name: 'Top Notch Building Supply', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'pinto-baseball-8u-dickerson-nieman', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'pinto-baseball-8u-convey-all', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'pinto-baseball-8u-815-control', division: '8U Pinto Baseball', name: '815 Control', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'pinto-baseball-8u-firefighters-413', division: '8U Pinto Baseball', name: 'Firefighters 413', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'pinto-softball-8u-reflections', division: '8U Pinto Softball', name: 'Reflections', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-
       { id: 'shetland-baseball-6u-reflections', division: '6U Shetland Baseball', name: 'Reflections', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'shetland-baseball-6u-team-5', division: '6U Shetland Baseball', name: 'Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
       { id: 'shetland-baseball-6u-team-4', division: '6U Shetland Baseball', name: 'Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
@@ -468,10 +528,12 @@
     ];
 
     const divisions = [...new Set(teams.map(team => team.division))];
-
     let activeDivision = divisions[0];
     let activeTeamId = teams.find(team => team.division === activeDivision).id;
     let selectedSpotId = null;
+    let app;
+    let db;
+    let remoteState = {};
 
     const divisionButtons = document.getElementById('divisionButtons');
     const teamButtons = document.getElementById('teamButtons');
@@ -487,18 +549,29 @@
     const markPaidButton = document.getElementById('markPaidButton');
     const unmarkPaidButton = document.getElementById('unmarkPaidButton');
     const resetTeamButton = document.getElementById('resetTeamButton');
+    const syncStatus = document.getElementById('syncStatus');
 
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
+    }
+
+    function getFilledForTeam(teamId) {
+      return Array.isArray(remoteState[teamId]?.filled) ? remoteState[teamId].filled : [];
+    }
+
+    function setStatus(message, isError = false) {
+      syncStatus.textContent = message;
+      syncStatus.style.background = isError ? '#fee2e2' : '#e8f1fa';
+      syncStatus.style.color = isError ? '#991b1b' : '#0f4c81';
     }
 
     function calcGoal() {
       return 500;
     }
 
-    function calcRaised(team) {
+    function calcRaised(teamId) {
       return baseSpots
-        .filter(spot => team.filled.includes(spot.id))
+        .filter(spot => getFilledForTeam(teamId).includes(spot.id))
         .reduce((sum, spot) => sum + spot.amount, 0);
     }
 
@@ -538,10 +611,9 @@
     function renderStats() {
       const team = getActiveTeam();
       const goal = calcGoal();
-      const raised = calcRaised(team);
-      const spotsLeft = baseSpots.length - team.filled.length;
+      const raised = calcRaised(team.id);
+      const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
       const pct = Math.min(100, Math.round((raised / goal) * 100));
-
       goalValue.textContent = `$${goal}`;
       raisedValue.textContent = `$${raised}`;
       spotsLeftValue.textContent = spotsLeft;
@@ -551,8 +623,8 @@
 
     function renderSpots() {
       const team = getActiveTeam();
+      const filled = getFilledForTeam(team.id);
       spotsLayer.innerHTML = '';
-
       baseSpots.forEach(spot => {
         const div = document.createElement('button');
         div.className = 'spot';
@@ -560,24 +632,19 @@
         div.style.left = `${spot.x}px`;
         div.style.top = `${spot.y}px`;
         div.type = 'button';
-
-        const isFilled = team.filled.includes(spot.id);
+        const isFilled = filled.includes(spot.id);
         const isSelected = selectedSpotId === spot.id;
-
         if (isFilled) {
           div.classList.add('filled');
           div.setAttribute('aria-label', `$${spot.amount} donation spot filled`);
         } else {
           div.setAttribute('aria-label', `$${spot.amount} donation spot available`);
         }
-
         div.addEventListener('click', () => {
           selectedSpotId = spot.id;
           renderAll();
         });
-
         if (isSelected) div.classList.add('selected');
-
         spotsLayer.appendChild(div);
       });
     }
@@ -585,7 +652,6 @@
     function renderSelection() {
       const team = getActiveTeam();
       const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
-
       if (!selectedSpot) {
         selectedAmount.textContent = '--';
         selectedHelper.textContent = 'Select an open or filled spot on the glove.';
@@ -594,10 +660,8 @@
         unmarkPaidButton.disabled = true;
         return;
       }
-
-      const isFilled = team.filled.includes(selectedSpot.id);
+      const isFilled = getFilledForTeam(team.id).includes(selectedSpot.id);
       selectedAmount.textContent = `$${selectedSpot.amount}`;
-
       if (isFilled) {
         selectedHelper.textContent = `${team.name} spot is currently marked paid. Use Unmark Paid Spot if you need to reopen it.`;
         checkoutButton.disabled = true;
@@ -611,6 +675,11 @@
       }
     }
 
+    async function saveTeamFilled(teamId, filled) {
+      if (!db) return;
+      await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled });
+    }
+
     checkoutButton.addEventListener('click', () => {
       const team = getActiveTeam();
       if (!selectedSpotId) return;
@@ -618,27 +687,27 @@
       window.open(url, '_blank', 'noopener,noreferrer');
     });
 
-    markPaidButton.addEventListener('click', () => {
+    markPaidButton.addEventListener('click', async () => {
       const team = getActiveTeam();
       if (!selectedSpotId) return;
-      if (!team.filled.includes(selectedSpotId)) {
-        team.filled.push(selectedSpotId);
+      const filled = getFilledForTeam(team.id);
+      if (!filled.includes(selectedSpotId)) {
+        const updated = [...filled, selectedSpotId].sort((a, b) => a - b);
+        await saveTeamFilled(team.id, updated);
       }
-      renderAll();
     });
 
-    unmarkPaidButton.addEventListener('click', () => {
+    unmarkPaidButton.addEventListener('click', async () => {
       const team = getActiveTeam();
       if (!selectedSpotId) return;
-      team.filled = team.filled.filter(id => id !== selectedSpotId);
-      renderAll();
+      const updated = getFilledForTeam(team.id).filter(id => id !== selectedSpotId);
+      await saveTeamFilled(team.id, updated);
     });
 
-    resetTeamButton.addEventListener('click', () => {
+    resetTeamButton.addEventListener('click', async () => {
       const team = getActiveTeam();
-      team.filled = [];
+      await saveTeamFilled(team.id, []);
       selectedSpotId = null;
-      renderAll();
     });
 
     function renderAll() {
@@ -649,7 +718,40 @@
       renderSelection();
     }
 
+    async function seedDatabaseIfEmpty() {
+      const snapshot = await get(ref(db, 'fillMyGlove/teams'));
+      if (!snapshot.exists()) {
+        const seed = {};
+        teams.forEach(team => {
+          seed[team.id] = {
+            division: team.division,
+            name: team.name,
+            filled: []
+          };
+        });
+        await update(ref(db, 'fillMyGlove'), { teams: seed });
+      }
+    }
+
+    async function startFirebase() {
+      try {
+        app = initializeApp(firebaseConfig);
+        db = getDatabase(app);
+        await seedDatabaseIfEmpty();
+        onValue(ref(db, 'fillMyGlove/teams'), (snapshot) => {
+          remoteState = snapshot.val() || {};
+          setStatus('Live sync connected. Everyone sees the same updated spots.');
+          renderAll();
+        });
+      } catch (error) {
+        console.error(error);
+        setStatus('Firebase is not connected yet. Add your Firebase config to turn on shared saving.', true);
+        renderAll();
+      }
+    }
+
     renderAll();
+    startFirebase();
   </script>
 </body>
 </html>
