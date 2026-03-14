@@ -390,11 +390,11 @@
 
       <div class="panel">
         <h2>How It Works</h2>
-        <p style="margin-top:0; line-height:1.6; text-align:center;">Support Roy Gayle Baseball and Softball teams by helping fill their glove. Choose a team, select a donation amount on the glove, and complete your gift through PayPal. Once the donation is made, mark the spot as filled so everyone can see the progress in real time. Each team is working toward a $500 goal to support league improvements.</p>
-      </div><div><div class="how-title">Choose a Division</div><div class="how-text">Start by selecting a division like 6U Shetland Baseball or 14U Pony Baseball.</div></div></div>
+        <div class="how-grid">
+          <div class="how-step"><div class="how-number">1</div><div><div class="how-title">Choose a Division</div><div class="how-text">Start by selecting a division like 6U Shetland Baseball or 14U Pony Baseball.</div></div></div>
           <div class="how-step"><div class="how-number">2</div><div><div class="how-title">Pick a Team</div><div class="how-text">Choose the specific Roy Gayle team you want to support inside that division.</div></div></div>
           <div class="how-step"><div class="how-number">3</div><div><div class="how-title">Choose a Spot</div><div class="how-text">Click any open donation amount on the glove to sponsor that spot.</div></div></div>
-          <div class="how-step"><div class="how-number">4</div><div><div class="how-title">Donate Through PayPal</div><div class="how-text">Use the Roy Gayle PayPal button to donate. The saved status will update for everyone once marked paid.</div></div></div>
+          <div class="how-step"><div class="how-number">4</div><div><div class="how-title">Donate Through PayPal</div><div class="how-text">Use the Roy Gayle PayPal button to donate. After your donation, click the button to mark the spot filled for everyone to see.</div></div></div>
         </div>
         <div class="how-note">Every team is working toward a $500 fundraising goal. Thank you for supporting Roy Gayle Baseball and Softball.</div>
       </div>
@@ -436,20 +436,19 @@
         <div class="helper" id="selectedHelper">Select an open or filled spot on the glove.</div>
         <button class="checkout" id="checkoutButton" disabled>Continue to Donate</button>
         <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
-        <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
-        
+        <button class="secondary" id="unmarkPaidButton" style="display:none;" disabled>Unmark Paid Spot</button>
         <div class="legend">
           <div class="legend-row"><span class="legend-dot"></span> Open donation spot</div>
           <div class="legend-row"><span class="legend-dot red"></span> Filled donation spot</div>
         </div>
-        <div class="mini-note">This Firebase version syncs shared team progress for everyone viewing the page. For now, anyone with access to the page can mark spots paid unless you later add Firebase Auth.</div>
+        <div class="mini-note">This version updates live for everyone viewing the page. If a correction is needed later, we can make an admin-only fix tool.</div>
       </div>
     </div>
   </div>
 
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
-    import { getDatabase, ref, onValue, update, get } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js';
+    import { getDatabase, ref, onValue, update, get } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js';
 
     const firebaseConfig = {
       apiKey: 'AIzaSyAKs9v1U5PNWRL3gpPoyDf2SbGHo5JVDc0',
@@ -470,7 +469,7 @@
       { id: 3, amount: 25, x: 409, y: 130 },
       { id: 4, amount: 15, x: 189, y: 176 },
       { id: 5, amount: 30, x: 278, y: 180 },
-      { id: 6, amount: 5, x: 362, y: 190 },
+      { id: 6, amount: 5,  x: 362, y: 190 },
       { id: 7, amount: 20, x: 433, y: 200 },
       { id: 8, amount: 10, x: 223, y: 239 },
       { id: 9, amount: 15, x: 311, y: 256 },
@@ -490,48 +489,47 @@
     ];
 
     const teams = [
-      { id: 'pony-baseball-14u-ponds', division: '14U Pony Baseball', name: 'Ponds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-baseball-14u-oregon-j-hawks', division: '14U Pony Baseball', name: 'Oregon J Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-baseball-14u-rockford-icehogs', division: '14U Pony Baseball', name: 'Rockford IceHogs', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-baseball-14u-american-eagles', division: '14U Pony Baseball', name: 'American Eagles', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-baseball-14u-kruse-farms', division: '14U Pony Baseball', name: 'Kruse Farms', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-baseball-14u-red-birds', division: '14U Pony Baseball', name: 'Red Birds', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-softball-14u-firefighters', division: '14U Pony Softball', name: 'Firefighters', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pony-softball-14u-pbpa', division: '14U Pony Softball', name: 'PBPA', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-baseball-12u-red-devils', division: '12U Bronco Baseball', name: 'Red Devils', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-baseball-12u-425', division: '12U Bronco Baseball', name: '425', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-baseball-12u-hawkins-kids', division: '12U Bronco Baseball', name: 'Hawkins Kids', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-baseball-12u-larsen-and-larsen', division: '12U Bronco Baseball', name: 'Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-baseball-12u-lincoln-rental', division: '12U Bronco Baseball', name: 'Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-softball-12u-mbs-makos', division: '12U Bronco Softball', name: "MBS Mako's", paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-softball-12u-bax-tees', division: '12U Bronco Softball', name: "Bax Tee's", paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-softball-12u-oregon-avalanche-spangler', division: '12U Bronco Softball', name: 'Oregon Avalanche Spangler', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'bronco-softball-12u-oregon-avalanche-anderson', division: '12U Bronco Softball', name: 'Oregon Avalanche Anderson', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-baseball-10u-crown-ff', division: '10U Mustang Baseball', name: 'Crown FF', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-baseball-10u-lil-gators', division: '10U Mustang Baseball', name: 'Lil Gators', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-baseball-10u-oregon-j-hawks', division: '10U Mustang Baseball', name: 'Oregon J-Hawks', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-baseball-10u-lonnies', division: '10U Mustang Baseball', name: 'Lonnies', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-baseball-10u-cubbies', division: '10U Mustang Baseball', name: 'Cubbies', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-baseball-10u-cherry-valley-feed', division: '10U Mustang Baseball', name: 'Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-baseball-10u-byron', division: '10U Mustang Baseball', name: 'Byron', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-softball-10u-kruse-farm-krushers', division: '10U Mustang Softball', name: 'Kruse Farm Krushers', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'mustang-softball-10u-top-notch-building-supply', division: '10U Mustang Softball', name: 'Top Notch Building Supply', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-baseball-8u-dickerson-nieman', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-baseball-8u-convey-all', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-baseball-8u-815-control', division: '8U Pinto Baseball', name: '815 Control', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-baseball-8u-firefighters-413', division: '8U Pinto Baseball', name: 'Firefighters 413', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'pinto-softball-8u-reflections', division: '8U Pinto Softball', name: 'Reflections', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-baseball-6u-reflections', division: '6U Shetland Baseball', name: 'Reflections', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-baseball-6u-team-5', division: '6U Shetland Baseball', name: 'Team 5', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-baseball-6u-team-4', division: '6U Shetland Baseball', name: 'Team 4', paymentUrl: PAYPAL_DONATE_URL, filled: [] },
-      { id: 'shetland-baseball-6u-team-6', division: '6U Shetland Baseball', name: 'Team 6', paymentUrl: PAYPAL_DONATE_URL, filled: [] }
+      { id: 'pony-baseball-14u-ponds', division: '14U Pony Baseball', name: 'Ponds', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-baseball-14u-oregon-j-hawks', division: '14U Pony Baseball', name: 'Oregon J Hawks', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-baseball-14u-rockford-icehogs', division: '14U Pony Baseball', name: 'Rockford IceHogs', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-baseball-14u-american-eagles', division: '14U Pony Baseball', name: 'American Eagles', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-baseball-14u-kruse-farms', division: '14U Pony Baseball', name: 'Kruse Farms', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-baseball-14u-red-birds', division: '14U Pony Baseball', name: 'Red Birds', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-softball-14u-firefighters', division: '14U Pony Softball', name: 'Firefighters', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-softball-14u-pbpa', division: '14U Pony Softball', name: 'PBPA', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-baseball-12u-red-devils', division: '12U Bronco Baseball', name: 'Red Devils', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-baseball-12u-425', division: '12U Bronco Baseball', name: '425', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-baseball-12u-hawkins-kids', division: '12U Bronco Baseball', name: 'Hawkins Kids', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-baseball-12u-larsen-and-larsen', division: '12U Bronco Baseball', name: 'Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-baseball-12u-lincoln-rental', division: '12U Bronco Baseball', name: 'Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-softball-12u-mbs-makos', division: '12U Bronco Softball', name: "MBS Mako's", paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-softball-12u-bax-tees', division: '12U Bronco Softball', name: "Bax Tee's", paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-softball-12u-oregon-avalanche-spangler', division: '12U Bronco Softball', name: 'Oregon Avalanche Spangler', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-softball-12u-oregon-avalanche-anderson', division: '12U Bronco Softball', name: 'Oregon Avalanche Anderson', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-crown-ff', division: '10U Mustang Baseball', name: 'Crown FF', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-lil-gators', division: '10U Mustang Baseball', name: 'Lil Gators', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-oregon-j-hawks', division: '10U Mustang Baseball', name: 'Oregon J-Hawks', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-lonnies', division: '10U Mustang Baseball', name: 'Lonnies', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-cubbies', division: '10U Mustang Baseball', name: 'Cubbies', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-cherry-valley-feed', division: '10U Mustang Baseball', name: 'Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-byron', division: '10U Mustang Baseball', name: 'Byron', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-softball-10u-kruse-farm-krushers', division: '10U Mustang Softball', name: 'Kruse Farm Krushers', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-softball-10u-top-notch-building-supply', division: '10U Mustang Softball', name: 'Top Notch Building Supply', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pinto-baseball-8u-dickerson-nieman', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pinto-baseball-8u-convey-all', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pinto-baseball-8u-815-control', division: '8U Pinto Baseball', name: '815 Control', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pinto-baseball-8u-firefighters-413', division: '8U Pinto Baseball', name: 'Firefighters 413', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pinto-softball-8u-reflections', division: '8U Pinto Softball', name: 'Reflections', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'shetland-baseball-6u-reflections', division: '6U Shetland Baseball', name: 'Reflections', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'shetland-baseball-6u-team-5', division: '6U Shetland Baseball', name: 'Team 5', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'shetland-baseball-6u-team-4', division: '6U Shetland Baseball', name: 'Team 4', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'shetland-baseball-6u-team-6', division: '6U Shetland Baseball', name: 'Team 6', paymentUrl: PAYPAL_DONATE_URL }
     ];
 
     const divisions = [...new Set(teams.map(team => team.division))];
     let activeDivision = divisions[0];
     let activeTeamId = teams.find(team => team.division === activeDivision).id;
     let selectedSpotId = null;
-    let app;
     let db;
     let remoteState = {};
 
@@ -547,8 +545,6 @@
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
     const markPaidButton = document.getElementById('markPaidButton');
-    const unmarkPaidButton = document.getElementById('unmarkPaidButton');
-    const resetTeamButton = document.getElementById('resetTeamButton');
     const syncStatus = document.getElementById('syncStatus');
 
     function getActiveTeam() {
@@ -654,24 +650,21 @@
       const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
       if (!selectedSpot) {
         selectedAmount.textContent = '--';
-        selectedHelper.textContent = 'Select an open or filled spot on the glove.';
+        selectedHelper.textContent = 'Select an open spot on the glove.';
         checkoutButton.disabled = true;
         markPaidButton.disabled = true;
-        unmarkPaidButton.disabled = true;
         return;
       }
       const isFilled = getFilledForTeam(team.id).includes(selectedSpot.id);
       selectedAmount.textContent = `$${selectedSpot.amount}`;
       if (isFilled) {
-        selectedHelper.textContent = `${team.name} spot is currently marked paid. Use Unmark Paid Spot if you need to reopen it.`;
+        selectedHelper.textContent = `${team.name} spot is already filled.`;
         checkoutButton.disabled = true;
         markPaidButton.disabled = true;
-        unmarkPaidButton.disabled = false;
       } else {
-        selectedHelper.textContent = `${team.name} donation selected. Use Continue to Donate to open PayPal, then come back and mark the spot paid after the gift is received.`;
+        selectedHelper.textContent = `${team.name} donation selected. Use Continue to Donate to open PayPal, then click the button below to fill the spot for everyone.`;
         checkoutButton.disabled = false;
         markPaidButton.disabled = false;
-        unmarkPaidButton.disabled = true;
       }
     }
 
@@ -695,19 +688,6 @@
         const updated = [...filled, selectedSpotId].sort((a, b) => a - b);
         await saveTeamFilled(team.id, updated);
       }
-    });
-
-    unmarkPaidButton.addEventListener('click', async () => {
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const updated = getFilledForTeam(team.id).filter(id => id !== selectedSpotId);
-      await saveTeamFilled(team.id, updated);
-    });
-
-    resetTeamButton.addEventListener('click', async () => {
-      const team = getActiveTeam();
-      await saveTeamFilled(team.id, []);
-      selectedSpotId = null;
     });
 
     function renderAll() {
@@ -735,7 +715,7 @@
 
     async function startFirebase() {
       try {
-        app = initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
         db = getDatabase(app);
         await seedDatabaseIfEmpty();
         onValue(ref(db, 'fillMyGlove/teams'), (snapshot) => {
@@ -745,7 +725,7 @@
         });
       } catch (error) {
         console.error(error);
-        setStatus('Firebase is not connected yet. Add your Firebase config to turn on shared saving.', true);
+        setStatus('Firebase is not connected correctly yet.', true);
         renderAll();
       }
     }
