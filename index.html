@@ -78,6 +78,24 @@
       z-index: 1;
     }
 
+    .hero-park-wrap{
+      margin: 8px auto 18px;
+      max-width: 980px;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 12px 24px rgba(15,76,129,0.12);
+      border: 1px solid #dbeafe;
+      background: #f8fbff;
+    }
+
+    .hero-park-img{
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 280px;
+      object-fit: cover;
+    }
+
     .hero-kicker{
       display:flex;
       align-items:center;
@@ -300,6 +318,19 @@
       text-align: center;
       color: #0f172a;
       letter-spacing: .05em;
+    }
+
+    .how-art-wrap{
+      text-align:center;
+      margin: 0 0 16px;
+    }
+
+    .how-art-img{
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      display: inline-block;
+      opacity: 0.95;
     }
 
     .controls {
@@ -662,6 +693,19 @@
       top: 20px;
     }
 
+    .field-art-wrap{
+      text-align:center;
+      margin: 4px 0 16px;
+    }
+
+    .field-art-img{
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      display: inline-block;
+      opacity: 0.92;
+    }
+
     .selected-amount {
       font-size: 52px;
       text-align: center;
@@ -896,6 +940,10 @@
         transform-origin: top center;
       }
 
+      .hero-park-img {
+        max-height: 220px;
+      }
+
       .action-card { position: static; }
     }
   </style>
@@ -909,6 +957,11 @@
           Roy Gayle Baseball & Softball
           <span class="dot"></span>
         </div>
+
+        <div class="hero-park-wrap">
+          <img src="park.png" alt="Roy Gayle ballpark illustration" class="hero-park-img" />
+        </div>
+
         <h1>Fill My Glove Fundraiser</h1>
         <p>A live, shareable fundraiser for Roy Gayle teams. Supporters can choose a spot on the glove, donate through PayPal, and watch team progress update in real time.</p>
         <div class="hero-badges">
@@ -977,6 +1030,11 @@
 
       <div class="panel">
         <h2>How It Works</h2>
+
+        <div class="how-art-wrap">
+          <img src="batting.png" alt="Youth baseball and softball batting illustration" class="how-art-img" />
+        </div>
+
         <div class="how-grid">
           <div class="how-step"><div class="how-number">1</div><div><div class="how-title">Choose a Division</div><div class="how-text">Start by selecting a division like 6U Shetland Baseball or 14U Pony Baseball.</div></div></div>
           <div class="how-step"><div class="how-number">2</div><div><div class="how-title">Pick a Team</div><div class="how-text">Choose the specific Roy Gayle team you want to support inside that division.</div></div></div>
@@ -1007,6 +1065,11 @@
 
       <div class="panel action-card">
         <h2>Selected Donation</h2>
+
+        <div class="field-art-wrap">
+          <img src="field.png" alt="Youth baseball and softball fielding illustration" class="field-art-img" />
+        </div>
+
         <div class="selected-amount" id="selectedAmount">--</div>
         <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
 
