@@ -45,6 +45,72 @@
       background: #e8f1fa;
       color: #0f4c81;
     }
+    .leaderboard-panel {
+      margin-top: 18px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+    }
+    .leaderboard-title {
+      text-align: center;
+      margin: 0 0 12px;
+      font-size: 24px;
+      color: #0f4c81;
+    }
+    .leaderboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .leaderboard-box {
+      background: #f7fafc;
+      border: 1px solid #d9e2ec;
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .leaderboard-box h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: #0f4c81;
+      text-align: center;
+    }
+    .top-team-row {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .top-team-rank {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #0f4c81;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .top-team-name {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .top-team-sub {
+      color: #6b7280;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .top-team-amount {
+      font-weight: bold;
+      color: #8b1e2d;
+      font-size: 16px;
+    }
     .topbar {
       display: grid;
       grid-template-columns: 1.3fr .7fr;
@@ -82,6 +148,33 @@
     .controls button.active {
       background: #0f4c81;
       color: #ffffff;
+    }
+    .share-wrap {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 8px 0 18px;
+      flex-wrap: wrap;
+    }
+    .share-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #8b1e2d;
+      color: #ffffff;
+    }
+    .share-btn.secondary {
+      background: #0f4c81;
+    }
+    .share-message {
+      text-align: center;
+      font-size: 13px;
+      color: #0f4c81;
+      min-height: 18px;
+      margin-bottom: 8px;
     }
     .stats {
       display: grid;
@@ -140,6 +233,7 @@
       justify-content: center;
       align-items: center;
       min-height: 720px;
+      position: relative;
     }
     .glove-board {
       position: relative;
@@ -210,6 +304,44 @@
       font-weight: bold;
       border: 2px solid #fff;
     }
+    .fill-celebration {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .fill-celebration.show {
+      display: flex;
+      animation: popFade 2.4s ease forwards;
+    }
+    .fill-celebration-card {
+      background: rgba(255,255,255,0.95);
+      border: 4px solid #8b1e2d;
+      border-radius: 24px;
+      padding: 24px 28px;
+      text-align: center;
+      box-shadow: 0 16px 30px rgba(0,0,0,0.2);
+    }
+    .fill-celebration-card h3 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      color: #8b1e2d;
+    }
+    .fill-celebration-card p {
+      margin: 0;
+      font-size: 18px;
+      color: #0f4c81;
+      font-weight: bold;
+    }
+    @keyframes popFade {
+      0% { opacity: 0; transform: scale(.85); }
+      15% { opacity: 1; transform: scale(1.03); }
+      85% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.04); }
+    }
     .action-card {
       position: sticky;
       top: 20px;
@@ -257,6 +389,50 @@
       background: #ffffff;
       cursor: pointer;
       margin-bottom: 12px;
+    }
+    .admin-toggle-wrap {
+      margin: 10px 0 4px;
+      text-align: center;
+    }
+    .admin-link {
+      background: none;
+      border: none;
+      color: #6b7280;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .admin-panel {
+      display: none;
+      background: #f7fafc;
+      border: 1px solid #d9e2ec;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .admin-panel.show {
+      display: block;
+    }
+    .admin-panel h3 {
+      margin: 0 0 10px;
+      text-align: center;
+      color: #0f4c81;
+      font-size: 18px;
+    }
+    .admin-panel input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .admin-status {
+      font-size: 13px;
+      text-align: center;
+      min-height: 18px;
+      color: #0f4c81;
+      margin-bottom: 8px;
     }
     .legend {
       background: #f7fafc;
@@ -336,7 +512,7 @@
       border-radius: 10px;
     }
     @media (max-width: 980px) {
-      .topbar, .main { grid-template-columns: 1fr; }
+      .topbar, .main, .leaderboard-grid { grid-template-columns: 1fr; }
       .how-grid { grid-template-columns: 1fr; }
       .glove-wrap {
         min-height: auto;
@@ -357,9 +533,19 @@
       <h1>Roy Gayle Fill My Glove Fundraiser</h1>
       <p>A fun digital fundraiser for Roy Gayle Baseball and Softball teams. Supporters choose a donation amount on the glove to help each team reach its $500 goal.</p>
       <div class="status-banner" id="syncStatus">Connecting to Firebase...</div>
-      <div class="panel" style="margin-top:18px; padding:18px;">
-        <h2 style="font-size:24px; margin-bottom:12px;">Top Fundraising Teams</h2>
-        <div id="leaderboardList" style="display:grid; gap:10px;"></div>
+    </div>
+
+    <div class="leaderboard-panel">
+      <h2 class="leaderboard-title">Fundraising Leaders</h2>
+      <div class="leaderboard-grid">
+        <div class="leaderboard-box">
+          <h3>Top 5 Teams Overall</h3>
+          <div id="leaderboardList"></div>
+        </div>
+        <div class="leaderboard-box">
+          <h3>Division Leaders</h3>
+          <div id="divisionLeaderboardList"></div>
+        </div>
       </div>
     </div>
 
@@ -369,6 +555,11 @@
         <div class="controls" id="divisionButtons"></div>
         <h2 style="font-size:22px; margin-top:10px;">Choose a Team</h2>
         <div class="controls" id="teamButtons"></div>
+        <div class="share-wrap">
+          <button class="share-btn" id="shareButton">Share This Team</button>
+          <button class="share-btn secondary" id="copyLinkButton">Copy Team Link</button>
+        </div>
+        <div class="share-message" id="shareMessage"></div>
         <div class="stats">
           <div class="stat">
             <div class="label">Goal</div>
@@ -398,7 +589,7 @@
           <div class="how-step"><div class="how-number">1</div><div><div class="how-title">Choose a Division</div><div class="how-text">Start by selecting a division like 6U Shetland Baseball or 14U Pony Baseball.</div></div></div>
           <div class="how-step"><div class="how-number">2</div><div><div class="how-title">Pick a Team</div><div class="how-text">Choose the specific Roy Gayle team you want to support inside that division.</div></div></div>
           <div class="how-step"><div class="how-number">3</div><div><div class="how-title">Choose a Spot</div><div class="how-text">Click any open donation amount on the glove to sponsor that spot.</div></div></div>
-          <div class="how-step"><div class="how-number">4</div><div><div class="how-title">Donate Through PayPal</div><div class="how-text">Use the Roy Gayle PayPal button to donate. After your donation, click the button to mark the spot filled for everyone to see.</div></div></div>
+          <div class="how-step"><div class="how-number">4</div><div><div class="how-title">Donate Through PayPal</div><div class="how-text">Use the Roy Gayle PayPal link to donate, then click the button below to fill the spot for everyone to see.</div></div></div>
         </div>
         <div class="how-note">Every team is working toward a $500 fundraising goal. Thank you for supporting Roy Gayle Baseball and Softball.</div>
       </div>
@@ -431,21 +622,37 @@
             </svg>
             <div id="spotsLayer"></div>
           </div>
+          <div class="fill-celebration" id="fillCelebration">
+            <div class="fill-celebration-card">
+              <h3>🎉 Glove Filled!</h3>
+              <p>This team reached its $500 goal.</p>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="panel action-card">
         <h2>Selected Donation</h2>
         <div class="selected-amount" id="selectedAmount">--</div>
-        <div class="helper" id="selectedHelper">Select an open or filled spot on the glove.</div>
+        <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
         <button class="checkout" id="checkoutButton" disabled>Continue to Donate</button>
         <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
-        <button class="secondary" id="unmarkPaidButton" style="display:none;" disabled>Unmark Paid Spot</button>
+        <div class="admin-toggle-wrap">
+          <button class="admin-link" id="adminToggle">Admin</button>
+        </div>
+        <div class="admin-panel" id="adminPanel">
+          <h3>Admin Tools</h3>
+          <input type="password" id="adminPassword" placeholder="Enter admin password" />
+          <div class="admin-status" id="adminStatus"></div>
+          <button class="secondary" id="adminUnlockButton">Unlock Admin Mode</button>
+          <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
+          <button class="secondary" id="resetTeamButton" disabled>Reset Current Team</button>
+        </div>
         <div class="legend">
           <div class="legend-row"><span class="legend-dot"></span> Open donation spot</div>
           <div class="legend-row"><span class="legend-dot red"></span> Filled donation spot</div>
         </div>
-        <div class="mini-note">This version updates live for everyone viewing the page. If a correction is needed later, we can make an admin-only fix tool.</div>
+        <div class="mini-note">Thank you for supporting Roy Gayle Baseball and Softball. Every filled spot helps a team move closer to its fundraising goal.</div>
       </div>
     </div>
   </div>
@@ -466,6 +673,7 @@
     };
 
     const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
+    const ADMIN_PASSWORD = 'roygayle2026';
 
     const baseSpots = [
       { id: 1, amount: 20, x: 265, y: 122 },
@@ -536,6 +744,8 @@
     let selectedSpotId = null;
     let db;
     let remoteState = {};
+    let adminMode = false;
+    let lastCelebratedTeam = null;
 
     const divisionButtons = document.getElementById('divisionButtons');
     const teamButtons = document.getElementById('teamButtons');
@@ -549,8 +759,20 @@
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
     const markPaidButton = document.getElementById('markPaidButton');
+    const unmarkPaidButton = document.getElementById('unmarkPaidButton');
+    const resetTeamButton = document.getElementById('resetTeamButton');
     const syncStatus = document.getElementById('syncStatus');
     const leaderboardList = document.getElementById('leaderboardList');
+    const divisionLeaderboardList = document.getElementById('divisionLeaderboardList');
+    const shareButton = document.getElementById('shareButton');
+    const copyLinkButton = document.getElementById('copyLinkButton');
+    const shareMessage = document.getElementById('shareMessage');
+    const fillCelebration = document.getElementById('fillCelebration');
+    const adminToggle = document.getElementById('adminToggle');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminPassword = document.getElementById('adminPassword');
+    const adminUnlockButton = document.getElementById('adminUnlockButton');
+    const adminStatus = document.getElementById('adminStatus');
 
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
@@ -574,6 +796,44 @@
       return baseSpots
         .filter(spot => getFilledForTeam(teamId).includes(spot.id))
         .reduce((sum, spot) => sum + spot.amount, 0);
+    }
+
+    function getTeamUrl(team) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('division', team.division);
+      url.searchParams.set('team', team.id);
+      return url.toString();
+    }
+
+    function showShareMessage(message) {
+      shareMessage.textContent = message;
+      setTimeout(() => {
+        if (shareMessage.textContent === message) shareMessage.textContent = '';
+      }, 2500);
+    }
+
+    function updateUrlForSelection() {
+      const team = getActiveTeam();
+      const url = new URL(window.location.href);
+      url.searchParams.set('division', activeDivision);
+      url.searchParams.set('team', team.id);
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    function applySelectionFromUrl() {
+      const url = new URL(window.location.href);
+      const divisionParam = url.searchParams.get('division');
+      const teamParam = url.searchParams.get('team');
+      if (divisionParam && divisions.includes(divisionParam)) {
+        activeDivision = divisionParam;
+      }
+      if (teamParam && teams.some(team => team.id === teamParam)) {
+        activeTeamId = teamParam;
+        const matchedTeam = teams.find(team => team.id === teamParam);
+        if (matchedTeam) activeDivision = matchedTeam.division;
+      } else {
+        activeTeamId = teams.find(team => team.division === activeDivision).id;
+      }
     }
 
     function renderDivisionButtons() {
@@ -606,6 +866,50 @@
           renderAll();
         });
         teamButtons.appendChild(button);
+      });
+    }
+
+    function createLeaderboardRow(rankText, name, subtext, amount) {
+      const row = document.createElement('div');
+      row.className = 'top-team-row';
+      const rank = document.createElement('div');
+      rank.className = 'top-team-rank';
+      rank.textContent = rankText;
+      const nameWrap = document.createElement('div');
+      const teamName = document.createElement('div');
+      teamName.className = 'top-team-name';
+      teamName.textContent = name;
+      const sub = document.createElement('div');
+      sub.className = 'top-team-sub';
+      sub.textContent = subtext;
+      nameWrap.appendChild(teamName);
+      nameWrap.appendChild(sub);
+      const amt = document.createElement('div');
+      amt.className = 'top-team-amount';
+      amt.textContent = `$${amount}`;
+      row.appendChild(rank);
+      row.appendChild(nameWrap);
+      row.appendChild(amt);
+      return row;
+    }
+
+    function renderLeaderboard() {
+      const ranked = teams.map(team => ({ ...team, raised: calcRaised(team.id) }))
+        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name))
+        .slice(0, 5);
+      leaderboardList.innerHTML = '';
+      ranked.forEach((team, index) => {
+        leaderboardList.appendChild(createLeaderboardRow(String(index + 1), `${team.division} — ${team.name}`, `${Math.min(100, Math.round((team.raised / 500) * 100))}% of goal filled`, team.raised));
+      });
+
+      divisionLeaderboardList.innerHTML = '';
+      divisions.forEach((division) => {
+        const teamsInDivision = teams.filter(team => team.division === division).map(team => ({ ...team, raised: calcRaised(team.id) }))
+          .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
+        const leader = teamsInDivision[0];
+        if (leader) {
+          divisionLeaderboardList.appendChild(createLeaderboardRow('★', division, leader.name, leader.raised));
+        }
       });
     }
 
@@ -658,18 +962,48 @@
         selectedHelper.textContent = 'Select an open spot on the glove.';
         checkoutButton.disabled = true;
         markPaidButton.disabled = true;
+        unmarkPaidButton.disabled = true;
         return;
       }
       const isFilled = getFilledForTeam(team.id).includes(selectedSpot.id);
       selectedAmount.textContent = `$${selectedSpot.amount}`;
       if (isFilled) {
-        selectedHelper.textContent = `${team.name} spot is already filled.`;
+        selectedHelper.textContent = adminMode ? `${team.name} spot is already filled. Admin mode can reopen it.` : `${team.name} spot is already filled.`;
         checkoutButton.disabled = true;
         markPaidButton.disabled = true;
+        unmarkPaidButton.disabled = !adminMode;
       } else {
         selectedHelper.textContent = `${team.name} donation selected. Use Continue to Donate to open PayPal, then click the button below to fill the spot for everyone.`;
         checkoutButton.disabled = false;
         markPaidButton.disabled = false;
+        unmarkPaidButton.disabled = true;
+      }
+    }
+
+    function renderAdminState() {
+      adminPanel.classList.toggle('show', adminMode || adminPanel.classList.contains('show'));
+      unmarkPaidButton.style.display = adminMode ? 'block' : 'none';
+      resetTeamButton.style.display = adminMode ? 'block' : 'none';
+      resetTeamButton.disabled = !adminMode;
+      if (adminMode) {
+        adminStatus.textContent = 'Admin mode unlocked.';
+        adminStatus.style.color = '#0f4c81';
+        adminUnlockButton.textContent = 'Admin Mode Unlocked';
+        adminUnlockButton.disabled = true;
+      }
+    }
+
+    function maybeCelebrate(teamId) {
+      const raised = calcRaised(teamId);
+      if (raised >= 500 && lastCelebratedTeam !== teamId) {
+        lastCelebratedTeam = teamId;
+        fillCelebration.classList.remove('show');
+        void fillCelebration.offsetWidth;
+        fillCelebration.classList.add('show');
+        setTimeout(() => fillCelebration.classList.remove('show'), 2400);
+      }
+      if (raised < 500 && lastCelebratedTeam === teamId) {
+        lastCelebratedTeam = null;
       }
     }
 
@@ -677,6 +1011,54 @@
       if (!db) return;
       await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled });
     }
+
+    shareButton.addEventListener('click', async () => {
+      const team = getActiveTeam();
+      const url = getTeamUrl(team);
+      const text = `Support ${team.name} in the Roy Gayle Fill My Glove Fundraiser. Help us reach our $500 team goal. ${url}`;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: `Support ${team.name}`, text, url });
+          showShareMessage('Share window opened.');
+        } catch (error) {
+          showShareMessage('Share canceled.');
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(text);
+          showShareMessage('Team share message copied.');
+        } catch (error) {
+          showShareMessage('Copy failed.');
+        }
+      }
+    });
+
+    copyLinkButton.addEventListener('click', async () => {
+      const team = getActiveTeam();
+      const url = getTeamUrl(team);
+      try {
+        await navigator.clipboard.writeText(url);
+        showShareMessage('Team link copied.');
+      } catch (error) {
+        showShareMessage('Copy failed.');
+      }
+    });
+
+    adminToggle.addEventListener('click', () => {
+      adminPanel.classList.toggle('show');
+    });
+
+    adminUnlockButton.addEventListener('click', () => {
+      if (adminPassword.value === ADMIN_PASSWORD) {
+        adminMode = true;
+        adminStatus.textContent = 'Admin mode unlocked.';
+        adminStatus.style.color = '#0f4c81';
+        renderAll();
+      } else {
+        adminStatus.textContent = 'Password incorrect.';
+        adminStatus.style.color = '#991b1b';
+      }
+    });
 
     checkoutButton.addEventListener('click', () => {
       const team = getActiveTeam();
@@ -695,67 +1077,31 @@
       }
     });
 
-    function renderLeaderboard() {
-      const ranked = teams.map(team => ({
-        ...team,
-        raised: calcRaised(team.id)
-      })).sort((a, b) => b.raised - a.raised).slice(0, 5);
+    unmarkPaidButton.addEventListener('click', async () => {
+      if (!adminMode) return;
+      const team = getActiveTeam();
+      if (!selectedSpotId) return;
+      const updated = getFilledForTeam(team.id).filter(id => id !== selectedSpotId);
+      await saveTeamFilled(team.id, updated);
+    });
 
-      leaderboardList.innerHTML = '';
-
-      ranked.forEach((team, index) => {
-        const row = document.createElement('div');
-        row.style.display = 'grid';
-        row.style.gridTemplateColumns = '44px 1fr auto';
-        row.style.alignItems = 'center';
-        row.style.gap = '10px';
-        row.style.background = '#f7fafc';
-        row.style.padding = '10px 12px';
-        row.style.borderRadius = '12px';
-
-        const rank = document.createElement('div');
-        rank.textContent = `${index + 1}`;
-        rank.style.width = '32px';
-        rank.style.height = '32px';
-        rank.style.borderRadius = '50%';
-        rank.style.background = '#0f4c81';
-        rank.style.color = '#ffffff';
-        rank.style.display = 'flex';
-        rank.style.alignItems = 'center';
-        rank.style.justifyContent = 'center';
-        rank.style.fontWeight = 'bold';
-
-        const nameWrap = document.createElement('div');
-        const teamName = document.createElement('div');
-        teamName.textContent = `${team.division} — ${team.name}`;
-        teamName.style.fontWeight = 'bold';
-        teamName.style.fontSize = '14px';
-        const sub = document.createElement('div');
-        sub.textContent = `${Math.min(100, Math.round((team.raised / 500) * 100))}% of goal filled`;
-        sub.style.fontSize = '13px';
-        sub.style.color = '#6b7280';
-        nameWrap.appendChild(teamName);
-        nameWrap.appendChild(sub);
-
-        const amount = document.createElement('div');
-        amount.textContent = `$${team.raised}`;
-        amount.style.fontWeight = 'bold';
-        amount.style.color = '#8b1e2d';
-
-        row.appendChild(rank);
-        row.appendChild(nameWrap);
-        row.appendChild(amount);
-        leaderboardList.appendChild(row);
-      });
-    }
+    resetTeamButton.addEventListener('click', async () => {
+      if (!adminMode) return;
+      const team = getActiveTeam();
+      await saveTeamFilled(team.id, []);
+      selectedSpotId = null;
+    });
 
     function renderAll() {
+      updateUrlForSelection();
       renderLeaderboard();
       renderDivisionButtons();
       renderTeamButtons();
       renderStats();
       renderSpots();
       renderSelection();
+      renderAdminState();
+      maybeCelebrate(activeTeamId);
     }
 
     async function seedDatabaseIfEmpty() {
@@ -790,6 +1136,7 @@
       }
     }
 
+    applySelectionFromUrl();
     renderAll();
     startFirebase();
   </script>
