@@ -428,6 +428,7 @@
       background:
         radial-gradient(circle at center, rgba(15,76,129,0.04), transparent 40%);
       border-radius: 20px;
+      overflow: hidden;
     }
 
     .glove-board {
@@ -447,16 +448,27 @@
       letter-spacing: 1px;
       transform: rotate(-6deg);
       text-shadow: 0 2px 0 rgba(255,255,255,0.7);
+      z-index: 3;
+      pointer-events: none;
     }
 
-    .glove-svg {
+    .glove-image {
       position: absolute;
       left: 50%;
       top: 110px;
       transform: translateX(-50%);
       width: 620px;
-      height: 670px;
+      height: auto;
+      object-fit: contain;
       filter: drop-shadow(0 14px 20px rgba(0,0,0,0.20));
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #spotsLayer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
     }
 
     .spot {
@@ -921,26 +933,7 @@
         <div class="glove-wrap">
           <div class="glove-board">
             <div class="glove-title">FILL MY GLOVE!</div>
-            <svg class="glove-svg" viewBox="0 0 520 560" aria-hidden="true">
-              <path d="M131 456 C87 428, 67 372, 77 324 C84 289, 102 268, 124 258 C115 232, 118 191, 136 160 C153 132, 181 116, 208 120 C219 89, 244 63, 279 56 C311 50, 342 67, 361 92 C383 78, 414 77, 439 94 C465 112, 479 143, 478 179 C499 193, 512 221, 508 254 C505 282, 487 305, 465 318 C475 351, 469 391, 444 423 C416 459, 371 479, 315 486 C244 495, 180 486, 131 456 Z" fill="#8a4d24" stroke="#5a2f12" stroke-width="10"/>
-              <path d="M178 165 C189 123, 224 100, 255 103" fill="none" stroke="#4a210d" stroke-width="8" stroke-linecap="round"/>
-              <path d="M250 115 C260 82, 286 63, 318 67" fill="none" stroke="#4a210d" stroke-width="8" stroke-linecap="round"/>
-              <path d="M334 109 C352 82, 386 75, 413 90" fill="none" stroke="#4a210d" stroke-width="8" stroke-linecap="round"/>
-              <path d="M412 123 C440 113, 467 128, 478 154" fill="none" stroke="#4a210d" stroke-width="8" stroke-linecap="round"/>
-              <path d="M118 289 C153 308, 180 338, 198 378" fill="none" stroke="#4a210d" stroke-width="8" stroke-linecap="round"/>
-              <path d="M145 255 C177 278, 208 317, 229 361" fill="none" stroke="#4a210d" stroke-width="8" stroke-linecap="round"/>
-              <path d="M201 134 C211 205, 214 279, 206 353" fill="none" stroke="#4a210d" stroke-width="8"/>
-              <path d="M277 103 C282 182, 283 261, 276 341" fill="none" stroke="#4a210d" stroke-width="8"/>
-              <path d="M354 104 C358 176, 358 250, 351 325" fill="none" stroke="#4a210d" stroke-width="8"/>
-              <path d="M430 126 C433 187, 431 248, 423 310" fill="none" stroke="#4a210d" stroke-width="8"/>
-              <path d="M160 242 L227 172" fill="none" stroke="#4a210d" stroke-width="6"/>
-              <path d="M171 264 L244 186" fill="none" stroke="#4a210d" stroke-width="6"/>
-              <path d="M182 286 L258 204" fill="none" stroke="#4a210d" stroke-width="6"/>
-              <path d="M198 228 L262 293" fill="none" stroke="#4a210d" stroke-width="6"/>
-              <path d="M182 215 L248 281" fill="none" stroke="#4a210d" stroke-width="6"/>
-              <path d="M166 201 L234 267" fill="none" stroke="#4a210d" stroke-width="6"/>
-              <path d="M252 488 C262 527, 321 530, 335 486" fill="#7c421c" stroke="#5a2f12" stroke-width="8"/>
-            </svg>
+            <img src="glovepic.webp" alt="Baseball glove fundraiser board" class="glove-image" />
             <div id="spotsLayer"></div>
           </div>
 
