@@ -6,128 +6,281 @@
   <title>Roy Gayle Fill My Glove Fundraiser</title>
   <style>
     * { box-sizing: border-box; }
+
+    :root{
+      --bg-green-1:#0b2f18;
+      --bg-green-2:#1f6a38;
+      --navy:#0f4c81;
+      --navy-dark:#0b3357;
+      --maroon:#8b1e2d;
+      --gold:#facc15;
+      --gold-soft:#fde68a;
+      --card:#ffffff;
+      --muted:#64748b;
+      --line:#dbe4ee;
+      --soft:#f7fafc;
+      --shadow:0 18px 36px rgba(0,0,0,0.20);
+      --shadow-soft:0 12px 28px rgba(0,0,0,0.16);
+    }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #0f3b1f 0%, #1f6a38 100%);
       color: #1f2937;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent 20%),
+        radial-gradient(circle at top right, rgba(250,204,21,0.08), transparent 18%),
+        linear-gradient(180deg, var(--bg-green-1) 0%, var(--bg-green-2) 100%);
     }
+
     .page {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 24px;
     }
+
     .hero {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95)),
+        #ffffff;
+      border-radius: 28px;
+      padding: 30px 28px 24px;
+      box-shadow: var(--shadow);
       margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.55);
     }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-80px auto auto -80px;
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(15,76,129,0.18), transparent 68%);
+      pointer-events:none;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -60px -60px auto;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(139,30,45,0.14), transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero-inner{
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-kicker{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .hero-kicker .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(250,204,21,0.18);
+    }
+
     .hero h1 {
       margin: 0 0 10px;
       text-align: center;
-      font-size: 42px;
-      color: #0f4c81;
+      font-size: 46px;
+      line-height: 1.05;
+      color: var(--navy);
+      letter-spacing: -.02em;
     }
+
     .hero p {
-      margin: 0;
+      margin: 0 auto;
       text-align: center;
       font-size: 18px;
-      line-height: 1.5;
+      line-height: 1.55;
+      max-width: 860px;
+      color: #334155;
     }
+
+    .hero-badges{
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .hero-badge{
+      padding:9px 14px;
+      border-radius:999px;
+      background:#eff6ff;
+      color:var(--navy);
+      font-size:13px;
+      font-weight:700;
+      border:1px solid #dbeafe;
+    }
+
     .status-banner {
-      margin-top: 14px;
-      padding: 10px 14px;
-      border-radius: 12px;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
       font-size: 14px;
       text-align: center;
       background: #e8f1fa;
-      color: #0f4c81;
+      color: var(--navy);
+      font-weight: 700;
+      border: 1px solid #d9e8f6;
     }
+
     .leaderboard-panel {
       margin-top: 18px;
-      background: #ffffff;
-      border-radius: 20px;
+      margin-bottom: 24px;
+      background:
+        linear-gradient(180deg, #1f2937 0%, #111827 100%);
+      border: 4px solid #334155;
+      border-radius: 26px;
       padding: 18px;
-      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.28);
+      position: relative;
+      overflow: hidden;
     }
+
+    .leaderboard-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(250,204,21,0.07), transparent 20%, transparent 80%, rgba(250,204,21,0.07)),
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,255,255,0.02) 0,
+          rgba(255,255,255,0.02) 2px,
+          transparent 2px,
+          transparent 28px
+        );
+      pointer-events:none;
+    }
+
+    .leaderboard-inner{
+      position:relative;
+      z-index:1;
+    }
+
     .leaderboard-title {
       text-align: center;
-      margin: 0 0 12px;
-      font-size: 24px;
-      color: #0f4c81;
+      margin: 0 0 14px;
+      font-size: 30px;
+      color: #f8fafc;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      text-shadow: 0 0 14px rgba(255,255,255,0.06);
     }
+
     .leaderboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
+
     .leaderboard-box {
-      background: #f7fafc;
-      border: 1px solid #d9e2ec;
-      border-radius: 16px;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      border: 2px solid #475569;
+      border-radius: 18px;
       padding: 14px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
     }
+
     .leaderboard-box h3 {
       margin: 0 0 12px;
       font-size: 18px;
-      color: #0f4c81;
+      color: var(--gold);
       text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .06em;
     }
+
     .top-team-row {
       display: grid;
       grid-template-columns: 36px 1fr auto;
       gap: 10px;
       align-items: center;
-      background: #ffffff;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid #334155;
       border-radius: 12px;
       padding: 10px 12px;
       margin-bottom: 8px;
     }
+
     .top-team-rank {
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: #0f4c81;
-      color: #ffffff;
+      background: var(--gold);
+      color: #111827;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      font-weight: 800;
       font-size: 14px;
     }
+
     .top-team-name {
-      font-weight: bold;
+      font-weight: 700;
       font-size: 14px;
+      color: #f8fafc;
     }
+
     .top-team-sub {
-      color: #6b7280;
+      color: #93c5fd;
       font-size: 12px;
       margin-top: 2px;
     }
+
     .top-team-amount {
-      font-weight: bold;
-      color: #8b1e2d;
+      font-weight: 800;
+      color: #4ade80;
       font-size: 16px;
     }
+
     .topbar {
       display: grid;
-      grid-template-columns: 1.3fr .7fr;
+      grid-template-columns: 1.2fr .8fr;
       gap: 24px;
       margin-bottom: 24px;
     }
+
     .panel {
-      background: #ffffff;
-      border-radius: 20px;
+      background: var(--card);
+      border-radius: 24px;
       padding: 24px;
-      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255,255,255,0.45);
     }
+
     .panel h2 {
       margin: 0 0 16px;
       font-size: 28px;
       text-align: center;
+      color: #0f172a;
+      letter-spacing: -.02em;
     }
+
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -135,123 +288,168 @@
       gap: 10px;
       margin-bottom: 18px;
     }
+
     .controls button {
       border: none;
       border-radius: 999px;
-      padding: 10px 18px;
+      padding: 11px 18px;
       font-size: 15px;
-      font-weight: bold;
+      font-weight: 800;
       cursor: pointer;
       background: #e5eef8;
-      color: #0f4c81;
+      color: var(--navy);
+      box-shadow: 0 6px 12px rgba(15,76,129,0.08);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
     }
+
+    .controls button:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 16px rgba(15,76,129,0.12);
+    }
+
     .controls button.active {
-      background: #0f4c81;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
       color: #ffffff;
+      box-shadow: 0 10px 18px rgba(15,76,129,0.22);
     }
+
     .share-wrap {
       display: flex;
       gap: 10px;
       justify-content: center;
-      margin: 8px 0 18px;
+      margin: 10px 0 18px;
       flex-wrap: wrap;
     }
+
     .share-btn {
       border: none;
       border-radius: 999px;
-      padding: 10px 18px;
+      padding: 12px 18px;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 800;
       cursor: pointer;
-      background: #8b1e2d;
+      background: linear-gradient(180deg, var(--maroon) 0%, #6f1522 100%);
       color: #ffffff;
+      box-shadow: 0 10px 18px rgba(139,30,45,0.20);
+      transition: transform .15s ease, box-shadow .15s ease;
     }
+
+    .share-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 14px 20px rgba(139,30,45,0.24);
+    }
+
     .share-btn.secondary {
-      background: #0f4c81;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 18px rgba(15,76,129,0.20);
     }
+
     .share-message {
       text-align: center;
       font-size: 13px;
-      color: #0f4c81;
+      color: var(--navy);
       min-height: 18px;
       margin-bottom: 8px;
+      font-weight: 700;
     }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-bottom: 18px;
     }
+
     .stat {
-      background: #f7fafc;
-      border: 1px solid #d9e2ec;
-      border-radius: 16px;
-      padding: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 14px;
       text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
     }
+
     .stat .label {
-      font-size: 13px;
+      font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: .04em;
-      color: #6b7280;
-      margin-bottom: 4px;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
     }
+
     .stat .value {
-      font-size: 24px;
-      font-weight: bold;
-      color: #111827;
+      font-size: 26px;
+      font-weight: 900;
+      color: #0f172a;
     }
+
     .progress-wrap {
       margin-bottom: 14px;
     }
+
     .progress-label {
       display: flex;
       justify-content: space-between;
       font-size: 14px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       color: #374151;
+      font-weight: 700;
     }
+
     .progress {
-      height: 16px;
+      height: 18px;
       background: #e5e7eb;
       border-radius: 999px;
       overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
     }
+
     .progress-bar {
       height: 100%;
       width: 0;
-      background: linear-gradient(90deg, #8b1e2d 0%, #d16b76 100%);
+      background: linear-gradient(90deg, var(--maroon) 0%, #d16b76 100%);
       transition: width .25s ease;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.18);
     }
+
     .main {
       display: grid;
       grid-template-columns: 1.2fr .8fr;
       gap: 24px;
     }
+
     .glove-wrap {
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 720px;
       position: relative;
+      background:
+        radial-gradient(circle at center, rgba(15,76,129,0.04), transparent 40%);
+      border-radius: 20px;
     }
+
     .glove-board {
       position: relative;
       width: 640px;
       height: 700px;
     }
+
     .glove-title {
       position: absolute;
       top: 0;
       width: 100%;
       text-align: center;
-      font-size: 46px;
+      font-size: 48px;
       font-weight: 900;
       color: #8a5a12;
       letter-spacing: 1px;
       transform: rotate(-6deg);
       text-shadow: 0 2px 0 rgba(255,255,255,0.7);
     }
+
     .glove-svg {
       position: absolute;
       left: 50%;
@@ -259,8 +457,9 @@
       transform: translateX(-50%);
       width: 520px;
       height: 560px;
-      filter: drop-shadow(0 12px 18px rgba(0,0,0,0.2));
+      filter: drop-shadow(0 14px 20px rgba(0,0,0,0.20));
     }
+
     .spot {
       position: absolute;
       width: 72px;
@@ -276,17 +475,21 @@
       justify-content: center;
       cursor: pointer;
       transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.16);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.14);
     }
+
     .spot:hover { transform: scale(1.06); }
+
     .spot.selected {
-      outline: 5px solid #0f4c81;
+      outline: 5px solid var(--navy);
       transform: scale(1.08);
     }
+
     .spot.filled {
-      background: #8b1e2d;
+      background: var(--maroon);
       color: #ffffff;
     }
+
     .spot.filled::after {
       content: '✓';
       position: absolute;
@@ -295,7 +498,7 @@
       width: 26px;
       height: 26px;
       border-radius: 50%;
-      background: #0f4c81;
+      background: var(--navy);
       color: #fff;
       display: flex;
       align-items: center;
@@ -304,6 +507,7 @@
       font-weight: bold;
       border: 2px solid #fff;
     }
+
     .fill-celebration {
       position: absolute;
       inset: 0;
@@ -313,52 +517,63 @@
       pointer-events: none;
       z-index: 10;
     }
+
     .fill-celebration.show {
       display: flex;
       animation: popFade 2.4s ease forwards;
     }
+
     .fill-celebration-card {
-      background: rgba(255,255,255,0.95);
-      border: 4px solid #8b1e2d;
+      background: rgba(255,255,255,0.97);
+      border: 4px solid var(--maroon);
       border-radius: 24px;
       padding: 24px 28px;
       text-align: center;
       box-shadow: 0 16px 30px rgba(0,0,0,0.2);
     }
+
     .fill-celebration-card h3 {
       margin: 0 0 8px;
       font-size: 34px;
-      color: #8b1e2d;
+      color: var(--maroon);
     }
+
     .fill-celebration-card p {
       margin: 0;
       font-size: 18px;
-      color: #0f4c81;
+      color: var(--navy);
       font-weight: bold;
     }
+
     @keyframes popFade {
       0% { opacity: 0; transform: scale(.85); }
       15% { opacity: 1; transform: scale(1.03); }
       85% { opacity: 1; transform: scale(1); }
       100% { opacity: 0; transform: scale(1.04); }
     }
+
     .action-card {
       position: sticky;
       top: 20px;
     }
+
     .selected-amount {
-      font-size: 44px;
+      font-size: 48px;
       text-align: center;
       font-weight: 900;
-      color: #8b1e2d;
+      color: var(--maroon);
       margin: 10px 0 8px;
+      letter-spacing: -.02em;
     }
+
     .helper {
       text-align: center;
       color: #4b5563;
       line-height: 1.5;
       margin-bottom: 18px;
+      min-height: 44px;
     }
+
     .checkout {
       width: 100%;
       border: none;
@@ -367,33 +582,39 @@
       font-size: 18px;
       font-weight: 900;
       color: #ffffff;
-      background: #0f4c81;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
       cursor: pointer;
       margin-bottom: 12px;
+      box-shadow: 0 12px 20px rgba(15,76,129,0.20);
     }
+
     .checkout:disabled,
     .secondary:disabled {
       background: #9ca3af;
       color: #ffffff;
       cursor: not-allowed;
       border-color: #9ca3af;
+      box-shadow: none;
     }
+
     .secondary {
       width: 100%;
       border: 2px solid #d1d5db;
       border-radius: 16px;
       padding: 12px 16px;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 800;
       color: #374151;
       background: #ffffff;
       cursor: pointer;
       margin-bottom: 12px;
     }
+
     .admin-toggle-wrap {
       margin: 10px 0 4px;
       text-align: center;
     }
+
     .admin-link {
       background: none;
       border: none;
@@ -401,7 +622,9 @@
       font-size: 12px;
       cursor: pointer;
       text-decoration: underline;
+      font-weight: 700;
     }
+
     .admin-panel {
       display: none;
       background: #f7fafc;
@@ -410,15 +633,18 @@
       padding: 14px;
       margin-bottom: 12px;
     }
+
     .admin-panel.show {
       display: block;
     }
+
     .admin-panel h3 {
       margin: 0 0 10px;
       text-align: center;
-      color: #0f4c81;
+      color: var(--navy);
       font-size: 18px;
     }
+
     .admin-panel input {
       width: 100%;
       border: 1px solid #cbd5e1;
@@ -427,20 +653,24 @@
       margin-bottom: 10px;
       font-size: 14px;
     }
+
     .admin-status {
       font-size: 13px;
       text-align: center;
       min-height: 18px;
-      color: #0f4c81;
+      color: var(--navy);
       margin-bottom: 8px;
+      font-weight: 700;
     }
+
     .legend {
-      background: #f7fafc;
+      background: var(--soft);
       border: 1px solid #dbe4ee;
       border-radius: 16px;
       padding: 16px;
       margin-top: 10px;
     }
+
     .legend-row {
       display: flex;
       align-items: center;
@@ -448,6 +678,7 @@
       margin-bottom: 10px;
       font-size: 15px;
     }
+
     .legend-dot {
       width: 22px;
       height: 22px;
@@ -455,7 +686,9 @@
       border: 2px solid #3d1f0f;
       background: white;
     }
-    .legend-dot.red { background: #8b1e2d; border-color: #8b1e2d; }
+
+    .legend-dot.red { background: var(--maroon); border-color: var(--maroon); }
+
     .mini-note {
       margin-top: 16px;
       padding: 14px;
@@ -465,64 +698,82 @@
       color: #7c2d12;
       font-size: 14px;
       line-height: 1.5;
+      text-align:center;
+      font-weight:700;
     }
+
     .how-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
       margin-top: 10px;
     }
+
     .how-step {
       display: flex;
       gap: 12px;
       align-items: flex-start;
-      background: #f7fafc;
-      padding: 12px;
-      border-radius: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--line);
+      padding: 14px;
+      border-radius: 16px;
     }
+
     .how-number {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      background: #0f4c81;
+      background: var(--navy);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      font-weight: 800;
       font-size: 14px;
       flex-shrink: 0;
+      box-shadow: 0 8px 14px rgba(15,76,129,0.18);
     }
+
     .how-title {
-      font-weight: bold;
-      margin-bottom: 2px;
+      font-weight: 800;
+      margin-bottom: 3px;
+      color:#0f172a;
     }
+
     .how-text {
       font-size: 14px;
       color: #4b5563;
       line-height: 1.4;
     }
+
     .how-note {
       margin-top: 14px;
       font-size: 14px;
       text-align: center;
       color: #7c2d12;
       background: #fff7ed;
-      padding: 10px;
-      border-radius: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
     }
+
     @media (max-width: 980px) {
       .topbar, .main, .leaderboard-grid { grid-template-columns: 1fr; }
       .how-grid { grid-template-columns: 1fr; }
+
+      .hero h1 { font-size: 36px; }
+
       .glove-wrap {
         min-height: auto;
         overflow-x: auto;
         padding-bottom: 10px;
       }
+
       .glove-board {
         transform: scale(.88);
         transform-origin: top center;
       }
+
       .action-card { position: static; }
     }
   </style>
@@ -530,21 +781,36 @@
 <body>
   <div class="page">
     <div class="hero">
-      <h1>Roy Gayle Fill My Glove Fundraiser</h1>
-      <p>A fun digital fundraiser for Roy Gayle Baseball and Softball teams. Supporters choose a donation amount on the glove to help each team reach its $500 goal.</p>
-      <div class="status-banner" id="syncStatus">Connecting to Firebase...</div>
+      <div class="hero-inner">
+        <div class="hero-kicker">
+          <span class="dot"></span>
+          Roy Gayle Baseball & Softball
+          <span class="dot"></span>
+        </div>
+        <h1>Fill My Glove Fundraiser</h1>
+        <p>A live, shareable fundraiser for Roy Gayle teams. Supporters can choose a spot on the glove, donate through PayPal, and watch team progress update in real time.</p>
+        <div class="hero-badges">
+          <div class="hero-badge">Live Team Tracking</div>
+          <div class="hero-badge">Division Leaderboards</div>
+          <div class="hero-badge">Shareable Team Links</div>
+          <div class="hero-badge">$500 Team Goals</div>
+        </div>
+        <div class="status-banner" id="syncStatus">Connecting to Firebase...</div>
+      </div>
     </div>
 
     <div class="leaderboard-panel">
-      <h2 class="leaderboard-title">Fundraising Leaders</h2>
-      <div class="leaderboard-grid">
-        <div class="leaderboard-box">
-          <h3>Top 5 Teams Overall</h3>
-          <div id="leaderboardList"></div>
-        </div>
-        <div class="leaderboard-box">
-          <h3>Division Leaders</h3>
-          <div id="divisionLeaderboardList"></div>
+      <div class="leaderboard-inner">
+        <h2 class="leaderboard-title">Fundraising Leaders</h2>
+        <div class="leaderboard-grid">
+          <div class="leaderboard-box">
+            <h3>Top 5 Teams Overall</h3>
+            <div id="leaderboardList"></div>
+          </div>
+          <div class="leaderboard-box">
+            <h3>Division Leaders</h3>
+            <div id="divisionLeaderboardList"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -553,13 +819,16 @@
       <div class="panel">
         <h2>Choose a Division</h2>
         <div class="controls" id="divisionButtons"></div>
+
         <h2 style="font-size:22px; margin-top:10px;">Choose a Team</h2>
         <div class="controls" id="teamButtons"></div>
+
         <div class="share-wrap">
           <button class="share-btn" id="shareButton">Share This Team</button>
           <button class="share-btn secondary" id="copyLinkButton">Copy Team Link</button>
         </div>
         <div class="share-message" id="shareMessage"></div>
+
         <div class="stats">
           <div class="stat">
             <div class="label">Goal</div>
@@ -574,6 +843,7 @@
             <div class="value" id="spotsLeftValue">0</div>
           </div>
         </div>
+
         <div class="progress-wrap">
           <div class="progress-label">
             <span>Fundraising Progress</span>
@@ -622,6 +892,7 @@
             </svg>
             <div id="spotsLayer"></div>
           </div>
+
           <div class="fill-celebration" id="fillCelebration">
             <div class="fill-celebration-card">
               <h3>🎉 Glove Filled!</h3>
@@ -635,11 +906,14 @@
         <h2>Selected Donation</h2>
         <div class="selected-amount" id="selectedAmount">--</div>
         <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
+
         <button class="checkout" id="checkoutButton" disabled>Continue to Donate</button>
         <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
+
         <div class="admin-toggle-wrap">
           <button class="admin-link" id="adminToggle">Admin</button>
         </div>
+
         <div class="admin-panel" id="adminPanel">
           <h3>Admin Tools</h3>
           <input type="password" id="adminPassword" placeholder="Enter admin password" />
@@ -648,10 +922,12 @@
           <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
           <button class="secondary" id="resetTeamButton" disabled>Reset Current Team</button>
         </div>
+
         <div class="legend">
           <div class="legend-row"><span class="legend-dot"></span> Open donation spot</div>
           <div class="legend-row"><span class="legend-dot red"></span> Filled donation spot</div>
         </div>
+
         <div class="mini-note">Thank you for supporting Roy Gayle Baseball and Softball. Every filled spot helps a team move closer to its fundraising goal.</div>
       </div>
     </div>
@@ -872,9 +1148,11 @@
     function createLeaderboardRow(rankText, name, subtext, amount) {
       const row = document.createElement('div');
       row.className = 'top-team-row';
+
       const rank = document.createElement('div');
       rank.className = 'top-team-rank';
       rank.textContent = rankText;
+
       const nameWrap = document.createElement('div');
       const teamName = document.createElement('div');
       teamName.className = 'top-team-name';
@@ -884,9 +1162,11 @@
       sub.textContent = subtext;
       nameWrap.appendChild(teamName);
       nameWrap.appendChild(sub);
+
       const amt = document.createElement('div');
       amt.className = 'top-team-amount';
       amt.textContent = `$${amount}`;
+
       row.appendChild(rank);
       row.appendChild(nameWrap);
       row.appendChild(amt);
@@ -897,18 +1177,31 @@
       const ranked = teams.map(team => ({ ...team, raised: calcRaised(team.id) }))
         .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name))
         .slice(0, 5);
+
       leaderboardList.innerHTML = '';
       ranked.forEach((team, index) => {
-        leaderboardList.appendChild(createLeaderboardRow(String(index + 1), `${team.division} — ${team.name}`, `${Math.min(100, Math.round((team.raised / 500) * 100))}% of goal filled`, team.raised));
+        leaderboardList.appendChild(
+          createLeaderboardRow(
+            String(index + 1),
+            `${team.division} — ${team.name}`,
+            `${Math.min(100, Math.round((team.raised / 500) * 100))}% of goal filled`,
+            team.raised
+          )
+        );
       });
 
       divisionLeaderboardList.innerHTML = '';
       divisions.forEach((division) => {
-        const teamsInDivision = teams.filter(team => team.division === division).map(team => ({ ...team, raised: calcRaised(team.id) }))
+        const teamsInDivision = teams
+          .filter(team => team.division === division)
+          .map(team => ({ ...team, raised: calcRaised(team.id) }))
           .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
+
         const leader = teamsInDivision[0];
         if (leader) {
-          divisionLeaderboardList.appendChild(createLeaderboardRow('★', division, leader.name, leader.raised));
+          divisionLeaderboardList.appendChild(
+            createLeaderboardRow('★', division, leader.name, leader.raised)
+          );
         }
       });
     }
@@ -919,6 +1212,7 @@
       const raised = calcRaised(team.id);
       const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
       const pct = Math.min(100, Math.round((raised / goal) * 100));
+
       goalValue.textContent = `$${goal}`;
       raisedValue.textContent = `$${raised}`;
       spotsLeftValue.textContent = spotsLeft;
@@ -930,6 +1224,7 @@
       const team = getActiveTeam();
       const filled = getFilledForTeam(team.id);
       spotsLayer.innerHTML = '';
+
       baseSpots.forEach(spot => {
         const div = document.createElement('button');
         div.className = 'spot';
@@ -937,19 +1232,24 @@
         div.style.left = `${spot.x}px`;
         div.style.top = `${spot.y}px`;
         div.type = 'button';
+
         const isFilled = filled.includes(spot.id);
         const isSelected = selectedSpotId === spot.id;
+
         if (isFilled) {
           div.classList.add('filled');
           div.setAttribute('aria-label', `$${spot.amount} donation spot filled`);
         } else {
           div.setAttribute('aria-label', `$${spot.amount} donation spot available`);
         }
+
         div.addEventListener('click', () => {
           selectedSpotId = spot.id;
           renderAll();
         });
+
         if (isSelected) div.classList.add('selected');
+
         spotsLayer.appendChild(div);
       });
     }
@@ -957,6 +1257,7 @@
     function renderSelection() {
       const team = getActiveTeam();
       const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
+
       if (!selectedSpot) {
         selectedAmount.textContent = '--';
         selectedHelper.textContent = 'Select an open spot on the glove.';
@@ -965,10 +1266,14 @@
         unmarkPaidButton.disabled = true;
         return;
       }
+
       const isFilled = getFilledForTeam(team.id).includes(selectedSpot.id);
       selectedAmount.textContent = `$${selectedSpot.amount}`;
+
       if (isFilled) {
-        selectedHelper.textContent = adminMode ? `${team.name} spot is already filled. Admin mode can reopen it.` : `${team.name} spot is already filled.`;
+        selectedHelper.textContent = adminMode
+          ? `${team.name} spot is already filled. Admin mode can reopen it.`
+          : `${team.name} spot is already filled.`;
         checkoutButton.disabled = true;
         markPaidButton.disabled = true;
         unmarkPaidButton.disabled = !adminMode;
@@ -985,6 +1290,7 @@
       unmarkPaidButton.style.display = adminMode ? 'block' : 'none';
       resetTeamButton.style.display = adminMode ? 'block' : 'none';
       resetTeamButton.disabled = !adminMode;
+
       if (adminMode) {
         adminStatus.textContent = 'Admin mode unlocked.';
         adminStatus.style.color = '#0f4c81';
@@ -1016,6 +1322,7 @@
       const team = getActiveTeam();
       const url = getTeamUrl(team);
       const text = `Support ${team.name} in the Roy Gayle Fill My Glove Fundraiser. Help us reach our $500 team goal. ${url}`;
+
       if (navigator.share) {
         try {
           await navigator.share({ title: `Support ${team.name}`, text, url });
