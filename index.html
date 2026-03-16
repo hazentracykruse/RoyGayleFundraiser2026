@@ -14,7 +14,6 @@
       --navy-dark:#0b3357;
       --maroon:#8b1e2d;
       --gold:#facc15;
-      --gold-soft:#fde68a;
       --card:#ffffff;
       --muted:#64748b;
       --line:#dbe4ee;
@@ -420,128 +419,123 @@
       gap: 24px;
     }
 
-.glove-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 860px;
-  position: relative;
-  background:
-    radial-gradient(circle at center, rgba(15,76,129,0.04), transparent 40%);
-  border-radius: 20px;
-}
+    .glove-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 900px;
+      position: relative;
+      background:
+        radial-gradient(circle at center, rgba(15,76,129,0.04), transparent 40%);
+      border-radius: 20px;
+    }
 
-.glove-board {
-  position: relative;
-  width: 760px;
-  height: 860px;
-}
+    .glove-board {
+      position: relative;
+      width: 760px;
+      height: 860px;
+    }
 
-.glove-title {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 56px;
-  font-weight: 900;
-  color: #8a5a12;
-  letter-spacing: 1px;
-  transform: rotate(-6deg);
-  text-shadow: 0 2px 0 rgba(255,255,255,0.7);
-}
+    .glove-title {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 56px;
+      font-weight: 900;
+      color: #8a5a12;
+      letter-spacing: 1px;
+      transform: rotate(-6deg);
+      text-shadow: 0 2px 0 rgba(255,255,255,0.7);
+    }
 
-.glove-svg {
-  position: absolute;
-  left: 50%;
-  top: 110px;
-  transform: translateX(-50%);
-  width: 620px;
-  height: 670px;
-  filter: drop-shadow(0 14px 20px rgba(0,0,0,0.20));
-}
+    .glove-svg {
+      position: absolute;
+      left: 50%;
+      top: 110px;
+      transform: translateX(-50%);
+      width: 620px;
+      height: 670px;
+      filter: drop-shadow(0 14px 20px rgba(0,0,0,0.20));
+    }
 
-  .spot {
-  position: absolute;
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  border: 3px solid #d1d5db;
-  background:
-    radial-gradient(circle at 30% 30%, #ffffff 0%, #f8fafc 70%, #e5e7eb 100%);
-  color: #111827;
-  font-weight: 900;
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
-  box-shadow: 0 8px 14px rgba(0,0,0,0.16);
-  overflow: hidden;
-}
+    .spot {
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      font-weight: 900;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+      box-shadow: 0 8px 14px rgba(0,0,0,0.16);
+      overflow: hidden;
+      color: #111827;
+      background-clip: padding-box;
+    }
 
-.spot::before,
-.spot::after {
-  content: "";
-  position: absolute;
-  width: 26px;
-  height: 52px;
-  border: 3px solid #c2410c;
-  border-color: transparent transparent transparent #c2410c;
-  border-radius: 50%;
-  top: 10px;
-}
+    .spot-label {
+      position: relative;
+      z-index: 2;
+    }
 
-.spot::before {
-  left: 6px;
-  transform: rotate(-18deg);
-}
+    .spot.ball-baseball {
+      border: 3px solid #d1d5db;
+      background:
+        radial-gradient(circle at 30% 30%, #ffffff 0%, #f8fafc 70%, #e5e7eb 100%);
+    }
 
-.spot::after {
-  right: 6px;
-  transform: scaleX(-1) rotate(-18deg);
-}
+    .spot.ball-baseball::before,
+    .spot.ball-baseball::after {
+      content: "";
+      position: absolute;
+      width: 24px;
+      height: 50px;
+      border: 3px solid #c2410c;
+      border-color: transparent transparent transparent #c2410c;
+      border-radius: 50%;
+      top: 10px;
+    }
 
-.spot:hover {
-  transform: scale(1.06);
-}
+    .spot.ball-baseball::before {
+      left: 6px;
+      transform: rotate(-18deg);
+    }
 
-.spot.selected {
-  outline: 5px solid #0f4c81;
-  transform: scale(1.08);
-}
+    .spot.ball-baseball::after {
+      right: 6px;
+      transform: scaleX(-1) rotate(-18deg);
+    }
 
-.spot.filled {
-  background:
-    radial-gradient(circle at 30% 30%, #b91c1c 0%, #8b1e2d 70%, #6f1522 100%);
-  color: #ffffff;
-  border-color: #7f1d1d;
-}
+    .spot.ball-softball {
+      border: 3px solid #d4a514;
+      background:
+        radial-gradient(circle at 30% 30%, #fff7c2 0%, #fde68a 70%, #facc15 100%);
+    }
 
-.spot.filled::before,
-.spot.filled::after {
-  border-color: transparent transparent transparent rgba(255,255,255,0.7);
-}
+    .spot.ball-softball::before,
+    .spot.ball-softball::after {
+      content: "";
+      position: absolute;
+      width: 24px;
+      height: 50px;
+      border: 3px solid #dc2626;
+      border-color: transparent transparent transparent #dc2626;
+      border-radius: 50%;
+      top: 10px;
+    }
 
-.spot.filled::after {
-  content: "✓";
-  position: absolute;
-  right: -4px;
-  bottom: -4px;
-  top: auto;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #0f4c81;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: bold;
-  border: 2px solid #fff;
-  transform: none;
-}
+    .spot.ball-softball::before {
+      left: 6px;
+      transform: rotate(-18deg);
+    }
+
+    .spot.ball-softball::after {
+      right: 6px;
+      transform: scaleX(-1) rotate(-18deg);
     }
 
     .spot:hover { transform: scale(1.06); }
@@ -552,26 +546,18 @@
     }
 
     .spot.filled {
-      background: var(--maroon);
+      background: radial-gradient(circle at 30% 30%, #b91c1c 0%, #8b1e2d 70%, #6f1522 100%);
       color: #ffffff;
+      border-color: #7f1d1d;
     }
 
+    .spot.filled::before,
     .spot.filled::after {
-      content: '✓';
-      position: absolute;
-      right: -4px;
-      bottom: -4px;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: bold;
-      border: 2px solid #fff;
+      border-color: transparent transparent transparent rgba(255,255,255,0.7);
+    }
+
+    .spot.filled .spot-label {
+      color: #ffffff;
     }
 
     .fill-celebration {
@@ -826,7 +812,6 @@
     @media (max-width: 980px) {
       .topbar, .main, .leaderboard-grid { grid-template-columns: 1fr; }
       .how-grid { grid-template-columns: 1fr; }
-
       .hero h1 { font-size: 36px; }
 
       .glove-wrap {
@@ -836,7 +821,7 @@
       }
 
       .glove-board {
-        transform: scale(.88);
+        transform: scale(.82);
         transform-origin: top center;
       }
 
@@ -1017,50 +1002,51 @@
     const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
     const ADMIN_PASSWORD = 'roygayle2026';
 
-   const baseSpots = [
-  { id: 1, amount: 10, x: 250, y: 102 },
-  { id: 2, amount: 10, x: 315, y: 102 },
-  { id: 3, amount: 15, x: 382, y: 110 },
-  { id: 4, amount: 10, x: 438, y: 126 },
+    const baseSpots = [
+      { id: 1, amount: 10, x: 295, y: 132 },
+      { id: 2, amount: 10, x: 372, y: 132 },
+      { id: 3, amount: 15, x: 451, y: 142 },
+      { id: 4, amount: 10, x: 517, y: 161 },
 
-  { id: 5, amount: 10, x: 180, y: 148 },
-  { id: 6, amount: 15, x: 246, y: 162 },
-  { id: 7, amount: 20, x: 314, y: 170 },
-  { id: 8, amount: 15, x: 382, y: 182 },
-  { id: 9, amount: 10, x: 445, y: 198 },
+      { id: 5, amount: 10, x: 212, y: 187 },
+      { id: 6, amount: 15, x: 290, y: 203 },
+      { id: 7, amount: 20, x: 371, y: 213 },
+      { id: 8, amount: 15, x: 451, y: 227 },
+      { id: 9, amount: 10, x: 525, y: 246 },
 
-  { id: 10, amount: 10, x: 150, y: 215 },
-  { id: 11, amount: 10, x: 214, y: 232 },
-  { id: 12, amount: 15, x: 282, y: 248 },
-  { id: 13, amount: 20, x: 348, y: 264 },
-  { id: 14, amount: 15, x: 410, y: 280 },
-  { id: 15, amount: 10, x: 462, y: 295 },
+      { id: 10, amount: 10, x: 177, y: 266 },
+      { id: 11, amount: 10, x: 253, y: 286 },
+      { id: 12, amount: 15, x: 333, y: 305 },
+      { id: 13, amount: 20, x: 411, y: 324 },
+      { id: 14, amount: 15, x: 484, y: 342 },
+      { id: 15, amount: 10, x: 545, y: 360 },
 
-  { id: 16, amount: 10, x: 122, y: 286 },
-  { id: 17, amount: 10, x: 182, y: 306 },
-  { id: 18, amount: 15, x: 248, y: 324 },
-  { id: 19, amount: 25, x: 316, y: 340 },
-  { id: 20, amount: 15, x: 382, y: 354 },
-  { id: 21, amount: 10, x: 440, y: 368 },
+      { id: 16, amount: 10, x: 144, y: 349 },
+      { id: 17, amount: 10, x: 215, y: 373 },
+      { id: 18, amount: 15, x: 293, y: 394 },
+      { id: 19, amount: 25, x: 373, y: 413 },
+      { id: 20, amount: 15, x: 451, y: 430 },
+      { id: 21, amount: 10, x: 519, y: 446 },
 
-  { id: 22, amount: 10, x: 116, y: 356 },
-  { id: 23, amount: 10, x: 170, y: 388 },
-  { id: 24, amount: 15, x: 232, y: 406 },
-  { id: 25, amount: 20, x: 294, y: 424 },
-  { id: 26, amount: 15, x: 356, y: 438 },
-  { id: 27, amount: 10, x: 418, y: 446 },
-  { id: 28, amount: 10, x: 470, y: 426 },
+      { id: 22, amount: 10, x: 137, y: 432 },
+      { id: 23, amount: 10, x: 201, y: 470 },
+      { id: 24, amount: 15, x: 274, y: 491 },
+      { id: 25, amount: 20, x: 347, y: 512 },
+      { id: 26, amount: 15, x: 420, y: 529 },
+      { id: 27, amount: 10, x: 493, y: 538 },
+      { id: 28, amount: 10, x: 555, y: 515 },
 
-  { id: 29, amount: 10, x: 150, y: 458 },
-  { id: 30, amount: 10, x: 206, y: 484 },
-  { id: 31, amount: 25, x: 266, y: 502 },
-  { id: 32, amount: 10, x: 330, y: 500 },
-  { id: 33, amount: 10, x: 392, y: 490 },
-  { id: 34, amount: 10, x: 446, y: 474 },
+      { id: 29, amount: 10, x: 177, y: 552 },
+      { id: 30, amount: 10, x: 243, y: 583 },
+      { id: 31, amount: 25, x: 314, y: 604 },
+      { id: 32, amount: 10, x: 389, y: 602 },
+      { id: 33, amount: 10, x: 463, y: 590 },
+      { id: 34, amount: 10, x: 526, y: 571 },
 
-  { id: 35, amount: 30, x: 230, y: 552 },
-  { id: 36, amount: 30, x: 332, y: 548 }
-];
+      { id: 35, amount: 30, x: 271, y: 663 },
+      { id: 36, amount: 30, x: 392, y: 659 }
+    ];
+
     const teams = [
       { id: 'pony-baseball-14u-ponds', division: '14U Pony Baseball', name: 'Ponds', paymentUrl: PAYPAL_DONATE_URL },
       { id: 'pony-baseball-14u-oregon-j-hawks', division: '14U Pony Baseball', name: 'Oregon J Hawks', paymentUrl: PAYPAL_DONATE_URL },
@@ -1308,15 +1294,21 @@
     function renderSpots() {
       const team = getActiveTeam();
       const filled = getFilledForTeam(team.id);
+      const isSoftball = team.division.toLowerCase().includes('softball');
+
       spotsLayer.innerHTML = '';
 
       baseSpots.forEach(spot => {
         const div = document.createElement('button');
-        div.className = 'spot';
-        div.textContent = `$${spot.amount}`;
+        div.className = `spot ${isSoftball ? 'ball-softball' : 'ball-baseball'}`;
         div.style.left = `${spot.x}px`;
         div.style.top = `${spot.y}px`;
         div.type = 'button';
+
+        const label = document.createElement('span');
+        label.className = 'spot-label';
+        label.textContent = `$${spot.amount}`;
+        div.appendChild(label);
 
         const isFilled = filled.includes(spot.id);
         const isSelected = selectedSpotId === spot.id;
