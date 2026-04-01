@@ -23,11 +23,11 @@
       --shadow-soft:0 12px 28px rgba(0,0,0,0.16);
       --venmo:#008CFF;
       --venmo-dark:#0077d9;
-      --success:#15803d;
+      --success:#166534;
       --success-soft:#dcfce7;
-      --warning:#b45309;
+      --warning:#92400e;
       --warning-soft:#fef3c7;
-      --danger:#b91c1c;
+      --danger:#991b1b;
       --danger-soft:#fee2e2;
     }
 
@@ -47,7 +47,7 @@
       padding: 24px;
     }
 
-    .hero {
+    .hero, .team-hero {
       position: relative;
       overflow: hidden;
       background:
@@ -60,7 +60,8 @@
       border: 1px solid rgba(255,255,255,0.55);
     }
 
-    .hero::before{
+    .hero::before,
+    .team-hero::before{
       content:"";
       position:absolute;
       inset:-80px auto auto -80px;
@@ -71,7 +72,8 @@
       pointer-events:none;
     }
 
-    .hero::after{
+    .hero::after,
+    .team-hero::after{
       content:"";
       position:absolute;
       inset:auto -60px -60px auto;
@@ -82,7 +84,8 @@
       pointer-events:none;
     }
 
-    .hero-inner{
+    .hero-inner,
+    .team-hero-inner{
       position: relative;
       z-index: 1;
     }
@@ -111,10 +114,9 @@
     .selected-amount,
     .leaderboard-box h3,
     .how-title,
-    .team-hero-name,
-    .team-hero-division,
-    .progress-card-title,
-    .section-label {
+    .team-name,
+    .status-pill,
+    .team-support-line {
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
       text-transform: uppercase;
       letter-spacing: .04em;
@@ -130,7 +132,8 @@
       text-shadow: 0 2px 0 rgba(255,255,255,0.65);
     }
 
-    .hero p {
+    .hero p,
+    .team-hero p {
       margin: 0 auto;
       text-align: center;
       font-size: 18px;
@@ -140,7 +143,8 @@
       font-weight: 600;
     }
 
-    .hero-badges{
+    .hero-badges,
+    .team-badges{
       margin-top:18px;
       display:flex;
       justify-content:center;
@@ -148,7 +152,8 @@
       gap:10px;
     }
 
-    .hero-badge{
+    .hero-badge,
+    .team-badge{
       padding:10px 15px;
       border-radius:999px;
       background:#eff6ff;
@@ -173,6 +178,222 @@
       border: 1px solid #d9e8f6;
       text-transform: uppercase;
       letter-spacing: .04em;
+    }
+
+    .view-toggle-wrap {
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin: 0 0 18px;
+    }
+
+    .view-toggle {
+      border:none;
+      border-radius:999px;
+      padding:12px 18px;
+      background: linear-gradient(180deg, #eef5ff 0%, #dbeafe 100%);
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 14px rgba(15,76,129,0.10);
+      text-transform: uppercase;
+      letter-spacing:.06em;
+    }
+
+    .view-toggle.active {
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
+      color:#fff;
+    }
+
+    .team-hero {
+      display:none;
+      padding-top: 28px;
+    }
+
+    body.team-mode .team-hero {
+      display:block;
+    }
+
+    body.team-mode .hero,
+    body.team-mode .leaderboard-panel,
+    body.team-mode .topbar {
+      display:none;
+    }
+
+    .team-hero-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .team-hero-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .team-back-btn,
+    .team-browse-btn {
+      border:none;
+      border-radius:999px;
+      padding:12px 18px;
+      background: linear-gradient(180deg, #eef5ff 0%, #dbeafe 100%);
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 14px rgba(15,76,129,0.10);
+      text-transform: uppercase;
+      letter-spacing:.06em;
+    }
+
+    .team-browse-btn {
+      background: linear-gradient(180deg, var(--maroon) 0%, #6f1522 100%);
+      color:#fff;
+      box-shadow: 0 10px 18px rgba(139,30,45,0.18);
+    }
+
+    .team-sport-tag {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#eff6ff;
+      color:var(--navy);
+      border:1px solid #dbeafe;
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:900;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:12px;
+    }
+
+    .team-name {
+      margin:0 0 8px;
+      font-size: clamp(34px, 5vw, 58px);
+      color: var(--navy);
+      line-height: 1;
+      text-align:left;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.65);
+    }
+
+    .team-support-line {
+      font-size:18px;
+      color: var(--maroon);
+      margin-bottom:10px;
+      text-align:left;
+    }
+
+    .team-copy {
+      margin:0;
+      max-width: 780px;
+      text-align:left !important;
+      font-size:17px !important;
+    }
+
+    .team-summary-grid {
+      margin-top:20px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:14px;
+    }
+
+    .team-summary-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 2px solid #dbe4ee;
+      border-radius: 20px;
+      padding: 16px 14px;
+      text-align:center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .team-summary-card .mini-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: 7px;
+      font-weight: 900;
+    }
+
+    .team-summary-card .mini-value {
+      font-size: 32px;
+      font-weight: 900;
+      color: #0f172a;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      letter-spacing: .04em;
+      line-height: 1.05;
+    }
+
+    .team-summary-card .mini-sub {
+      margin-top:6px;
+      font-size:12px;
+      color:#64748b;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .team-progress-bar-wrap{
+      margin-top:18px;
+    }
+
+    .team-progress-note{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:14px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#7c2d12;
+      font-size:14px;
+      line-height:1.5;
+      text-align:center;
+      font-weight:800;
+    }
+
+    .status-pill {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.08em;
+      border:1px solid transparent;
+      min-width: 140px;
+    }
+
+    .status-pill.started {
+      color: var(--danger);
+      background: var(--danger-soft);
+      border-color: #fecaca;
+    }
+
+    .status-pill.halfway {
+      color: var(--warning);
+      background: var(--warning-soft);
+      border-color: #fde68a;
+    }
+
+    .status-pill.almost {
+      color: var(--success);
+      background: var(--success-soft);
+      border-color: #bbf7d0;
+    }
+
+    .status-pill.goal {
+      color: #fff;
+      background: linear-gradient(180deg, var(--maroon) 0%, #6f1522 100%);
+      border-color: #6f1522;
+      box-shadow: 0 10px 18px rgba(139,30,45,0.18);
     }
 
     .leaderboard-panel {
@@ -204,10 +425,7 @@
       pointer-events:none;
     }
 
-    .leaderboard-inner{
-      position:relative;
-      z-index:1;
-    }
+    .leaderboard-inner{ position:relative; z-index:1; }
 
     .leaderboard-title {
       text-align: center;
@@ -311,12 +529,8 @@
       letter-spacing: .05em;
     }
 
-    .section-label {
-      font-size: 22px;
-      margin-top: 10px;
-      text-align: center;
-      color: #0f172a;
-    }
+    .how-art-wrap{ text-align:center; margin: 0 0 16px; }
+    .how-art-img{ width: 100%; max-width: 360px; height: auto; display: inline-block; opacity: 0.95; }
 
     .controls {
       display: flex;
@@ -352,251 +566,132 @@
       box-shadow: 0 10px 18px rgba(15,76,129,0.22);
     }
 
-    .team-hero-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 22px;
-      padding: 22px;
-      margin: 6px 0 18px;
-      background:
-        linear-gradient(135deg, rgba(15,76,129,0.98), rgba(11,51,87,0.96));
-      color: #ffffff;
-      box-shadow: 0 16px 28px rgba(15,76,129,0.18);
-    }
-
-    .team-hero-card.softball {
-      background:
-        linear-gradient(135deg, rgba(139,30,45,0.98), rgba(111,21,34,0.96));
-      box-shadow: 0 16px 28px rgba(139,30,45,0.18);
-    }
-
-    .team-hero-card::before {
-      content: "";
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      right: -70px;
-      top: -70px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      pointer-events: none;
-    }
-
-    .team-hero-card::after {
-      content: "";
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      left: -50px;
-      bottom: -60px;
-      border-radius: 50%;
-      background: rgba(250,204,21,0.12);
-      pointer-events: none;
-    }
-
-    .team-hero-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .team-hero-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .team-hero-sport {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.15);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .team-hero-name {
-      font-size: 34px;
-      line-height: 1;
-      margin: 0 0 8px;
-      color: #ffffff;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.10);
-    }
-
-    .team-hero-division {
-      font-size: 18px;
-      color: #dbeafe;
-      margin: 0 0 10px;
-    }
-
-    .team-hero-copy {
-      margin: 0;
-      color: rgba(255,255,255,0.95);
-      font-size: 15px;
-      line-height: 1.55;
-      font-weight: 700;
-      max-width: 760px;
-    }
-
-    .team-status-pill {
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.14);
-    }
-
-    .team-status-pill.just-started { background: rgba(255,255,255,0.14); color: #ffffff; }
-    .team-status-pill.building { background: rgba(250,204,21,0.18); color: #fef3c7; }
-    .team-status-pill.halfway { background: rgba(34,197,94,0.18); color: #dcfce7; }
-    .team-status-pill.almost { background: rgba(255,255,255,0.18); color: #ffffff; }
-    .team-status-pill.goal { background: rgba(250,204,21,0.22); color: #fef3c7; }
-
-    .team-meta-grid {
+    .team-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .team-meta-box {
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 16px;
-      padding: 14px;
-      text-align: center;
-      backdrop-filter: blur(3px);
-    }
-
-    .team-meta-label {
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: rgba(255,255,255,0.82);
-      margin-bottom: 6px;
-    }
-
-    .team-meta-value {
-      font-size: 26px;
-      font-weight: 900;
-      color: #ffffff;
-      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-      letter-spacing: .04em;
-    }
-
-    .progress-card {
-      border-radius: 22px;
-      border: 1px solid #dbe4ee;
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      padding: 18px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
       margin-bottom: 18px;
     }
 
-    .progress-card-top {
+    .team-card {
+      border: 2px solid #dbe4ee;
+      border-radius: 20px;
+      padding: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: 0 10px 22px rgba(15,76,129,0.08);
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
+      text-align: left;
+    }
+
+    .team-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 26px rgba(15,76,129,0.14);
+      border-color: #bfdbfe;
+    }
+
+    .team-card.active {
+      background: linear-gradient(180deg, #0f4c81 0%, #0b3357 100%);
+      border-color: #0b3357;
+      box-shadow: 0 16px 28px rgba(15,76,129,0.24);
+    }
+
+    .team-card-head {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
     }
 
-    .progress-card-title {
-      font-size: 26px;
+    .team-card-name {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.15;
       color: #0f172a;
-      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: .03em;
     }
 
-    .progress-card-note {
-      color: #475569;
-      font-size: 14px;
-      font-weight: 700;
-      margin: 0 0 14px;
-      line-height: 1.45;
+    .team-card.active .team-card-name,
+    .team-card.active .team-card-division,
+    .team-card.active .team-card-status,
+    .team-card.active .team-card-meta,
+    .team-card.active .team-card-pill {
+      color: #ffffff;
     }
 
-    .progress-callouts {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .progress-callout {
-      border-radius: 16px;
-      padding: 14px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      text-align: center;
-    }
-
-    .progress-callout .label {
+    .team-card-pill {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: var(--navy);
       font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: .12em;
-      color: var(--muted);
-      margin-bottom: 6px;
+      letter-spacing: .08em;
+      border: 1px solid #dbeafe;
     }
 
-    .progress-callout .value {
-      font-size: 28px;
-      font-weight: 900;
-      color: #0f172a;
-      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-      letter-spacing: .04em;
+    .team-card.active .team-card-pill {
+      background: rgba(255,255,255,0.14);
+      border-color: rgba(255,255,255,0.2);
     }
 
-    .progress-wrap {
-      margin-bottom: 14px;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: #374151;
+    .team-card-division {
+      font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: .04em;
+      letter-spacing: .08em;
+      color: #64748b;
+      margin-bottom: 10px;
     }
 
-    .progress {
-      height: 22px;
+    .team-card-status {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--maroon);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 10px;
+    }
+
+    .team-card-progress {
+      height: 12px;
       background: #e5e7eb;
       border-radius: 999px;
       overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
-      border: 1px solid #cbd5e1;
+      margin-bottom: 10px;
+      border: 1px solid #dbe4ee;
     }
 
-    .progress-bar {
+    .team-card-progress-bar {
       height: 100%;
       width: 0;
       background: linear-gradient(90deg, var(--maroon) 0%, #d16b76 100%);
-      transition: width .25s ease;
-      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.18);
+      border-radius: 999px;
+    }
+
+    .team-card-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    .team-card.active .team-card-progress {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.16);
     }
 
     .share-wrap {
       display: flex;
       gap: 10px;
       justify-content: center;
-      margin: 10px 0 10px;
+      margin: 10px 0 18px;
       flex-wrap: wrap;
     }
 
@@ -637,21 +732,68 @@
       letter-spacing: .04em;
     }
 
-    .how-art-wrap{
-      text-align:center;
-      margin: 0 0 16px;
-    }
-
-    .how-art-img{
-      width: 100%;
-      max-width: 360px;
-      height: auto;
-      display: inline-block;
-      opacity: 0.95;
-    }
-
     .stats {
-      display: none;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 2px solid #dbe4ee;
+      border-radius: 18px;
+      padding: 16px 14px;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .stat .label,
+    .mini-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 900;
+    }
+
+    .stat .value {
+      font-size: 28px;
+      font-weight: 900;
+      color: #0f172a;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      letter-spacing: .04em;
+    }
+
+    .progress-wrap { margin-bottom: 14px; }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #374151;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .progress {
+      height: 20px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+      border: 1px solid #cbd5e1;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--maroon) 0%, #d16b76 100%);
+      transition: width .25s ease;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.18);
     }
 
     .main {
@@ -670,6 +812,10 @@
         radial-gradient(circle at center, rgba(15,76,129,0.04), transparent 40%);
       border-radius: 20px;
       overflow: hidden;
+    }
+
+    body.team-mode .glove-wrap {
+      min-height: 820px;
     }
 
     .glove-board {
@@ -706,11 +852,7 @@
       pointer-events: none;
     }
 
-    #spotsLayer {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-    }
+    #spotsLayer { position: absolute; inset: 0; z-index: 2; }
 
     .spot {
       position: absolute;
@@ -730,12 +872,7 @@
       background-clip: padding-box;
     }
 
-    .spot-label {
-      position: relative;
-      z-index: 2;
-      font-weight: 900;
-      letter-spacing: .02em;
-    }
+    .spot-label { position: relative; z-index: 2; font-weight: 900; letter-spacing: .02em; }
 
     .spot.ball-baseball {
       border: 3px solid #d1d5db;
@@ -755,15 +892,8 @@
       top: 10px;
     }
 
-    .spot.ball-baseball::before {
-      left: 6px;
-      transform: rotate(-18deg);
-    }
-
-    .spot.ball-baseball::after {
-      right: 6px;
-      transform: scaleX(-1) rotate(-18deg);
-    }
+    .spot.ball-baseball::before { left: 6px; transform: rotate(-18deg); }
+    .spot.ball-baseball::after { right: 6px; transform: scaleX(-1) rotate(-18deg); }
 
     .spot.ball-softball {
       border: 3px solid #d4a514;
@@ -783,25 +913,11 @@
       top: 10px;
     }
 
-    .spot.ball-softball::before {
-      left: 6px;
-      transform: rotate(-18deg);
-    }
+    .spot.ball-softball::before { left: 6px; transform: rotate(-18deg); }
+    .spot.ball-softball::after { right: 6px; transform: scaleX(-1) rotate(-18deg); }
 
-    .spot.ball-softball::after {
-      right: 6px;
-      transform: scaleX(-1) rotate(-18deg);
-    }
-
-    .spot:hover {
-      transform: scale(1.08);
-      box-shadow: 0 12px 20px rgba(0,0,0,0.20);
-    }
-
-    .spot.selected {
-      outline: 5px solid var(--navy);
-      transform: scale(1.08);
-    }
+    .spot:hover { transform: scale(1.08); box-shadow: 0 12px 20px rgba(0,0,0,0.20); }
+    .spot.selected { outline: 5px solid var(--navy); transform: scale(1.08); }
 
     .spot.filled {
       background: radial-gradient(circle at 30% 30%, #b91c1c 0%, #8b1e2d 70%, #6f1522 100%);
@@ -814,9 +930,7 @@
       border-color: transparent transparent transparent rgba(255,255,255,0.7);
     }
 
-    .spot.filled .spot-label {
-      color: #ffffff;
-    }
+    .spot.filled .spot-label { color: #ffffff; }
 
     .fill-celebration {
       position: absolute;
@@ -828,10 +942,7 @@
       z-index: 10;
     }
 
-    .fill-celebration.show {
-      display: flex;
-      animation: popFade 2.4s ease forwards;
-    }
+    .fill-celebration.show { display: flex; animation: popFade 2.4s ease forwards; }
 
     .fill-celebration-card {
       background: rgba(255,255,255,0.97);
@@ -865,23 +976,9 @@
       100% { opacity: 0; transform: scale(1.04); }
     }
 
-    .action-card {
-      position: sticky;
-      top: 20px;
-    }
-
-    .field-art-wrap{
-      text-align:center;
-      margin: 4px 0 16px;
-    }
-
-    .field-art-img{
-      width: 100%;
-      max-width: 300px;
-      height: auto;
-      display: inline-block;
-      opacity: 0.92;
-    }
+    .action-card { position: sticky; top: 20px; }
+    .field-art-wrap{ text-align:center; margin: 4px 0 16px; }
+    .field-art-img{ width: 100%; max-width: 300px; height: auto; display: inline-block; opacity: 0.92; }
 
     .selected-amount {
       font-size: 52px;
@@ -901,20 +998,25 @@
       font-weight: 600;
     }
 
-    .checkout {
+    .checkout,
+    .venmo-button,
+    .secondary {
       width: 100%;
-      border: none;
       border-radius: 16px;
-      padding: 16px 20px;
-      font-size: 18px;
-      font-weight: 900;
-      color: #ffffff;
-      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
       cursor: pointer;
       margin-bottom: 12px;
-      box-shadow: 0 12px 20px rgba(15,76,129,0.20);
       text-transform: uppercase;
       letter-spacing: .06em;
+      font-weight: 900;
+    }
+
+    .checkout {
+      border: none;
+      padding: 16px 20px;
+      font-size: 18px;
+      color: #ffffff;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
+      box-shadow: 0 12px 20px rgba(15,76,129,0.20);
     }
 
     .checkout:disabled,
@@ -928,34 +1030,20 @@
     }
 
     .venmo-button {
-      width: 100%;
-      border: none;
-      border-radius: 16px;
+      border:none;
       padding: 16px 20px;
       font-size: 18px;
-      font-weight: 900;
       color: #ffffff;
       background: linear-gradient(180deg, var(--venmo) 0%, var(--venmo-dark) 100%);
-      cursor: pointer;
-      margin-bottom: 12px;
       box-shadow: 0 12px 20px rgba(0,140,255,0.20);
-      text-transform: uppercase;
-      letter-spacing: .06em;
     }
 
     .secondary {
-      width: 100%;
       border: 2px solid #d1d5db;
-      border-radius: 16px;
       padding: 12px 16px;
       font-size: 15px;
-      font-weight: 900;
       color: #374151;
       background: #ffffff;
-      cursor: pointer;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: .05em;
     }
 
     .payment-note {
@@ -969,10 +1057,20 @@
       letter-spacing: .04em;
     }
 
-    .admin-toggle-wrap {
-      margin: 10px 0 4px;
-      text-align: center;
+    .team-page-note {
+      margin: 0 0 14px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      color: var(--navy);
+      font-size: 14px;
+      line-height: 1.5;
+      text-align:center;
+      font-weight:800;
     }
+
+    .admin-toggle-wrap { margin: 10px 0 4px; text-align: center; }
 
     .admin-link {
       background: none;
@@ -995,9 +1093,7 @@
       margin-bottom: 12px;
     }
 
-    .admin-panel.show {
-      display: block;
-    }
+    .admin-panel.show { display: block; }
 
     .admin-panel h3 {
       margin: 0 0 10px;
@@ -1102,19 +1198,8 @@
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     }
 
-    .how-title {
-      font-weight: 900;
-      margin-bottom: 3px;
-      color:#0f172a;
-      font-size: 18px;
-    }
-
-    .how-text {
-      font-size: 14px;
-      color: #4b5563;
-      line-height: 1.4;
-      font-weight: 600;
-    }
+    .how-title { font-weight: 900; margin-bottom: 3px; color:#0f172a; font-size: 18px; }
+    .how-text { font-size: 14px; color: #4b5563; line-height: 1.4; font-weight: 600; }
 
     .how-note {
       margin-top: 14px;
@@ -1129,11 +1214,17 @@
       letter-spacing: .03em;
     }
 
+    .hidden { display:none !important; }
+
     @media (max-width: 980px) {
-      .topbar, .main, .leaderboard-grid { grid-template-columns: 1fr; }
-      .how-grid, .progress-callouts, .team-meta-grid { grid-template-columns: 1fr; }
+      .topbar, .main, .leaderboard-grid, .team-summary-grid { grid-template-columns: 1fr; }
+      .how-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 38px; }
-      .team-hero-name { font-size: 28px; }
+      .team-name { text-align:center; }
+      .team-support-line, .team-copy { text-align:center !important; }
+      .team-sport-tag { margin-left:auto; margin-right:auto; display:flex; width:fit-content; }
+      .team-hero-top { justify-content:center; }
+      .team-hero-actions { justify-content:center; width:100%; }
 
       .glove-wrap {
         min-height: auto;
@@ -1146,17 +1237,19 @@
         transform-origin: top center;
       }
 
-      .hero-park-img {
-        max-height: 220px;
-      }
-
+      .hero-park-img { max-height: 220px; }
       .action-card { position: static; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="hero">
+    <div class="view-toggle-wrap">
+      <button class="view-toggle" id="homeModeButton">Fundraiser Home</button>
+      <button class="view-toggle" id="teamModeButton">Team Page View</button>
+    </div>
+
+    <div class="hero" id="homeHero">
       <div class="hero-inner">
         <div class="hero-park-wrap">
           <img src="signzoomout.png" alt="Roy Gayle ballpark illustration" class="hero-park-img" />
@@ -1171,6 +1264,66 @@
           <div class="hero-badge">$500 Team Goals</div>
         </div>
         <div class="status-banner" id="syncStatus">Connecting to Firebase...</div>
+      </div>
+    </div>
+
+    <div class="team-hero" id="teamHero">
+      <div class="team-hero-inner">
+        <div class="team-hero-top">
+          <div>
+            <div class="team-sport-tag" id="teamSportTag">Baseball Team Page</div>
+            <h1 class="team-name" id="teamHeroName">Support This Team</h1>
+            <div class="team-support-line" id="teamSupportLine">Roy Gayle Fill My Glove Fundraiser</div>
+            <p class="team-copy" id="teamHeroCopy">Help this team fill its glove and reach its fundraising goal.</p>
+          </div>
+          <div class="team-hero-actions">
+            <div class="status-pill started" id="teamStatusPill">Just Started</div>
+            <button class="team-back-btn" id="copyTeamLinkTop">Copy Team Link</button>
+            <button class="team-browse-btn" id="browseTeamsButton">Choose Another Team</button>
+          </div>
+        </div>
+
+        <div class="team-badges">
+          <div class="team-badge" id="teamDivisionBadge">Division</div>
+          <div class="team-badge" id="teamRankBadge">Overall Rank</div>
+          <div class="team-badge" id="teamSpotsBadge">Spots Left</div>
+          <div class="team-badge">$500 Goal</div>
+        </div>
+
+        <div class="team-summary-grid">
+          <div class="team-summary-card">
+            <div class="mini-label">Raised</div>
+            <div class="mini-value" id="teamHeroRaised">$0</div>
+            <div class="mini-sub">Current Total</div>
+          </div>
+          <div class="team-summary-card">
+            <div class="mini-label">Progress</div>
+            <div class="mini-value" id="teamHeroProgress">0%</div>
+            <div class="mini-sub">Of Team Goal</div>
+          </div>
+          <div class="team-summary-card">
+            <div class="mini-label">Spots Left</div>
+            <div class="mini-value" id="teamHeroSpotsLeft">36</div>
+            <div class="mini-sub">Available To Fill</div>
+          </div>
+          <div class="team-summary-card">
+            <div class="mini-label">Overall Rank</div>
+            <div class="mini-value" id="teamHeroRank">#--</div>
+            <div class="mini-sub">Across All Teams</div>
+          </div>
+        </div>
+
+        <div class="team-progress-bar-wrap">
+          <div class="progress-label">
+            <span>Team Progress</span>
+            <strong id="teamHeroProgressLabel">0% Filled</strong>
+          </div>
+          <div class="progress"><div class="progress-bar" id="teamHeroProgressBar"></div></div>
+        </div>
+
+        <div class="team-progress-note" id="teamHeroNote">
+          Share this team page with family and friends so supporters can land directly on the team they want to help.
+        </div>
       </div>
     </div>
 
@@ -1192,81 +1345,43 @@
 
     <div class="topbar">
       <div class="panel">
-        <h2>Choose a Team</h2>
-
-        <div class="section-label">Choose a Sport</div>
+        <h2>Choose a Sport</h2>
         <div class="controls" id="sportButtons"></div>
 
-        <div class="section-label">Choose a Division</div>
+        <h2 style="font-size:22px; margin-top:10px;">Choose a Division</h2>
         <div class="controls" id="divisionButtons"></div>
 
-        <div class="section-label">Choose a Team</div>
-        <div class="controls" id="teamButtons"></div>
-
-        <div class="team-hero-card" id="teamHeroCard">
-          <div class="team-hero-inner">
-            <div class="team-hero-top">
-              <div>
-                <div class="team-hero-sport" id="teamSportLabel">Baseball Team</div>
-                <h3 class="team-hero-name" id="teamHeroName">Team Name</h3>
-                <div class="team-hero-division" id="teamHeroDivision">Division</div>
-                <p class="team-hero-copy" id="teamHeroMessage">Support this Roy Gayle team by filling open glove spots and helping them reach their fundraising goal.</p>
-              </div>
-              <div class="team-status-pill just-started" id="teamStatusBadge">Just Started</div>
-            </div>
-
-            <div class="team-meta-grid">
-              <div class="team-meta-box">
-                <div class="team-meta-label">League Rank</div>
-                <div class="team-meta-value" id="teamRankValue">#--</div>
-              </div>
-              <div class="team-meta-box">
-                <div class="team-meta-label">Division Rank</div>
-                <div class="team-meta-value" id="divisionRankValue">#--</div>
-              </div>
-              <div class="team-meta-box">
-                <div class="team-meta-label">Spots Filled</div>
-                <div class="team-meta-value" id="teamFilledValue">0/36</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="progress-card">
-          <div class="progress-card-top">
-            <h3 class="progress-card-title">Live Team Progress</h3>
-          </div>
-          <p class="progress-card-note" id="progressCardNote">This team is working toward a $500 goal. Every filled spot helps move them up the leaderboard.</p>
-
-          <div class="progress-callouts">
-            <div class="progress-callout">
-              <div class="label">Goal</div>
-              <div class="value" id="goalValue">$500</div>
-            </div>
-            <div class="progress-callout">
-              <div class="label">Raised</div>
-              <div class="value" id="raisedValue">$0</div>
-            </div>
-            <div class="progress-callout">
-              <div class="label">Spots Left</div>
-              <div class="value" id="spotsLeftValue">0</div>
-            </div>
-          </div>
-
-          <div class="progress-wrap">
-            <div class="progress-label">
-              <span>Fundraising Progress</span>
-              <strong id="progressPct">0%</strong>
-            </div>
-            <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-          </div>
-        </div>
+        <h2 style="font-size:22px; margin-top:10px;">Choose a Team</h2>
+        <div class="team-grid" id="teamButtons"></div>
 
         <div class="share-wrap">
           <button class="share-btn" id="shareButton">Share This Team</button>
           <button class="share-btn secondary" id="copyLinkButton">Copy Team Link</button>
         </div>
         <div class="share-message" id="shareMessage"></div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Goal</div>
+            <div class="value" id="goalValue">$500</div>
+          </div>
+          <div class="stat">
+            <div class="label">Raised</div>
+            <div class="value" id="raisedValue">$0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Spots Left</div>
+            <div class="value" id="spotsLeftValue">0</div>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Fundraising Progress</span>
+            <strong id="progressPct">0%</strong>
+          </div>
+          <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+        </div>
       </div>
 
       <div class="panel">
@@ -1305,11 +1420,13 @@
       </div>
 
       <div class="panel action-card">
-        <h2>Selected Donation</h2>
+        <h2 id="actionCardTitle">Selected Donation</h2>
 
         <div class="field-art-wrap">
           <img src="field.png" alt="Youth baseball and softball fielding illustration" class="field-art-img" />
         </div>
+
+        <div class="team-page-note hidden" id="teamPageNote"></div>
 
         <div class="selected-amount" id="selectedAmount">--</div>
         <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
@@ -1318,6 +1435,7 @@
         <button class="venmo-button" id="venmoButton" disabled>Donate with Venmo</button>
         <div class="payment-note">Use whichever option is easiest, then mark the spot filled below.</div>
         <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
+        <button class="secondary hidden" id="copyTeamLinkBottom">Copy Team Link</button>
 
         <div class="admin-toggle-wrap">
           <button class="admin-link" id="adminToggle">Admin</button>
@@ -1362,42 +1480,24 @@
     const ADMIN_PASSWORD = 'roygayle2026';
 
     const baseSpots = [
-      { id: 1, amount: 10, x: 295, y: 132 },
-      { id: 2, amount: 10, x: 372, y: 132 },
-      { id: 3, amount: 15, x: 451, y: 142 },
-      { id: 4, amount: 10, x: 517, y: 161 },
-      { id: 5, amount: 10, x: 212, y: 187 },
-      { id: 6, amount: 15, x: 290, y: 203 },
-      { id: 7, amount: 20, x: 371, y: 213 },
-      { id: 8, amount: 15, x: 451, y: 227 },
-      { id: 9, amount: 10, x: 525, y: 246 },
-      { id: 10, amount: 10, x: 177, y: 266 },
-      { id: 11, amount: 10, x: 253, y: 286 },
-      { id: 12, amount: 15, x: 333, y: 305 },
-      { id: 13, amount: 20, x: 411, y: 324 },
-      { id: 14, amount: 15, x: 484, y: 342 },
-      { id: 15, amount: 10, x: 545, y: 360 },
-      { id: 16, amount: 10, x: 144, y: 349 },
-      { id: 17, amount: 10, x: 215, y: 373 },
-      { id: 18, amount: 15, x: 293, y: 394 },
-      { id: 19, amount: 25, x: 373, y: 413 },
-      { id: 20, amount: 15, x: 451, y: 430 },
-      { id: 21, amount: 10, x: 519, y: 446 },
-      { id: 22, amount: 10, x: 137, y: 432 },
-      { id: 23, amount: 10, x: 201, y: 470 },
-      { id: 24, amount: 15, x: 274, y: 491 },
-      { id: 25, amount: 20, x: 347, y: 512 },
-      { id: 26, amount: 15, x: 420, y: 529 },
-      { id: 27, amount: 10, x: 493, y: 538 },
-      { id: 28, amount: 10, x: 555, y: 515 },
-      { id: 29, amount: 10, x: 177, y: 552 },
-      { id: 30, amount: 10, x: 243, y: 583 },
-      { id: 31, amount: 25, x: 314, y: 604 },
-      { id: 32, amount: 10, x: 389, y: 602 },
-      { id: 33, amount: 10, x: 463, y: 590 },
-      { id: 34, amount: 10, x: 526, y: 571 },
-      { id: 35, amount: 30, x: 271, y: 663 },
-      { id: 36, amount: 30, x: 392, y: 659 }
+      { id: 1, amount: 10, x: 295, y: 132 }, { id: 2, amount: 10, x: 372, y: 132 },
+      { id: 3, amount: 15, x: 451, y: 142 }, { id: 4, amount: 10, x: 517, y: 161 },
+      { id: 5, amount: 10, x: 212, y: 187 }, { id: 6, amount: 15, x: 290, y: 203 },
+      { id: 7, amount: 20, x: 371, y: 213 }, { id: 8, amount: 15, x: 451, y: 227 },
+      { id: 9, amount: 10, x: 525, y: 246 }, { id: 10, amount: 10, x: 177, y: 266 },
+      { id: 11, amount: 10, x: 253, y: 286 }, { id: 12, amount: 15, x: 333, y: 305 },
+      { id: 13, amount: 20, x: 411, y: 324 }, { id: 14, amount: 15, x: 484, y: 342 },
+      { id: 15, amount: 10, x: 545, y: 360 }, { id: 16, amount: 10, x: 144, y: 349 },
+      { id: 17, amount: 10, x: 215, y: 373 }, { id: 18, amount: 15, x: 293, y: 394 },
+      { id: 19, amount: 25, x: 373, y: 413 }, { id: 20, amount: 15, x: 451, y: 430 },
+      { id: 21, amount: 10, x: 519, y: 446 }, { id: 22, amount: 10, x: 137, y: 432 },
+      { id: 23, amount: 10, x: 201, y: 470 }, { id: 24, amount: 15, x: 274, y: 491 },
+      { id: 25, amount: 20, x: 347, y: 512 }, { id: 26, amount: 15, x: 420, y: 529 },
+      { id: 27, amount: 10, x: 493, y: 538 }, { id: 28, amount: 10, x: 555, y: 515 },
+      { id: 29, amount: 10, x: 177, y: 552 }, { id: 30, amount: 10, x: 243, y: 583 },
+      { id: 31, amount: 25, x: 314, y: 604 }, { id: 32, amount: 10, x: 389, y: 602 },
+      { id: 33, amount: 10, x: 463, y: 590 }, { id: 34, amount: 10, x: 526, y: 571 },
+      { id: 35, amount: 30, x: 271, y: 663 }, { id: 36, amount: 30, x: 392, y: 659 }
     ];
 
     const teams = [
@@ -1414,7 +1514,7 @@
       { id: 'baseball-8u-pinto-baseball-convey-all', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-convey-all-2', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All 2', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-dickerson-nieman', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-8u-pinto-baseball-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters-413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-firefighters-413-red', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413 Red', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-golden-oak-sluggers', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Golden Oak Sluggers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-randees-music', sport: 'Baseball', division: '8U Pinto Baseball', name: "Randee's Music", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
@@ -1482,6 +1582,8 @@
     let remoteState = {};
     let adminMode = false;
     let lastCelebratedTeam = null;
+    let explicitTeamFromUrl = false;
+    let teamViewMode = false;
 
     const sportButtons = document.getElementById('sportButtons');
     const divisionButtons = document.getElementById('divisionButtons');
@@ -1492,7 +1594,6 @@
     const spotsLeftValue = document.getElementById('spotsLeftValue');
     const progressBar = document.getElementById('progressBar');
     const progressPct = document.getElementById('progressPct');
-    const progressCardNote = document.getElementById('progressCardNote');
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
@@ -1512,16 +1613,28 @@
     const adminPassword = document.getElementById('adminPassword');
     const adminUnlockButton = document.getElementById('adminUnlockButton');
     const adminStatus = document.getElementById('adminStatus');
-
-    const teamHeroCard = document.getElementById('teamHeroCard');
-    const teamSportLabel = document.getElementById('teamSportLabel');
+    const homeModeButton = document.getElementById('homeModeButton');
+    const teamModeButton = document.getElementById('teamModeButton');
+    const copyTeamLinkTop = document.getElementById('copyTeamLinkTop');
+    const copyTeamLinkBottom = document.getElementById('copyTeamLinkBottom');
+    const browseTeamsButton = document.getElementById('browseTeamsButton');
+    const teamSportTag = document.getElementById('teamSportTag');
     const teamHeroName = document.getElementById('teamHeroName');
-    const teamHeroDivision = document.getElementById('teamHeroDivision');
-    const teamHeroMessage = document.getElementById('teamHeroMessage');
-    const teamStatusBadge = document.getElementById('teamStatusBadge');
-    const teamRankValue = document.getElementById('teamRankValue');
-    const divisionRankValue = document.getElementById('divisionRankValue');
-    const teamFilledValue = document.getElementById('teamFilledValue');
+    const teamSupportLine = document.getElementById('teamSupportLine');
+    const teamHeroCopy = document.getElementById('teamHeroCopy');
+    const teamDivisionBadge = document.getElementById('teamDivisionBadge');
+    const teamRankBadge = document.getElementById('teamRankBadge');
+    const teamSpotsBadge = document.getElementById('teamSpotsBadge');
+    const teamHeroRaised = document.getElementById('teamHeroRaised');
+    const teamHeroProgress = document.getElementById('teamHeroProgress');
+    const teamHeroSpotsLeft = document.getElementById('teamHeroSpotsLeft');
+    const teamHeroRank = document.getElementById('teamHeroRank');
+    const teamHeroProgressLabel = document.getElementById('teamHeroProgressLabel');
+    const teamHeroProgressBar = document.getElementById('teamHeroProgressBar');
+    const teamHeroNote = document.getElementById('teamHeroNote');
+    const teamStatusPill = document.getElementById('teamStatusPill');
+    const teamPageNote = document.getElementById('teamPageNote');
+    const actionCardTitle = document.getElementById('actionCardTitle');
 
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
@@ -1529,6 +1642,28 @@
 
     function getFilledForTeam(teamId) {
       return Array.isArray(remoteState[teamId]?.filled) ? remoteState[teamId].filled : [];
+    }
+
+    function getAllRankedTeams() {
+      return teams
+        .map(team => ({ ...team, raised: calcRaised(team.id) }))
+        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
+    }
+
+    function getTeamRank(teamId) {
+      const ranked = getAllRankedTeams();
+      return ranked.findIndex(team => team.id === teamId) + 1;
+    }
+
+    function getStatusForTeam(teamId) {
+      const goal = calcGoal();
+      const raised = calcRaised(teamId);
+      const pct = Math.min(100, Math.round((raised / goal) * 100));
+
+      if (pct >= 100) return { key: 'goal', label: 'Goal Reached' };
+      if (pct >= 75) return { key: 'almost', label: 'Almost Full' };
+      if (pct >= 40) return { key: 'halfway', label: 'Halfway There' };
+      return { key: 'started', label: 'Just Started' };
     }
 
     function setStatus(message, isError = false) {
@@ -1547,11 +1682,12 @@
         .reduce((sum, spot) => sum + spot.amount, 0);
     }
 
-    function getTeamUrl(team) {
+    function getTeamUrl(team, mode = 'team') {
       const url = new URL(window.location.href);
       url.searchParams.set('sport', team.sport);
       url.searchParams.set('division', team.division);
       url.searchParams.set('team', team.id);
+      url.searchParams.set('view', mode);
       return url.toString();
     }
 
@@ -1564,11 +1700,11 @@
 
     function updateUrlForSelection() {
       const team = getActiveTeam();
-      if (!team) return;
       const url = new URL(window.location.href);
       url.searchParams.set('sport', activeSport);
       url.searchParams.set('division', activeDivision);
       url.searchParams.set('team', team.id);
+      url.searchParams.set('view', teamViewMode ? 'team' : 'home');
       window.history.replaceState({}, '', url.toString());
     }
 
@@ -1577,6 +1713,10 @@
       const sportParam = url.searchParams.get('sport');
       const divisionParam = url.searchParams.get('division');
       const teamParam = url.searchParams.get('team');
+      const viewParam = url.searchParams.get('view');
+
+      explicitTeamFromUrl = Boolean(teamParam);
+      teamViewMode = viewParam === 'team' || (Boolean(teamParam) && viewParam !== 'home');
 
       if (sportParam && sports.includes(sportParam)) {
         activeSport = sportParam;
@@ -1592,7 +1732,7 @@
 
       if (
         teamParam &&
-        teams.some(team => team.id === teamParam && team.sport === activeSport)
+        teams.some(team => team.id === teamParam && team.sport)
       ) {
         activeTeamId = teamParam;
         const matchedTeam = teams.find(team => team.id === teamParam);
@@ -1605,6 +1745,16 @@
         const firstTeam = teams.find(team => team.sport === activeSport && team.division === activeDivision);
         activeTeamId = firstTeam ? firstTeam.id : null;
       }
+    }
+
+    function setViewMode(isTeamMode) {
+      teamViewMode = isTeamMode;
+      document.body.classList.toggle('team-mode', isTeamMode);
+      homeModeButton.classList.toggle('active', !isTeamMode);
+      teamModeButton.classList.toggle('active', isTeamMode);
+      teamPageNote.classList.toggle('hidden', !isTeamMode);
+      copyTeamLinkBottom.classList.toggle('hidden', !isTeamMode);
+      actionCardTitle.textContent = isTeamMode ? 'Support This Team' : 'Selected Donation';
     }
 
     function renderSportButtons() {
@@ -1644,19 +1794,53 @@
       });
     }
 
+    function getTeamStatus(raised, goal = 500) {
+      const pct = Math.min(100, Math.round((raised / goal) * 100));
+      if (pct >= 100) return 'Goal Reached';
+      if (pct >= 80) return 'Almost Full';
+      if (pct >= 50) return 'Halfway There';
+      if (pct >= 1) return 'Getting There';
+      return 'Just Started';
+    }
+
     function renderTeamButtons() {
       teamButtons.innerHTML = '';
       const teamsInDivision = teams.filter(team => team.sport === activeSport && team.division === activeDivision);
       teamsInDivision.forEach(team => {
-        const button = document.createElement('button');
-        button.textContent = team.name;
-        if (team.id === activeTeamId) button.classList.add('active');
-        button.addEventListener('click', () => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'team-card';
+
+        const raised = calcRaised(team.id);
+        const goal = calcGoal();
+        const pct = Math.min(100, Math.round((raised / goal) * 100));
+        const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
+        const status = getTeamStatus(raised, goal);
+
+        if (team.id === activeTeamId) card.classList.add('active');
+
+        card.innerHTML = `
+          <div class="team-card-head">
+            <div class="team-card-name">${team.name}</div>
+            <div class="team-card-pill">${team.sport}</div>
+          </div>
+          <div class="team-card-division">${team.division}</div>
+          <div class="team-card-status">${status}</div>
+          <div class="team-card-progress">
+            <div class="team-card-progress-bar" style="width:${pct}%"></div>
+          </div>
+          <div class="team-card-meta">
+            <span>$${raised} raised</span>
+            <span>${spotsLeft} left</span>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
           activeTeamId = team.id;
           selectedSpotId = null;
           renderAll();
         });
-        teamButtons.appendChild(button);
+        teamButtons.appendChild(card);
       });
     }
 
@@ -1688,47 +1872,8 @@
       return row;
     }
 
-    function getRankedTeams() {
-      return teams
-        .map(team => ({ ...team, raised: calcRaised(team.id) }))
-        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
-    }
-
-    function getOverallRank(teamId) {
-      const ranked = getRankedTeams();
-      return ranked.findIndex(team => team.id === teamId) + 1;
-    }
-
-    function getDivisionRank(teamId) {
-      const team = teams.find(item => item.id === teamId);
-      if (!team) return null;
-      const ranked = teams
-        .filter(item => item.division === team.division)
-        .map(item => ({ ...item, raised: calcRaised(item.id) }))
-        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
-      return ranked.findIndex(item => item.id === teamId) + 1;
-    }
-
-    function getStatusMeta(raised) {
-      const pct = Math.min(100, Math.round((raised / calcGoal()) * 100));
-      if (pct >= 100) return { label: 'Goal Reached', className: 'goal' };
-      if (pct >= 80) return { label: 'Almost Full', className: 'almost' };
-      if (pct >= 50) return { label: 'Halfway There', className: 'halfway' };
-      if (pct >= 20) return { label: 'Building Momentum', className: 'building' };
-      return { label: 'Just Started', className: 'just-started' };
-    }
-
-    function getTeamMessage(team, raised, spotsLeft) {
-      const pct = Math.min(100, Math.round((raised / calcGoal()) * 100));
-      if (pct >= 100) return `${team.name} filled every needed spot and hit the full team goal. Thank you for helping this team finish strong.`;
-      if (pct >= 80) return `${team.name} is so close to the finish line. Only ${spotsLeft} spots remain to help this team close out its fundraiser.`;
-      if (pct >= 50) return `${team.name} has real momentum going. Help push this team from halfway there to nearly full.`;
-      if (pct > 0) return `${team.name} is on the board and climbing. Fill a glove spot to help this Roy Gayle team keep moving up the leaderboard.`;
-      return `${team.name} is ready to get the glove filling started. Be one of the first supporters to help this team build momentum.`;
-    }
-
     function renderLeaderboard() {
-      const ranked = getRankedTeams().slice(0, 5);
+      const ranked = getAllRankedTeams().slice(0, 5);
 
       leaderboardList.innerHTML = '';
       ranked.forEach((team, index) => {
@@ -1760,32 +1905,8 @@
       });
     }
 
-    function renderTeamShowcase() {
-      const team = getActiveTeam();
-      if (!team) return;
-      const raised = calcRaised(team.id);
-      const filledCount = getFilledForTeam(team.id).length;
-      const spotsLeft = baseSpots.length - filledCount;
-      const overallRank = getOverallRank(team.id);
-      const divisionRank = getDivisionRank(team.id);
-      const statusMeta = getStatusMeta(raised);
-
-      teamHeroCard.classList.toggle('softball', team.sport.toLowerCase() === 'softball');
-      teamSportLabel.textContent = `${team.sport} Team`;
-      teamHeroName.textContent = team.name;
-      teamHeroDivision.textContent = team.division;
-      teamHeroMessage.textContent = getTeamMessage(team, raised, spotsLeft);
-      teamStatusBadge.textContent = statusMeta.label;
-      teamStatusBadge.className = `team-status-pill ${statusMeta.className}`;
-      teamRankValue.textContent = overallRank ? `#${overallRank}` : '#--';
-      divisionRankValue.textContent = divisionRank ? `#${divisionRank}` : '#--';
-      teamFilledValue.textContent = `${filledCount}/${baseSpots.length}`;
-      progressCardNote.textContent = `${team.name} has raised $${raised} so far. ${spotsLeft} open spots remain on this glove.`;
-    }
-
     function renderStats() {
       const team = getActiveTeam();
-      if (!team) return;
       const goal = calcGoal();
       const raised = calcRaised(team.id);
       const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
@@ -1798,9 +1919,48 @@
       progressPct.textContent = `${pct}%`;
     }
 
+    function renderTeamHero() {
+      const team = getActiveTeam();
+      const goal = calcGoal();
+      const raised = calcRaised(team.id);
+      const filledCount = getFilledForTeam(team.id).length;
+      const spotsLeft = baseSpots.length - filledCount;
+      const pct = Math.min(100, Math.round((raised / goal) * 100));
+      const rank = getTeamRank(team.id);
+      const status = getStatusForTeam(team.id);
+
+      teamSportTag.textContent = `${team.sport} Team Page`;
+      teamHeroName.textContent = team.name;
+      teamSupportLine.textContent = `${team.division} • Roy Gayle Fill My Glove Fundraiser`;
+      teamHeroCopy.textContent = `You are supporting ${team.name}. Choose an open spot below, donate through PayPal or Venmo, and help this team reach its $500 goal.`;
+      teamDivisionBadge.textContent = team.division;
+      teamRankBadge.textContent = `Overall Rank #${rank}`;
+      teamSpotsBadge.textContent = `${spotsLeft} Spots Left`;
+      teamHeroRaised.textContent = `$${raised}`;
+      teamHeroProgress.textContent = `${pct}%`;
+      teamHeroSpotsLeft.textContent = spotsLeft;
+      teamHeroRank.textContent = `#${rank}`;
+      teamHeroProgressLabel.textContent = `${pct}% Filled`;
+      teamHeroProgressBar.style.width = `${pct}%`;
+
+      teamStatusPill.className = `status-pill ${status.key}`;
+      teamStatusPill.textContent = status.label;
+
+      if (pct >= 100) {
+        teamHeroNote.textContent = `${team.name} has reached its goal. Share the page anyway so supporters can celebrate the team and see the filled glove.`;
+      } else if (pct >= 75) {
+        teamHeroNote.textContent = `${team.name} is getting close. This is a great time to share the direct team page with family and friends.`;
+      } else if (pct >= 40) {
+        teamHeroNote.textContent = `${team.name} has momentum. A few more shares could really help keep this fundraiser moving.`;
+      } else {
+        teamHeroNote.textContent = `Share this team page with family and friends so supporters can land directly on the team they want to help.`;
+      }
+
+      teamPageNote.textContent = `You are on ${team.name}'s team page. Supporters can donate right here without hunting for the correct team.`;
+    }
+
     function renderSpots() {
       const team = getActiveTeam();
-      if (!team) return;
       const filled = getFilledForTeam(team.id);
       const isSoftball = team.sport.toLowerCase() === 'softball';
 
@@ -1845,7 +2005,9 @@
 
       if (!selectedSpot) {
         selectedAmount.textContent = '--';
-        selectedHelper.textContent = 'Select an open spot on the glove.';
+        selectedHelper.textContent = teamViewMode
+          ? `You are supporting ${team.name}. Select an open spot on the glove below.`
+          : 'Select an open spot on the glove.';
         checkoutButton.disabled = true;
         venmoButton.disabled = true;
         markPaidButton.disabled = true;
@@ -1906,9 +2068,20 @@
       await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled });
     }
 
+    async function copyTeamLink(mode = 'team') {
+      const team = getActiveTeam();
+      const url = getTeamUrl(team, mode);
+      try {
+        await navigator.clipboard.writeText(url);
+        showShareMessage(mode === 'team' ? 'Direct team page copied.' : 'Fundraiser home link copied.');
+      } catch (error) {
+        showShareMessage('Copy failed.');
+      }
+    }
+
     shareButton.addEventListener('click', async () => {
       const team = getActiveTeam();
-      const url = getTeamUrl(team);
+      const url = getTeamUrl(team, 'team');
       const text = `Support ${team.name} in the Roy Gayle Fill My Glove Fundraiser. Help us reach our $500 team goal. ${url}`;
 
       if (navigator.share) {
@@ -1928,16 +2101,9 @@
       }
     });
 
-    copyLinkButton.addEventListener('click', async () => {
-      const team = getActiveTeam();
-      const url = getTeamUrl(team);
-      try {
-        await navigator.clipboard.writeText(url);
-        showShareMessage('Team link copied.');
-      } catch (error) {
-        showShareMessage('Copy failed.');
-      }
-    });
+    copyLinkButton.addEventListener('click', () => copyTeamLink('team'));
+    copyTeamLinkTop.addEventListener('click', () => copyTeamLink('team'));
+    copyTeamLinkBottom.addEventListener('click', () => copyTeamLink('team'));
 
     adminToggle.addEventListener('click', () => {
       adminPanel.classList.toggle('show');
@@ -1994,14 +2160,33 @@
       selectedSpotId = null;
     });
 
+    homeModeButton.addEventListener('click', () => {
+      setViewMode(false);
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    teamModeButton.addEventListener('click', () => {
+      setViewMode(true);
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    browseTeamsButton.addEventListener('click', () => {
+      setViewMode(false);
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
     function renderAll() {
+      setViewMode(teamViewMode);
       updateUrlForSelection();
       renderLeaderboard();
       renderSportButtons();
       renderDivisionButtons();
       renderTeamButtons();
-      renderTeamShowcase();
       renderStats();
+      renderTeamHero();
       renderSpots();
       renderSelection();
       renderAdminState();
