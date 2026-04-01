@@ -1219,249 +1219,28 @@
     .hidden { display:none !important; }
 
     @media (max-width: 980px) {
-      body { overflow-x: hidden; }
-
-      .page {
-        padding: 16px;
-      }
-
-      .hero,
-      .team-hero,
-      .panel,
-      .leaderboard-panel {
-        border-radius: 22px;
-      }
-
-      .hero,
-      .team-hero {
-        padding: 24px 18px 20px;
-      }
-
-      .topbar,
-      .main,
-      .leaderboard-grid,
-      .team-summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .how-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        font-size: 38px;
-      }
-
-      .team-name {
-        text-align: center;
-      }
-
-      .team-support-line,
-      .team-copy {
-        text-align: center !important;
-      }
-
-      .team-sport-tag {
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
-        width: fit-content;
-      }
-
-      .team-hero-top {
-        justify-content: center;
-      }
-
-      .team-hero-actions {
-        justify-content: center;
-        width: 100%;
-      }
-
-      .view-toggle-wrap,
-      .share-wrap {
-        gap: 8px;
-      }
-
-      .view-toggle,
-      .share-btn {
-        flex: 1 1 240px;
-      }
-
-      .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 12px;
-      }
-
-      .team-card {
-        padding: 14px;
-        border-radius: 18px;
-      }
-
-      .team-card-name {
-        font-size: 17px;
-      }
-
-      .stats {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .topbar, .main, .leaderboard-grid, .team-summary-grid { grid-template-columns: 1fr; }
+      .how-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 38px; }
+      .team-name { text-align:center; }
+      .team-support-line, .team-copy { text-align:center !important; }
+      .team-sport-tag { margin-left:auto; margin-right:auto; display:flex; width:fit-content; }
+      .team-hero-top { justify-content:center; }
+      .team-hero-actions { justify-content:center; width:100%; }
 
       .glove-wrap {
         min-height: auto;
         overflow-x: auto;
-        overflow-y: hidden;
-        padding: 6px 0 14px;
-        -webkit-overflow-scrolling: touch;
-        justify-content: flex-start;
+        padding-bottom: 10px;
       }
 
       .glove-board {
         transform: scale(.82);
-        transform-origin: top left;
-        margin-left: 4px;
+        transform-origin: top center;
       }
 
-      .hero-park-img {
-        max-height: 220px;
-      }
-
-      .action-card {
-        position: static;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .page {
-        padding: 12px;
-      }
-
-      .hero,
-      .team-hero,
-      .panel,
-      .leaderboard-panel {
-        border-radius: 18px;
-      }
-
-      .hero,
-      .team-hero,
-      .panel {
-        padding: 18px 14px 16px;
-      }
-
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      .hero p,
-      .team-hero p {
-        font-size: 15px;
-        line-height: 1.45;
-      }
-
-      .view-toggle-wrap {
-        margin-bottom: 14px;
-      }
-
-      .view-toggle,
-      .share-btn,
-      .team-back-btn,
-      .team-browse-btn {
-        width: 100%;
-        flex: 1 1 100%;
-        padding: 12px 14px;
-        font-size: 12px;
-      }
-
-      .hero-badge,
-      .team-badge,
-      .team-card-pill,
-      .status-pill {
-        font-size: 10px;
-      }
-
-      .team-summary-grid,
-      .stats {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .team-summary-card .mini-value,
-      .stat .value {
-        font-size: 26px;
-      }
-
-      .team-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .team-card {
-        padding: 14px 13px;
-      }
-
-      .team-card-name {
-        font-size: 16px;
-      }
-
-      .team-card-meta {
-        font-size: 12px;
-        flex-wrap: wrap;
-      }
-
-      .leaderboard-title {
-        font-size: 26px;
-      }
-
-      .top-team-row {
-        grid-template-columns: 32px 1fr auto;
-        padding: 10px;
-      }
-
-      .top-team-name {
-        font-size: 12px;
-      }
-
-      .top-team-sub,
-      .top-team-amount {
-        font-size: 11px;
-      }
-
-      .progress-label {
-        font-size: 12px;
-      }
-
-      .selected-amount {
-        font-size: 42px;
-      }
-
-      .helper,
-      .payment-note,
-      .team-page-note,
-      .mini-note,
-      .how-text {
-        font-size: 13px;
-      }
-
-      .checkout,
-      .venmo-button,
-      .secondary {
-        font-size: 16px;
-        padding: 15px 16px;
-      }
-
-      .glove-wrap {
-        margin-left: -6px;
-        margin-right: -6px;
-        padding-bottom: 8px;
-      }
-
-      .glove-board {
-        transform: scale(.66);
-        transform-origin: top left;
-        margin-left: 0;
-      }
-
-      .glove-title {
-        font-size: 48px;
-      }
+      .hero-park-img { max-height: 220px; }
+      .action-card { position: static; }
     }
   </style>
 </head>
@@ -1469,7 +1248,6 @@
   <div class="page">
     <div class="view-toggle-wrap">
       <button class="view-toggle" id="homeModeButton">Fundraiser Home</button>
-      <button class="view-toggle" id="teamModeButton">Team Page View</button>
     </div>
 
     <div class="hero" id="homeHero">
@@ -1837,7 +1615,6 @@
     const adminUnlockButton = document.getElementById('adminUnlockButton');
     const adminStatus = document.getElementById('adminStatus');
     const homeModeButton = document.getElementById('homeModeButton');
-    const teamModeButton = document.getElementById('teamModeButton');
     const copyTeamLinkTop = document.getElementById('copyTeamLinkTop');
     const copyTeamLinkBottom = document.getElementById('copyTeamLinkBottom');
     const browseTeamsButton = document.getElementById('browseTeamsButton');
@@ -1877,6 +1654,30 @@
       const ranked = getAllRankedTeams();
       return ranked.findIndex(team => team.id === teamId) + 1;
     }
+
+    function getDivisionRank(teamId) {
+      const team = teams.find(item => item.id === teamId);
+      if (!team) return 0;
+      const rankedDivisionTeams = teams
+        .filter(item => item.division === team.division)
+        .map(item => ({ ...item, raised: calcRaised(item.id) }))
+        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
+      return rankedDivisionTeams.findIndex(item => item.id === teamId) + 1;
+    }
+
+    function getRankCallout(teamId) {
+      const overallRank = getTeamRank(teamId);
+      const divisionRank = getDivisionRank(teamId);
+      const totalTeams = teams.length;
+
+      if (divisionRank === 1) return 'Division Leader';
+      if (overallRank === 1) return '#1 Overall';
+      if (overallRank <= 3) return `Top ${overallRank} Overall`;
+      if (overallRank <= 5) return 'Top 5 Overall';
+      if (overallRank <= 10) return `#${overallRank} Overall`;
+      return `#${divisionRank} in Division`;
+    }
+
 
     function getStatusForTeam(teamId) {
       const goal = calcGoal();
@@ -1974,7 +1775,6 @@
       teamViewMode = isTeamMode;
       document.body.classList.toggle('team-mode', isTeamMode);
       homeModeButton.classList.toggle('active', !isTeamMode);
-      teamModeButton.classList.toggle('active', isTeamMode);
       teamPageNote.classList.toggle('hidden', !isTeamMode);
       copyTeamLinkBottom.classList.toggle('hidden', !isTeamMode);
       actionCardTitle.textContent = isTeamMode ? 'Support This Team' : 'Selected Donation';
@@ -2038,7 +1838,7 @@
         const goal = calcGoal();
         const pct = Math.min(100, Math.round((raised / goal) * 100));
         const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
-        const status = getTeamStatus(raised, goal);
+        const rankCallout = getRankCallout(team.id);
 
         if (team.id === activeTeamId) card.classList.add('active');
 
@@ -2048,7 +1848,7 @@
             <div class="team-card-pill">${team.sport}</div>
           </div>
           <div class="team-card-division">${team.division}</div>
-          <div class="team-card-status">${status}</div>
+          <div class="team-card-status">${rankCallout}</div>
           <div class="team-card-progress">
             <div class="team-card-progress-bar" style="width:${pct}%"></div>
           </div>
@@ -2060,9 +1860,6 @@
 
         card.addEventListener('click', () => {
           activeTeamId = team.id;
-          activeSport = team.sport;
-          divisions = getDivisionsForSport(activeSport);
-          activeDivision = team.division;
           selectedSpotId = null;
           setViewMode(true);
           renderAll();
@@ -2393,13 +2190,6 @@
       renderAll();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-
-    teamModeButton.addEventListener('click', () => {
-      setViewMode(true);
-      renderAll();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
     browseTeamsButton.addEventListener('click', () => {
       setViewMode(false);
       renderAll();
