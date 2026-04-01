@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1837,8 +1839,13 @@
 
         card.addEventListener('click', () => {
           activeTeamId = team.id;
+          activeSport = team.sport;
+          divisions = getDivisionsForSport(activeSport);
+          activeDivision = team.division;
           selectedSpotId = null;
+          setViewMode(true);
           renderAll();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         });
         teamButtons.appendChild(card);
       });
