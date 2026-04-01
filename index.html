@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +23,12 @@
       --shadow-soft:0 12px 28px rgba(0,0,0,0.16);
       --venmo:#008CFF;
       --venmo-dark:#0077d9;
+      --success:#15803d;
+      --success-soft:#dcfce7;
+      --warning:#b45309;
+      --warning-soft:#fef3c7;
+      --danger:#b91c1c;
+      --danger-soft:#fee2e2;
     }
 
     body {
@@ -103,7 +110,11 @@
     .panel h2,
     .selected-amount,
     .leaderboard-box h3,
-    .how-title {
+    .how-title,
+    .team-hero-name,
+    .team-hero-division,
+    .progress-card-title,
+    .section-label {
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
       text-transform: uppercase;
       letter-spacing: .04em;
@@ -300,17 +311,11 @@
       letter-spacing: .05em;
     }
 
-    .how-art-wrap{
-      text-align:center;
-      margin: 0 0 16px;
-    }
-
-    .how-art-img{
-      width: 100%;
-      max-width: 360px;
-      height: auto;
-      display: inline-block;
-      opacity: 0.95;
+    .section-label {
+      font-size: 22px;
+      margin-top: 10px;
+      text-align: center;
+      color: #0f172a;
     }
 
     .controls {
@@ -347,11 +352,251 @@
       box-shadow: 0 10px 18px rgba(15,76,129,0.22);
     }
 
+    .team-hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      padding: 22px;
+      margin: 6px 0 18px;
+      background:
+        linear-gradient(135deg, rgba(15,76,129,0.98), rgba(11,51,87,0.96));
+      color: #ffffff;
+      box-shadow: 0 16px 28px rgba(15,76,129,0.18);
+    }
+
+    .team-hero-card.softball {
+      background:
+        linear-gradient(135deg, rgba(139,30,45,0.98), rgba(111,21,34,0.96));
+      box-shadow: 0 16px 28px rgba(139,30,45,0.18);
+    }
+
+    .team-hero-card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -70px;
+      top: -70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+
+    .team-hero-card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      left: -50px;
+      bottom: -60px;
+      border-radius: 50%;
+      background: rgba(250,204,21,0.12);
+      pointer-events: none;
+    }
+
+    .team-hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .team-hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .team-hero-sport {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .team-hero-name {
+      font-size: 34px;
+      line-height: 1;
+      margin: 0 0 8px;
+      color: #ffffff;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.10);
+    }
+
+    .team-hero-division {
+      font-size: 18px;
+      color: #dbeafe;
+      margin: 0 0 10px;
+    }
+
+    .team-hero-copy {
+      margin: 0;
+      color: rgba(255,255,255,0.95);
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 700;
+      max-width: 760px;
+    }
+
+    .team-status-pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.14);
+    }
+
+    .team-status-pill.just-started { background: rgba(255,255,255,0.14); color: #ffffff; }
+    .team-status-pill.building { background: rgba(250,204,21,0.18); color: #fef3c7; }
+    .team-status-pill.halfway { background: rgba(34,197,94,0.18); color: #dcfce7; }
+    .team-status-pill.almost { background: rgba(255,255,255,0.18); color: #ffffff; }
+    .team-status-pill.goal { background: rgba(250,204,21,0.22); color: #fef3c7; }
+
+    .team-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .team-meta-box {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      backdrop-filter: blur(3px);
+    }
+
+    .team-meta-label {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 6px;
+    }
+
+    .team-meta-value {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffffff;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      letter-spacing: .04em;
+    }
+
+    .progress-card {
+      border-radius: 22px;
+      border: 1px solid #dbe4ee;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      margin-bottom: 18px;
+    }
+
+    .progress-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .progress-card-title {
+      font-size: 26px;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .progress-card-note {
+      color: #475569;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 14px;
+      line-height: 1.45;
+    }
+
+    .progress-callouts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .progress-callout {
+      border-radius: 16px;
+      padding: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    .progress-callout .label {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-callout .value {
+      font-size: 28px;
+      font-weight: 900;
+      color: #0f172a;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      letter-spacing: .04em;
+    }
+
+    .progress-wrap {
+      margin-bottom: 14px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #374151;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .progress {
+      height: 22px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+      border: 1px solid #cbd5e1;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--maroon) 0%, #d16b76 100%);
+      transition: width .25s ease;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.18);
+    }
+
     .share-wrap {
       display: flex;
       gap: 10px;
       justify-content: center;
-      margin: 10px 0 18px;
+      margin: 10px 0 10px;
       flex-wrap: wrap;
     }
 
@@ -392,69 +637,21 @@
       letter-spacing: .04em;
     }
 
+    .how-art-wrap{
+      text-align:center;
+      margin: 0 0 16px;
+    }
+
+    .how-art-img{
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      display: inline-block;
+      opacity: 0.95;
+    }
+
     .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .stat {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-      border: 2px solid #dbe4ee;
-      border-radius: 18px;
-      padding: 16px 14px;
-      text-align: center;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-    }
-
-    .stat .label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: var(--muted);
-      margin-bottom: 6px;
-      font-weight: 900;
-    }
-
-    .stat .value {
-      font-size: 28px;
-      font-weight: 900;
-      color: #0f172a;
-      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-      letter-spacing: .04em;
-    }
-
-    .progress-wrap {
-      margin-bottom: 14px;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: #374151;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-
-    .progress {
-      height: 20px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
-      border: 1px solid #cbd5e1;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, var(--maroon) 0%, #d16b76 100%);
-      transition: width .25s ease;
-      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.18);
+      display: none;
     }
 
     .main {
@@ -934,8 +1131,9 @@
 
     @media (max-width: 980px) {
       .topbar, .main, .leaderboard-grid { grid-template-columns: 1fr; }
-      .how-grid { grid-template-columns: 1fr; }
+      .how-grid, .progress-callouts, .team-meta-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 38px; }
+      .team-hero-name { font-size: 28px; }
 
       .glove-wrap {
         min-height: auto;
@@ -960,7 +1158,6 @@
   <div class="page">
     <div class="hero">
       <div class="hero-inner">
-
         <div class="hero-park-wrap">
           <img src="signzoomout.png" alt="Roy Gayle ballpark illustration" class="hero-park-img" />
         </div>
@@ -995,43 +1192,81 @@
 
     <div class="topbar">
       <div class="panel">
-        <h2>Choose a Sport</h2>
+        <h2>Choose a Team</h2>
+
+        <div class="section-label">Choose a Sport</div>
         <div class="controls" id="sportButtons"></div>
 
-        <h2 style="font-size:22px; margin-top:10px;">Choose a Division</h2>
+        <div class="section-label">Choose a Division</div>
         <div class="controls" id="divisionButtons"></div>
 
-        <h2 style="font-size:22px; margin-top:10px;">Choose a Team</h2>
+        <div class="section-label">Choose a Team</div>
         <div class="controls" id="teamButtons"></div>
+
+        <div class="team-hero-card" id="teamHeroCard">
+          <div class="team-hero-inner">
+            <div class="team-hero-top">
+              <div>
+                <div class="team-hero-sport" id="teamSportLabel">Baseball Team</div>
+                <h3 class="team-hero-name" id="teamHeroName">Team Name</h3>
+                <div class="team-hero-division" id="teamHeroDivision">Division</div>
+                <p class="team-hero-copy" id="teamHeroMessage">Support this Roy Gayle team by filling open glove spots and helping them reach their fundraising goal.</p>
+              </div>
+              <div class="team-status-pill just-started" id="teamStatusBadge">Just Started</div>
+            </div>
+
+            <div class="team-meta-grid">
+              <div class="team-meta-box">
+                <div class="team-meta-label">League Rank</div>
+                <div class="team-meta-value" id="teamRankValue">#--</div>
+              </div>
+              <div class="team-meta-box">
+                <div class="team-meta-label">Division Rank</div>
+                <div class="team-meta-value" id="divisionRankValue">#--</div>
+              </div>
+              <div class="team-meta-box">
+                <div class="team-meta-label">Spots Filled</div>
+                <div class="team-meta-value" id="teamFilledValue">0/36</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-card-top">
+            <h3 class="progress-card-title">Live Team Progress</h3>
+          </div>
+          <p class="progress-card-note" id="progressCardNote">This team is working toward a $500 goal. Every filled spot helps move them up the leaderboard.</p>
+
+          <div class="progress-callouts">
+            <div class="progress-callout">
+              <div class="label">Goal</div>
+              <div class="value" id="goalValue">$500</div>
+            </div>
+            <div class="progress-callout">
+              <div class="label">Raised</div>
+              <div class="value" id="raisedValue">$0</div>
+            </div>
+            <div class="progress-callout">
+              <div class="label">Spots Left</div>
+              <div class="value" id="spotsLeftValue">0</div>
+            </div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Fundraising Progress</span>
+              <strong id="progressPct">0%</strong>
+            </div>
+            <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+          </div>
+        </div>
 
         <div class="share-wrap">
           <button class="share-btn" id="shareButton">Share This Team</button>
           <button class="share-btn secondary" id="copyLinkButton">Copy Team Link</button>
         </div>
         <div class="share-message" id="shareMessage"></div>
-
-        <div class="stats">
-          <div class="stat">
-            <div class="label">Goal</div>
-            <div class="value" id="goalValue">$500</div>
-          </div>
-          <div class="stat">
-            <div class="label">Raised</div>
-            <div class="value" id="raisedValue">$0</div>
-          </div>
-          <div class="stat">
-            <div class="label">Spots Left</div>
-            <div class="value" id="spotsLeftValue">0</div>
-          </div>
-        </div>
-
-        <div class="progress-wrap">
-          <div class="progress-label">
-            <span>Fundraising Progress</span>
-            <strong id="progressPct">0%</strong>
-          </div>
-          <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-        </div>
       </div>
 
       <div class="panel">
@@ -1131,27 +1366,23 @@
       { id: 2, amount: 10, x: 372, y: 132 },
       { id: 3, amount: 15, x: 451, y: 142 },
       { id: 4, amount: 10, x: 517, y: 161 },
-
       { id: 5, amount: 10, x: 212, y: 187 },
       { id: 6, amount: 15, x: 290, y: 203 },
       { id: 7, amount: 20, x: 371, y: 213 },
       { id: 8, amount: 15, x: 451, y: 227 },
       { id: 9, amount: 10, x: 525, y: 246 },
-
       { id: 10, amount: 10, x: 177, y: 266 },
       { id: 11, amount: 10, x: 253, y: 286 },
       { id: 12, amount: 15, x: 333, y: 305 },
       { id: 13, amount: 20, x: 411, y: 324 },
       { id: 14, amount: 15, x: 484, y: 342 },
       { id: 15, amount: 10, x: 545, y: 360 },
-
       { id: 16, amount: 10, x: 144, y: 349 },
       { id: 17, amount: 10, x: 215, y: 373 },
       { id: 18, amount: 15, x: 293, y: 394 },
       { id: 19, amount: 25, x: 373, y: 413 },
       { id: 20, amount: 15, x: 451, y: 430 },
       { id: 21, amount: 10, x: 519, y: 446 },
-
       { id: 22, amount: 10, x: 137, y: 432 },
       { id: 23, amount: 10, x: 201, y: 470 },
       { id: 24, amount: 15, x: 274, y: 491 },
@@ -1159,14 +1390,12 @@
       { id: 26, amount: 15, x: 420, y: 529 },
       { id: 27, amount: 10, x: 493, y: 538 },
       { id: 28, amount: 10, x: 555, y: 515 },
-
       { id: 29, amount: 10, x: 177, y: 552 },
       { id: 30, amount: 10, x: 243, y: 583 },
       { id: 31, amount: 25, x: 314, y: 604 },
       { id: 32, amount: 10, x: 389, y: 602 },
       { id: 33, amount: 10, x: 463, y: 590 },
       { id: 34, amount: 10, x: 526, y: 571 },
-
       { id: 35, amount: 30, x: 271, y: 663 },
       { id: 36, amount: 30, x: 392, y: 659 }
     ];
@@ -1180,12 +1409,12 @@
       { id: 'baseball-6u-shetland-baseball-team-verfuerth', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Verfuerth', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
 
       { id: 'baseball-8u-pinto-baseball-coach-hill', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Hill', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-coach-wallen', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach wallen', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-8u-pinto-baseball-coach-wallen', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Wallen', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-control', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Control', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-convey-all', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-convey-all-2', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-8u-pinto-baseball-convey-all-2', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All 2', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-dickerson-nieman', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters-413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-8u-pinto-baseball-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-firefighters-413-red', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413 Red', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-golden-oak-sluggers', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Golden Oak Sluggers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-8u-pinto-baseball-randees-music', sport: 'Baseball', division: '8U Pinto Baseball', name: "Randee's Music", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
@@ -1195,7 +1424,7 @@
       { id: 'baseball-10u-mustang-baseball-byron-tigers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Byron Tigers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-10u-mustang-baseball-cherry-valley-feed', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-10u-mustang-baseball-cubbies', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cubbies', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-firefrighters-local-413', sport: 'Baseball', division: '10U Mustang Baseball', name: 'FireFrighters Local 413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-10u-mustang-baseball-firefrighters-local-413', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Firefighters Local 413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-10u-mustang-baseball-lil-gators', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lil Gators', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-10u-mustang-baseball-lombardi-club', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lombardi Club', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-10u-mustang-baseball-lonnies-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lonnies Sluggers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
@@ -1204,7 +1433,7 @@
       { id: 'baseball-10u-mustang-baseball-pbpa-k9s', sport: 'Baseball', division: '10U Mustang Baseball', name: "PBPA K9's", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-10u-mustang-baseball-reflections-hair-salon', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
 
-      { id: 'baseball-12u-bronco-baseball-425-manufactoring', sport: 'Baseball', division: '12U Bronco Baseball', name: '425 Manufactoring', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-12u-bronco-baseball-425-manufactoring', sport: 'Baseball', division: '12U Bronco Baseball', name: '425 Manufacturing', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-12u-bronco-baseball-hawkins', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Hawkins', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-12u-bronco-baseball-larsen-and-larsen', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-12u-bronco-baseball-lincoln-rental', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
@@ -1220,7 +1449,7 @@
       { id: 'baseball-14u-pony-baseball-ponds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Ponds', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-14u-pony-baseball-redbirds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Redbirds', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'baseball-14u-pony-baseball-rockford-ice-hogs', sport: 'Baseball', division: '14U Pony Baseball', name: 'Rockford Ice Hogs', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-14u-pony-baseball-these-guys-dad', sport: 'Baseball', division: '14U Pony Baseball', name: "Byron Tigers", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-14u-pony-baseball-these-guys-dad', sport: 'Baseball', division: '14U Pony Baseball', name: 'Byron Tigers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
 
       { id: 'softball-8u-pinto-softball-bs-greenville-llc', sport: 'Softball', division: '8U Pinto Softball', name: 'Greenville LLC', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
       { id: 'softball-8u-pinto-softball-bs-reflections-hair-salon', sport: 'Softball', division: '8U Pinto Softball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
@@ -1263,6 +1492,7 @@
     const spotsLeftValue = document.getElementById('spotsLeftValue');
     const progressBar = document.getElementById('progressBar');
     const progressPct = document.getElementById('progressPct');
+    const progressCardNote = document.getElementById('progressCardNote');
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
@@ -1282,6 +1512,16 @@
     const adminPassword = document.getElementById('adminPassword');
     const adminUnlockButton = document.getElementById('adminUnlockButton');
     const adminStatus = document.getElementById('adminStatus');
+
+    const teamHeroCard = document.getElementById('teamHeroCard');
+    const teamSportLabel = document.getElementById('teamSportLabel');
+    const teamHeroName = document.getElementById('teamHeroName');
+    const teamHeroDivision = document.getElementById('teamHeroDivision');
+    const teamHeroMessage = document.getElementById('teamHeroMessage');
+    const teamStatusBadge = document.getElementById('teamStatusBadge');
+    const teamRankValue = document.getElementById('teamRankValue');
+    const divisionRankValue = document.getElementById('divisionRankValue');
+    const teamFilledValue = document.getElementById('teamFilledValue');
 
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
@@ -1324,6 +1564,7 @@
 
     function updateUrlForSelection() {
       const team = getActiveTeam();
+      if (!team) return;
       const url = new URL(window.location.href);
       url.searchParams.set('sport', activeSport);
       url.searchParams.set('division', activeDivision);
@@ -1447,10 +1688,47 @@
       return row;
     }
 
+    function getRankedTeams() {
+      return teams
+        .map(team => ({ ...team, raised: calcRaised(team.id) }))
+        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
+    }
+
+    function getOverallRank(teamId) {
+      const ranked = getRankedTeams();
+      return ranked.findIndex(team => team.id === teamId) + 1;
+    }
+
+    function getDivisionRank(teamId) {
+      const team = teams.find(item => item.id === teamId);
+      if (!team) return null;
+      const ranked = teams
+        .filter(item => item.division === team.division)
+        .map(item => ({ ...item, raised: calcRaised(item.id) }))
+        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
+      return ranked.findIndex(item => item.id === teamId) + 1;
+    }
+
+    function getStatusMeta(raised) {
+      const pct = Math.min(100, Math.round((raised / calcGoal()) * 100));
+      if (pct >= 100) return { label: 'Goal Reached', className: 'goal' };
+      if (pct >= 80) return { label: 'Almost Full', className: 'almost' };
+      if (pct >= 50) return { label: 'Halfway There', className: 'halfway' };
+      if (pct >= 20) return { label: 'Building Momentum', className: 'building' };
+      return { label: 'Just Started', className: 'just-started' };
+    }
+
+    function getTeamMessage(team, raised, spotsLeft) {
+      const pct = Math.min(100, Math.round((raised / calcGoal()) * 100));
+      if (pct >= 100) return `${team.name} filled every needed spot and hit the full team goal. Thank you for helping this team finish strong.`;
+      if (pct >= 80) return `${team.name} is so close to the finish line. Only ${spotsLeft} spots remain to help this team close out its fundraiser.`;
+      if (pct >= 50) return `${team.name} has real momentum going. Help push this team from halfway there to nearly full.`;
+      if (pct > 0) return `${team.name} is on the board and climbing. Fill a glove spot to help this Roy Gayle team keep moving up the leaderboard.`;
+      return `${team.name} is ready to get the glove filling started. Be one of the first supporters to help this team build momentum.`;
+    }
+
     function renderLeaderboard() {
-      const ranked = teams.map(team => ({ ...team, raised: calcRaised(team.id) }))
-        .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name))
-        .slice(0, 5);
+      const ranked = getRankedTeams().slice(0, 5);
 
       leaderboardList.innerHTML = '';
       ranked.forEach((team, index) => {
@@ -1482,8 +1760,32 @@
       });
     }
 
+    function renderTeamShowcase() {
+      const team = getActiveTeam();
+      if (!team) return;
+      const raised = calcRaised(team.id);
+      const filledCount = getFilledForTeam(team.id).length;
+      const spotsLeft = baseSpots.length - filledCount;
+      const overallRank = getOverallRank(team.id);
+      const divisionRank = getDivisionRank(team.id);
+      const statusMeta = getStatusMeta(raised);
+
+      teamHeroCard.classList.toggle('softball', team.sport.toLowerCase() === 'softball');
+      teamSportLabel.textContent = `${team.sport} Team`;
+      teamHeroName.textContent = team.name;
+      teamHeroDivision.textContent = team.division;
+      teamHeroMessage.textContent = getTeamMessage(team, raised, spotsLeft);
+      teamStatusBadge.textContent = statusMeta.label;
+      teamStatusBadge.className = `team-status-pill ${statusMeta.className}`;
+      teamRankValue.textContent = overallRank ? `#${overallRank}` : '#--';
+      divisionRankValue.textContent = divisionRank ? `#${divisionRank}` : '#--';
+      teamFilledValue.textContent = `${filledCount}/${baseSpots.length}`;
+      progressCardNote.textContent = `${team.name} has raised $${raised} so far. ${spotsLeft} open spots remain on this glove.`;
+    }
+
     function renderStats() {
       const team = getActiveTeam();
+      if (!team) return;
       const goal = calcGoal();
       const raised = calcRaised(team.id);
       const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
@@ -1498,6 +1800,7 @@
 
     function renderSpots() {
       const team = getActiveTeam();
+      if (!team) return;
       const filled = getFilledForTeam(team.id);
       const isSoftball = team.sport.toLowerCase() === 'softball';
 
@@ -1697,6 +2000,7 @@
       renderSportButtons();
       renderDivisionButtons();
       renderTeamButtons();
+      renderTeamShowcase();
       renderStats();
       renderSpots();
       renderSelection();
