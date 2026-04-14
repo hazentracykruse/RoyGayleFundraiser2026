@@ -1,7 +1,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1446,7 +1445,7 @@
           <div class="how-step"><div class="how-number">1</div><div><div class="how-title">Choose a Sport</div><div class="how-text">Start by choosing either Baseball or Softball.</div></div></div>
           <div class="how-step"><div class="how-number">2</div><div><div class="how-title">Choose a Division</div><div class="how-text">Select the division you want to support, such as 10U Mustang Baseball or 12U Bronco Girls Softball.</div></div></div>
           <div class="how-step"><div class="how-number">3</div><div><div class="how-title">Pick a Team</div><div class="how-text">Choose the specific Roy Gayle team you want to support inside that division.</div></div></div>
-          <div class="how-step"><div class="how-number">4</div><div><div class="how-title">Choose a Spot and Donate</div><div class="how-text">Click a donation amount on the glove, donate through PayPal or Venmo, and help your team move closer to its goal.</div></div></div>
+          <div class="how-step"><div class="how-number">4</div><div><div class="how-title">Choose a Spot and Donate</div><div class="how-text">Click any open donation amount on the glove, donate through PayPal or Venmo, then fill the spot for everyone to see.</div></div></div>
         </div>
         <div class="how-note">Every team is working toward a $500 fundraising goal. Thank you for supporting Roy Gayle Baseball and Softball.</div>
       </div>
@@ -1484,8 +1483,9 @@
 
         <button class="checkout" id="checkoutButton" disabled>Donate with PayPal</button>
         <button class="venmo-button" id="venmoButton" disabled>Donate with Venmo</button>
-        <div class="payment-note">Use whichever option is easiest. Donation amounts on the glove are suggested giving levels.</div>
-                <button class="secondary hidden" id="copyTeamLinkBottom">Copy Team Link</button>
+        <div class="payment-note">Use whichever option is easiest, then mark the spot filled below.</div>
+        <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
+        <button class="secondary hidden" id="copyTeamLinkBottom">Copy Team Link</button>
 
         <div class="admin-toggle-wrap">
           <button class="admin-link" id="adminToggle">Admin</button>
@@ -1496,6 +1496,8 @@
           <input type="password" id="adminPassword" placeholder="Enter admin password" />
           <div class="admin-status" id="adminStatus"></div>
           <button class="secondary" id="adminUnlockButton">Unlock Admin Mode</button>
+          <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
+          <button class="secondary" id="resetTeamButton" disabled>Reset Current Team</button>
         </div>
 
         <div class="legend">
@@ -1510,7 +1512,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js';
-    import { getDatabase, ref, onValue, get, set } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js';
+    import { getDatabase, ref, onValue, update, get } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js';
 
     const firebaseConfig = {
       apiKey: 'AIzaSyAKs9v1U5PNWRL3gpPoyDf2SbGHo5JVDc0',
@@ -1737,6 +1739,9 @@
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
     const venmoButton = document.getElementById('venmoButton');
+    const markPaidButton = document.getElementById('markPaidButton');
+    const unmarkPaidButton = document.getElementById('unmarkPaidButton');
+    const resetTeamButton = document.getElementById('resetTeamButton');
     const syncStatus = document.getElementById('syncStatus');
     const leaderboardList = document.getElementById('leaderboardList');
     const divisionLeaderboardList = document.getElementById('divisionLeaderboardList');
@@ -2166,10 +2171,12 @@
       if (!selectedSpot) {
         selectedAmount.textContent = '--';
         selectedHelper.textContent = teamViewMode
-          ? `You are supporting ${team.name}. Select a donation amount on the glove below.`
-          : 'Select a donation amount on the glove.';
+          ? `You are supporting ${team.name}. Select an open spot on the glove below.`
+          : 'Select an open spot on the glove.';
         checkoutButton.disabled = true;
         venmoButton.disabled = true;
+        markPaidButton.disabled = true;
+        unmarkPaidButton.disabled = true;
         return;
       }
 
@@ -2182,15 +2189,23 @@
           : `${team.name} spot is already filled.`;
         checkoutButton.disabled = true;
         venmoButton.disabled = true;
+        markPaidButton.disabled = true;
+        unmarkPaidButton.disabled = !adminMode;
       } else {
-        selectedHelper.textContent = `${team.name} donation amount selected. Use PayPal or Venmo to donate. Every contribution helps this team reach its goal.`;
+        selectedHelper.textContent = `${team.name} donation selected. Use PayPal or Venmo to donate, then click the button below to fill the spot for everyone.`;
         checkoutButton.disabled = false;
         venmoButton.disabled = false;
+        markPaidButton.disabled = false;
+        unmarkPaidButton.disabled = true;
       }
     }
 
     function renderAdminState() {
       adminPanel.classList.toggle('show', adminMode || adminPanel.classList.contains('show'));
+      unmarkPaidButton.style.display = adminMode ? 'block' : 'none';
+      resetTeamButton.style.display = adminMode ? 'block' : 'none';
+      resetTeamButton.disabled = !adminMode;
+
       if (adminMode) {
         adminStatus.textContent = 'Admin mode unlocked.';
         adminStatus.style.color = '#0f4c81';
@@ -2213,6 +2228,10 @@
       }
     }
 
+    async function saveTeamFilled(teamId, filled) {
+      if (!db) return;
+      await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled });
+    }
 
     async function copyTeamLink(mode = 'team') {
       const team = getActiveTeam();
@@ -2281,8 +2300,30 @@
       window.open(url, '_blank', 'noopener,noreferrer');
     });
 
+    markPaidButton.addEventListener('click', async () => {
+      const team = getActiveTeam();
+      if (!selectedSpotId) return;
+      const filled = getFilledForTeam(team.id);
+      if (!filled.includes(selectedSpotId)) {
+        const updated = [...filled, selectedSpotId].sort((a, b) => a - b);
+        await saveTeamFilled(team.id, updated);
+      }
+    });
 
+    unmarkPaidButton.addEventListener('click', async () => {
+      if (!adminMode) return;
+      const team = getActiveTeam();
+      if (!selectedSpotId) return;
+      const updated = getFilledForTeam(team.id).filter(id => id !== selectedSpotId);
+      await saveTeamFilled(team.id, updated);
+    });
 
+    resetTeamButton.addEventListener('click', async () => {
+      if (!adminMode) return;
+      const team = getActiveTeam();
+      await saveTeamFilled(team.id, []);
+      selectedSpotId = null;
+    });
 
     homeModeButton.addEventListener('click', () => {
       setViewMode(false);
@@ -2323,7 +2364,7 @@
             filled: []
           };
         });
-        await set(ref(db, 'fillMyGlove/teams'), seed);
+        await update(ref(db, 'fillMyGlove'), { teams: seed });
       }
     }
 
