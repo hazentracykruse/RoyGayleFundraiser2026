@@ -2300,15 +2300,24 @@
       window.open(url, '_blank', 'noopener,noreferrer');
     });
 
-    markPaidButton.addEventListener('click', async () => {
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const filled = getFilledForTeam(team.id);
-      if (!filled.includes(selectedSpotId)) {
-        const updated = [...filled, selectedSpotId].sort((a, b) => a - b);
-        await saveTeamFilled(team.id, updated);
-      }
-    });
+ import { push } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js';
+
+markPaidButton.addEventListener('click', async () => {
+  const team = getActiveTeam();
+  const spot = baseSpots.find(s => s.id === selectedSpotId);
+  if (!selectedSpotId || !spot) return;
+
+  const report = {
+    teamId: team.id,
+    spotId: spot.id,
+    amount: spot.amount,
+    timestamp: Date.now()
+  };
+
+  await push(ref(db, 'fillMyGlove/reports'), report);
+
+  alert('Thanks! Your donation was reported. A coach/admin will confirm shortly.');
+});
 
     unmarkPaidButton.addEventListener('click', async () => {
       if (!adminMode) return;
