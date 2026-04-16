@@ -1475,8 +1475,7 @@
         <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
 
         <button class="checkout" id="checkoutButton" disabled>Donate with PayPal</button>
-                <div class="payment-note">Donate with PayPal, then mark the spot filled below.</div>
-        <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
+        <div class="payment-note">Donate with PayPal. Filled spots are updated by the webhook or by admin tools only.</div>
         <button class="secondary hidden" id="copyTeamLinkBottom">Copy Team Link</button>
 
         <div class="admin-toggle-wrap">
@@ -1488,7 +1487,8 @@
           <input type="password" id="adminPassword" placeholder="Enter admin password" />
           <div class="admin-status" id="adminStatus"></div>
           <button class="secondary" id="adminUnlockButton">Unlock Admin Mode</button>
-          <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
+          <button class="secondary" id="adminMarkButton" disabled>Mark Selected Spot Filled</button>
+          <button class="secondary" id="unmarkPaidButton" disabled>Unmark Selected Spot</button>
           <button class="secondary" id="resetTeamButton" disabled>Reset Current Team</button>
         </div>
 
@@ -1737,7 +1737,7 @@
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
-    const markPaidButton = document.getElementById('markPaidButton');
+        const adminMarkButton = document.getElementById('adminMarkButton');
     const unmarkPaidButton = document.getElementById('unmarkPaidButton');
     const resetTeamButton = document.getElementById('resetTeamButton');
     const syncStatus = document.getElementById('syncStatus');
@@ -1992,6 +1992,14 @@
       actionCardTitle.textContent = isTeamMode ? 'Support This Team' : 'Selected Donation';
     }
 
+    
+    function formatDivisionLabel(division) {
+      return division
+        .replace(/ Girls Softball$/i, ' Girls')
+        .replace(/ Softball$/i, '')
+        .replace(/ Baseball$/i, '');
+    }
+
     function renderSportButtons() {
       sportButtons.innerHTML = '';
       sports.forEach(sport => {
@@ -2016,7 +2024,7 @@
       divisions = getDivisionsForSport(activeSport);
       divisions.forEach(division => {
         const button = document.createElement('button');
-        button.textContent = division;
+        button.textContent = formatDivisionLabel(division);
         if (division === activeDivision) button.classList.add('active');
         button.addEventListener('click', () => {
           activeDivision = division;
@@ -2117,7 +2125,7 @@
         leaderboardList.appendChild(
           createLeaderboardRow(
             String(index + 1),
-            `${team.division} — ${team.name}`,
+            `${formatDivisionLabel(team.division)} — ${team.name}`,
             `${Math.min(100, Math.round((team.raised / 500) * 100))}% of goal filled`,
             team.raised
           )
@@ -2136,7 +2144,7 @@
         const leader = teamsInDivision[0];
         if (leader) {
           divisionLeaderboardList.appendChild(
-            createLeaderboardRow('★', division, leader.name, leader.raised)
+            createLeaderboardRow('★', formatDivisionLabel(division), leader.name, leader.raised)
           );
         }
       });
@@ -2168,9 +2176,9 @@
 
       teamSportTag.textContent = `${team.sport} Team Page`;
       teamHeroName.textContent = team.name;
-      teamSupportLine.textContent = `${team.division} • Roy Gayle Fill My Glove Fundraiser`;
+      teamSupportLine.textContent = `${formatDivisionLabel(team.division)} • Roy Gayle Fill My Glove Fundraiser`;
       teamHeroCopy.textContent = `You are supporting ${team.name}. Choose an open spot below, donate through PayPal, and help this team reach its $500 goal.`;
-      teamDivisionBadge.textContent = team.division;
+      teamDivisionBadge.textContent = formatDivisionLabel(team.division);
       teamRankBadge.textContent = `Overall Rank #${rank}`;
       teamSpotsBadge.textContent = `${spotsLeft} Spots Left`;
       teamHeroRaised.textContent = `$${raised}`;
@@ -2246,7 +2254,7 @@
           ? `You are supporting ${team.name}. Select an open spot on the glove below.`
           : 'Select an open spot on the glove.';
         checkoutButton.disabled = true;
-            markPaidButton.disabled = true;
+        adminMarkButton.disabled = true;
         unmarkPaidButton.disabled = true;
         return;
       }
@@ -2256,32 +2264,46 @@
 
       if (isFilled) {
         selectedHelper.textContent = adminMode
-          ? `${team.name} spot is already filled. Admin mode can reopen it.`
+          ? `${team.name} spot is filled. Admin can unmark it below.`
           : `${team.name} spot is already filled.`;
         checkoutButton.disabled = true;
-            markPaidButton.disabled = true;
+        adminMarkButton.disabled = true;
         unmarkPaidButton.disabled = !adminMode;
       } else {
-        selectedHelper.textContent = `${team.name} donation selected. Use PayPal to donate, then click the button below to fill the spot for everyone.`;
+        selectedHelper.textContent = adminMode
+          ? `${team.name} spot is open. Admin can mark it filled below, or you can donate through PayPal.`
+          : `${team.name} donation selected. Use PayPal to donate.`;
         checkoutButton.disabled = false;
-        markPaidButton.disabled = false;
+        adminMarkButton.disabled = !adminMode;
         unmarkPaidButton.disabled = true;
       }
     }
 
     function renderAdminState() {
+      const selectedIsFilled = Boolean(selectedSpotId) && getFilledForTeam(activeTeamId).includes(selectedSpotId);
+      const selectedIsOpen = Boolean(selectedSpotId) && !selectedIsFilled;
+
       adminPanel.classList.toggle('show', adminMode || adminPanel.classList.contains('show'));
+      adminMarkButton.style.display = 'block';
       unmarkPaidButton.style.display = 'block';
       resetTeamButton.style.display = 'block';
-      unmarkPaidButton.disabled = !adminMode || !selectedSpotId || !getFilledForTeam(activeTeamId).includes(selectedSpotId);
+      adminMarkButton.disabled = !adminMode || !selectedIsOpen;
+      unmarkPaidButton.disabled = !adminMode || !selectedIsFilled;
       resetTeamButton.disabled = !adminMode;
 
       if (adminMode) {
-        adminStatus.textContent = 'Admin mode unlocked. Select a filled spot to unmark it.';
+        if (!selectedSpotId) {
+          adminStatus.textContent = 'Admin unlocked. Select a spot to mark or unmark it.';
+        } else if (selectedIsFilled) {
+          adminStatus.textContent = 'Selected spot is filled. Use unmark to reopen it.';
+        } else {
+          adminStatus.textContent = 'Selected spot is open. Use mark to fill it.';
+        }
         adminStatus.style.color = '#0f4c81';
         adminUnlockButton.textContent = 'Admin Mode Unlocked';
         adminUnlockButton.disabled = true;
       } else {
+        adminStatus.textContent = '';
         adminUnlockButton.textContent = 'Unlock Admin Mode';
         adminUnlockButton.disabled = false;
       }
@@ -2383,7 +2405,8 @@
       window.open(url, '_blank', 'noopener,noreferrer');
     });
 
-    markPaidButton.addEventListener('click', async () => {
+    adminMarkButton.addEventListener('click', async () => {
+      if (!adminMode) return;
       const team = getActiveTeam();
       if (!selectedSpotId) return;
       const filled = getFilledForTeam(team.id);
