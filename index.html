@@ -1712,42 +1712,15 @@
     let selectedSpotId = null;
     let db;
     let remoteState = {};
+    const LOCAL_STORAGE_KEY = 'royGayleFillMyGloveLocalState';
+
+    const hardcodedFilledSpots = {
+      'pinto-softball-8u-reflections-hair-salon': [1, 2],
+      'mustang-softball-10u-kruse-farm-krushers': [1, 2],
+      'pony-baseball-14u-kruse-farms': [1],
+      'pony-softball-14u-firefighters': []
+    };
     let adminMode = false;
-
-    const LOCAL_STATE_KEY = 'royGayleFillMyGloveLocalState';
-
-    function loadLocalState() {
-      try {
-        const raw = localStorage.getItem(LOCAL_STATE_KEY);
-        return raw ? JSON.parse(raw) : {};
-      } catch (error) {
-        return {};
-      }
-    }
-
-    function saveLocalState(state) {
-      try {
-        localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify(state));
-      } catch (error) {
-        console.warn('Could not save local state.', error);
-      }
-    }
-
-    function mergeStates(remote, local) {
-      const merged = { ...remote };
-      teams.forEach(team => {
-        const remoteFilled = Array.isArray(remote?.[team.id]?.filled) ? remote[team.id].filled : [];
-        const localFilled = Array.isArray(local?.[team.id]?.filled) ? local[team.id].filled : [];
-        merged[team.id] = {
-          ...(remote?.[team.id] || {}),
-          sport: team.sport,
-          division: team.division,
-          name: team.name,
-          filled: Array.from(new Set([...remoteFilled, ...localFilled])).sort((a, b) => a - b)
-        };
-      });
-      return merged;
-    }
     let lastCelebratedTeam = null;
     let explicitTeamFromUrl = false;
     let teamViewMode = false;
@@ -1801,11 +1774,85 @@
     const teamPageNote = document.getElementById('teamPageNote');
     const actionCardTitle = document.getElementById('actionCardTitle');
 
+
+    function cloneState(value) {
+      return JSON.parse(JSON.stringify(value || {}));
+    }
+
+    function ensureTeamEntry(teamId) {
+      if (!remoteState[teamId]) {
+        const team = teams.find(item => item.id === teamId);
+        remoteState[teamId] = {
+          sport: team?.sport || '',
+          division: team?.division || '',
+          name: team?.name || '',
+          filled: []
+        };
+      }
+      if (!Array.isArray(remoteState[teamId].filled)) remoteState[teamId].filled = [];
+    }
+
+    function buildSeedState() {
+      const seed = {};
+      teams.forEach(team => {
+        seed[team.id] = {
+          sport: team.sport,
+          division: team.division,
+          name: team.name,
+          filled: [...(hardcodedFilledSpots[team.id] || [])]
+        };
+      });
+      return seed;
+    }
+
+    function loadLocalState() {
+      try {
+        const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (!raw) return buildSeedState();
+        const parsed = JSON.parse(raw);
+        const seed = buildSeedState();
+        Object.keys(parsed || {}).forEach(teamId => {
+          seed[teamId] = {
+            ...(seed[teamId] || {}),
+            ...(parsed[teamId] || {})
+          };
+          if (!Array.isArray(seed[teamId].filled)) seed[teamId].filled = [];
+        });
+        return seed;
+      } catch (error) {
+        console.error('Local state load failed', error);
+        return buildSeedState();
+      }
+    }
+
+    function saveLocalState() {
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(remoteState));
+      } catch (error) {
+        console.error('Local state save failed', error);
+      }
+    }
+
+    function mergeSnapshot(snapshotVal) {
+      const merged = loadLocalState();
+      const incoming = snapshotVal || {};
+      Object.keys(incoming).forEach(teamId => {
+        merged[teamId] = {
+          ...(merged[teamId] || {}),
+          ...(incoming[teamId] || {})
+        };
+        if (!Array.isArray(merged[teamId].filled)) merged[teamId].filled = [];
+      });
+      remoteState = merged;
+      saveLocalState();
+    }
+
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
     }
 
     function getFilledForTeam(teamId) {
+      ensureTeamEntry(teamId);
       return Array.isArray(remoteState[teamId]?.filled) ? remoteState[teamId].filled : [];
     }
 
@@ -2224,15 +2271,19 @@
 
     function renderAdminState() {
       adminPanel.classList.toggle('show', adminMode || adminPanel.classList.contains('show'));
-      unmarkPaidButton.style.display = adminMode ? 'block' : 'none';
-      resetTeamButton.style.display = adminMode ? 'block' : 'none';
+      unmarkPaidButton.style.display = 'block';
+      resetTeamButton.style.display = 'block';
+      unmarkPaidButton.disabled = !adminMode || !selectedSpotId || !getFilledForTeam(activeTeamId).includes(selectedSpotId);
       resetTeamButton.disabled = !adminMode;
 
       if (adminMode) {
-        adminStatus.textContent = 'Admin mode unlocked.';
+        adminStatus.textContent = 'Admin mode unlocked. Select a filled spot to unmark it.';
         adminStatus.style.color = '#0f4c81';
         adminUnlockButton.textContent = 'Admin Mode Unlocked';
         adminUnlockButton.disabled = true;
+      } else {
+        adminUnlockButton.textContent = 'Unlock Admin Mode';
+        adminUnlockButton.disabled = false;
       }
     }
 
@@ -2251,38 +2302,18 @@
     }
 
     async function saveTeamFilled(teamId, filled) {
-      const normalizedFilled = [...new Set(filled)].sort((a, b) => a - b);
-
-      remoteState[teamId] = {
-        ...(remoteState[teamId] || {}),
-        sport: getActiveTeam().sport,
-        division: getActiveTeam().division,
-        name: getActiveTeam().name,
-        filled: normalizedFilled
-      };
-
-      const localState = loadLocalState();
-      localState[teamId] = {
-        ...(localState[teamId] || {}),
-        sport: getActiveTeam().sport,
-        division: getActiveTeam().division,
-        name: getActiveTeam().name,
-        filled: normalizedFilled
-      };
-      saveLocalState(localState);
+      ensureTeamEntry(teamId);
+      remoteState[teamId].filled = [...filled].sort((a, b) => a - b);
+      saveLocalState();
       renderAll();
 
-      if (!db) {
-        setStatus('Saved on this device only. Firebase is not connected.', true);
-        return;
-      }
-
+      if (!db) return;
       try {
-        await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled: normalizedFilled });
-        setStatus('Spot update saved.');
+        await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled: remoteState[teamId].filled });
+        setStatus('Saved successfully.');
       } catch (error) {
-        console.error('Firebase save failed. Keeping local copy instead.', error);
-        setStatus('Saved on this device only. Firebase write failed.', true);
+        console.error(error);
+        setStatus('Saved on this browser. Firebase sync failed.', true);
       }
     }
 
@@ -2327,9 +2358,15 @@
       adminPanel.classList.toggle('show');
     });
 
+    adminPassword.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') adminUnlockButton.click();
+    });
+
     adminUnlockButton.addEventListener('click', () => {
       if (adminPassword.value === ADMIN_PASSWORD) {
         adminMode = true;
+        sessionStorage.setItem('royGayleAdminMode', 'true');
+        adminPanel.classList.add('show');
         adminStatus.textContent = 'Admin mode unlocked.';
         adminStatus.style.color = '#0f4c81';
         renderAll();
@@ -2353,7 +2390,6 @@
       if (!filled.includes(selectedSpotId)) {
         const updated = [...filled, selectedSpotId].sort((a, b) => a - b);
         await saveTeamFilled(team.id, updated);
-        selectedHelper.textContent = `${team.name} spot marked filled.`;
       }
     });
 
@@ -2363,7 +2399,6 @@
       if (!selectedSpotId) return;
       const updated = getFilledForTeam(team.id).filter(id => id !== selectedSpotId);
       await saveTeamFilled(team.id, updated);
-      selectedHelper.textContent = `${team.name} spot reopened.`;
     });
 
     resetTeamButton.addEventListener('click', async () => {
@@ -2371,7 +2406,6 @@
       const team = getActiveTeam();
       await saveTeamFilled(team.id, []);
       selectedSpotId = null;
-      selectedHelper.textContent = `${team.name} has been reset.`;
     });
 
     homeModeButton.addEventListener('click', () => {
@@ -2404,40 +2438,33 @@
     async function seedDatabaseIfEmpty() {
       const snapshot = await get(ref(db, 'fillMyGlove/teams'));
       if (!snapshot.exists()) {
-        const seed = {};
-        teams.forEach(team => {
-          seed[team.id] = {
-            sport: team.sport,
-            division: team.division,
-            name: team.name,
-            filled: []
-          };
-        });
-        await update(ref(db, 'fillMyGlove'), { teams: seed });
+        await update(ref(db, 'fillMyGlove'), { teams: buildSeedState() });
       }
     }
 
     async function startFirebase() {
+      remoteState = loadLocalState();
+      adminMode = sessionStorage.getItem('royGayleAdminMode') === 'true';
+      setStatus('Using local saved fundraiser data.');
+      renderAll();
+
       try {
         const app = initializeApp(firebaseConfig);
         db = getDatabase(app);
         await seedDatabaseIfEmpty();
         onValue(ref(db, 'fillMyGlove/teams'), (snapshot) => {
-          const firebaseState = snapshot.val() || {};
-          remoteState = mergeStates(firebaseState, loadLocalState());
-          setStatus('Live sync connected. Everyone sees the same updated spots.');
+          mergeSnapshot(snapshot.val());
+          setStatus('Live sync connected.');
           renderAll();
         });
       } catch (error) {
         console.error(error);
-        remoteState = mergeStates({}, loadLocalState());
-        setStatus('Firebase is not connected correctly. Using device-only mode.', true);
+        setStatus('Using local saved fundraiser data. Firebase sync is off.', true);
         renderAll();
       }
     }
 
     applySelectionFromUrl();
-    renderAll();
     startFirebase();
   </script>
 </body>
