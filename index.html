@@ -4,6 +4,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1609,6 +1610,29 @@
     ];
 
 
+
+    const firebaseTeamAliases = {
+      'bronco-baseball-12u-425-manufacturing': 'bronco-baseball-12u-425',
+      'bronco-baseball-12u-hawkins': 'bronco-baseball-12u-hawkins-kids',
+      'softball-12u-bronco-girls-softball-bs-bax-tees': 'bronco-softball-12u-bax-tees',
+      'softball-12u-bronco-girls-softball-bs-mbs-makos': 'bronco-softball-12u-mbs-makos',
+      'mustang-baseball-10u-byron-tigers': 'mustang-baseball-10u-byron',
+      'mustang-baseball-10u-firefighters-local-413': 'mustang-baseball-10u-crown-ff',
+      'mustang-baseball-10u-lonnies-sluggers': 'mustang-baseball-10u-lonnies',
+      'pinto-baseball-8u-control': 'pinto-baseball-8u-815-control',
+      'pinto-softball-8u-reflections-hair-salon': 'softball-8u-pinto-softball-bs-reflections-hair-salon',
+      'pony-baseball-14u-oregon-jhawks': 'pony-baseball-14u-oregon-j-hawks',
+      'pony-baseball-14u-redbirds': 'pony-baseball-14u-red-birds',
+      'pony-baseball-14u-rockford-ice-hogs': 'pony-baseball-14u-rockford-icehogs',
+      'shetland-baseball-6u-reflections-hair-salon': 'shetland-baseball-6u-reflections',
+      'shetland-baseball-6u-team-name-05': 'shetland-baseball-6u-team-5',
+      'shetland-baseball-6u-team-verfuerth': 'shetland-baseball-6u-team-6'
+    };
+
+    function getFirebaseTeamId(teamId) {
+      return firebaseTeamAliases[teamId] || teamId;
+    }
+
     const teamThemes = {
       'mustang-softball-10u-kruse-farm-krushers': {
         primary: '#0f3d56',
@@ -1795,7 +1819,8 @@
     function buildSeedState() {
       const seed = {};
       teams.forEach(team => {
-        seed[team.id] = {
+        const firebaseTeamId = getFirebaseTeamId(team.id);
+        seed[firebaseTeamId] = {
           sport: team.sport,
           division: team.division,
           name: team.name,
@@ -1852,8 +1877,9 @@
     }
 
     function getFilledForTeam(teamId) {
-      ensureTeamEntry(teamId);
-      return Array.isArray(remoteState[teamId]?.filled) ? remoteState[teamId].filled : [];
+      const firebaseTeamId = getFirebaseTeamId(teamId);
+      ensureTeamEntry(firebaseTeamId);
+      return Array.isArray(remoteState[firebaseTeamId]?.filled) ? remoteState[firebaseTeamId].filled : [];
     }
 
     function getAllRankedTeams() {
@@ -2324,14 +2350,15 @@
     }
 
     async function saveTeamFilled(teamId, filled) {
-      ensureTeamEntry(teamId);
-      remoteState[teamId].filled = [...filled].sort((a, b) => a - b);
+      const firebaseTeamId = getFirebaseTeamId(teamId);
+      ensureTeamEntry(firebaseTeamId);
+      remoteState[firebaseTeamId].filled = [...filled].sort((a, b) => a - b);
       saveLocalState();
       renderAll();
 
       if (!db) return;
       try {
-        await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled: remoteState[teamId].filled });
+        await update(ref(db, `fillMyGlove/teams/${firebaseTeamId}`), { filled: remoteState[firebaseTeamId].filled });
         setStatus('Saved successfully.');
       } catch (error) {
         console.error(error);
