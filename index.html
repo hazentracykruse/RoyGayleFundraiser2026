@@ -2263,9 +2263,20 @@
     }
 
     async function captureApprovedOrder(orderID) {
-      const data = await apiPost(CAPTURE_ORDER_URL, { orderID });
-      setPaymentStatus('Donation received. Updating the board now.');
-      return data;
+  const response = await fetch("https://us-central1-roy-gayle-fill-my-glove.cloudfunctions.net/capturePayPalOrder", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ orderID })
+  });
+
+  const data = await response.json();
+
+  setPaymentStatus('Donation received. Updating the board now.');
+
+  return data;
+}
     }
 
     function renderStandaloneButton(fundingSource, container) {
