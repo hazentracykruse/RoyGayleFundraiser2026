@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1107,6 +1108,36 @@
       text-transform: uppercase;
       letter-spacing: .04em;
     }
+    .pay-buttons-wrap {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .pay-button-shell {
+      min-height: 60px;
+      border-radius: 16px;
+      padding: 8px;
+      border: 1px solid #dbe4ee;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+    }
+
+    .pay-button-shell.disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .payment-status {
+      text-align: center;
+      font-size: 13px;
+      color: var(--navy);
+      min-height: 18px;
+      margin: 0 0 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
 
     .team-page-note {
       margin: 0 0 14px;
@@ -1481,24 +1512,17 @@
         <div class="selected-amount" id="selectedAmount">--</div>
         <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
 
-        <button class="checkout" id="checkoutButton" disabled>Donate with PayPal</button>
-        <button class="venmo-button" id="venmoButton" disabled>Donate with Venmo</button>
-        <div class="payment-note">Use whichever option is easiest, then mark the spot filled below.</div>
-        <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
+        <div class="pay-buttons-wrap">
+          <div class="pay-button-shell disabled" id="paypalButtonShell">
+            <div id="paypalButtonContainer"></div>
+          </div>
+          <div class="pay-button-shell disabled" id="venmoButtonShell">
+            <div id="venmoButtonContainer"></div>
+          </div>
+        </div>
+        <div class="payment-note">Choose a glove amount, then complete checkout with PayPal or Venmo. The board updates automatically after a successful payment.</div>
+        <div class="payment-status" id="paymentStatus">Select an open spot to activate checkout.</div>
         <button class="secondary hidden" id="copyTeamLinkBottom">Copy Team Link</button>
-
-        <div class="admin-toggle-wrap">
-          <button class="admin-link" id="adminToggle">Admin</button>
-        </div>
-
-        <div class="admin-panel" id="adminPanel">
-          <h3>Admin Tools</h3>
-          <input type="password" id="adminPassword" placeholder="Enter admin password" />
-          <div class="admin-status" id="adminStatus"></div>
-          <button class="secondary" id="adminUnlockButton">Unlock Admin Mode</button>
-          <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
-          <button class="secondary" id="resetTeamButton" disabled>Reset Current Team</button>
-        </div>
 
         <div class="legend">
           <div class="legend-row"><span class="legend-dot"></span> Open donation spot</div>
@@ -1512,7 +1536,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js';
-    import { getDatabase, ref, onValue, update, get } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js';
+    import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js';
 
     const firebaseConfig = {
       apiKey: 'AIzaSyAKs9v1U5PNWRL3gpPoyDf2SbGHo5JVDc0',
@@ -1525,9 +1549,9 @@
       measurementId: 'G-7RYJJ54D4S'
     };
 
-    const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
-    const VENMO_DONATE_URL = 'https://www.venmo.com/u/RoyGayle';
-    const ADMIN_PASSWORD = 'roygayle2026';
+    const PAYPAL_CLIENT_ID = 'REPLACE_WITH_YOUR_PAYPAL_CLIENT_ID';
+    const CREATE_ORDER_URL = 'REPLACE_WITH_YOUR_CREATE_ORDER_FUNCTION_URL';
+    const CAPTURE_ORDER_URL = 'REPLACE_WITH_YOUR_CAPTURE_ORDER_FUNCTION_URL';
 
     const baseSpots = [
       { id: 1, amount: 10, x: 295, y: 132 }, { id: 2, amount: 10, x: 372, y: 132 },
@@ -1551,70 +1575,70 @@
     ];
 
     const teams = [
-      { id: 'baseball-6u-shetland-baseball-control-baseball', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Control Baseball', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-6u-shetland-baseball-mark-binder-reds', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Mark Binder Reds', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-6u-shetland-baseball-north-team', sport: 'Baseball', division: '6U Shetland Baseball', name: 'North Team', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-6u-shetland-baseball-reflections-hair-salon', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-6u-shetland-baseball-team-name-05', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Name 05', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-6u-shetland-baseball-team-verfuerth', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Verfuerth', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-6u-shetland-baseball-control-baseball', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Control Baseball' },
+      { id: 'baseball-6u-shetland-baseball-mark-binder-reds', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Mark Binder Reds' },
+      { id: 'baseball-6u-shetland-baseball-north-team', sport: 'Baseball', division: '6U Shetland Baseball', name: 'North Team' },
+      { id: 'baseball-6u-shetland-baseball-reflections-hair-salon', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Reflections Hair Salon' },
+      { id: 'baseball-6u-shetland-baseball-team-name-05', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Name 05' },
+      { id: 'baseball-6u-shetland-baseball-team-verfuerth', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Verfuerth' },
 
-      { id: 'baseball-8u-pinto-baseball-coach-hill', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Hill', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-coach-wallen', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Wallen', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-control', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Control', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-convey-all', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-convey-all-2', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All 2', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-dickerson-nieman', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters-413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-firefighters-413-red', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413 Red', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-golden-oak-sluggers', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Golden Oak Sluggers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-randees-music', sport: 'Baseball', division: '8U Pinto Baseball', name: "Randee's Music", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-the-knights', sport: 'Baseball', division: '8U Pinto Baseball', name: 'The Knights', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-vixen-productions', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Vixen Productions', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-8u-pinto-baseball-coach-hill', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Hill' },
+      { id: 'baseball-8u-pinto-baseball-coach-wallen', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Wallen' },
+      { id: 'baseball-8u-pinto-baseball-control', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Control' },
+      { id: 'baseball-8u-pinto-baseball-convey-all', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All' },
+      { id: 'baseball-8u-pinto-baseball-convey-all-2', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All 2' },
+      { id: 'baseball-8u-pinto-baseball-dickerson-nieman', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Dickerson Nieman' },
+      { id: 'baseball-8u-pinto-baseball-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters-413' },
+      { id: 'baseball-8u-pinto-baseball-firefighters-413-red', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413 Red' },
+      { id: 'baseball-8u-pinto-baseball-golden-oak-sluggers', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Golden Oak Sluggers' },
+      { id: 'baseball-8u-pinto-baseball-randees-music', sport: 'Baseball', division: '8U Pinto Baseball', name: "Randee's Music" },
+      { id: 'baseball-8u-pinto-baseball-the-knights', sport: 'Baseball', division: '8U Pinto Baseball', name: 'The Knights' },
+      { id: 'baseball-8u-pinto-baseball-vixen-productions', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Vixen Productions' },
 
-      { id: 'baseball-10u-mustang-baseball-byron-tigers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Byron Tigers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-cherry-valley-feed', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-cubbies', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cubbies', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-firefrighters-local-413', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Firefighters Local 413', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-lil-gators', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lil Gators', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-lombardi-club', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lombardi Club', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-lonnies-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lonnies Sluggers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-medlux-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Medlux Sluggers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-oregon-j-hawks', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Oregon J-Hawks', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-pbpa-k9s', sport: 'Baseball', division: '10U Mustang Baseball', name: "PBPA K9's", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-reflections-hair-salon', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-10u-mustang-baseball-byron-tigers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Byron Tigers' },
+      { id: 'baseball-10u-mustang-baseball-cherry-valley-feed', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cherry Valley Feed' },
+      { id: 'baseball-10u-mustang-baseball-cubbies', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cubbies' },
+      { id: 'baseball-10u-mustang-baseball-firefrighters-local-413', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Firefighters Local 413' },
+      { id: 'baseball-10u-mustang-baseball-lil-gators', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lil Gators' },
+      { id: 'baseball-10u-mustang-baseball-lombardi-club', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lombardi Club' },
+      { id: 'baseball-10u-mustang-baseball-lonnies-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lonnies Sluggers' },
+      { id: 'baseball-10u-mustang-baseball-medlux-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Medlux Sluggers' },
+      { id: 'baseball-10u-mustang-baseball-oregon-j-hawks', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Oregon J-Hawks' },
+      { id: 'baseball-10u-mustang-baseball-pbpa-k9s', sport: 'Baseball', division: '10U Mustang Baseball', name: "PBPA K9's" },
+      { id: 'baseball-10u-mustang-baseball-reflections-hair-salon', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Reflections Hair Salon' },
 
-      { id: 'baseball-12u-bronco-baseball-425-manufactoring', sport: 'Baseball', division: '12U Bronco Baseball', name: '425 Manufacturing', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-hawkins', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Hawkins', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-larsen-and-larsen', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-lincoln-rental', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-oregon-jhawks', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Oregon Jhawks', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-reg-ellen-inspire-pt', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Reg Ellen/Inspire PT', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-rockford-rampage', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Rockford Rampage', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-stillman-valley', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Stillman Valley', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-12u-bronco-baseball-your-pie', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Youngberg Comrades', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-12u-bronco-baseball-425-manufactoring', sport: 'Baseball', division: '12U Bronco Baseball', name: '425 Manufacturing' },
+      { id: 'baseball-12u-bronco-baseball-hawkins', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Hawkins' },
+      { id: 'baseball-12u-bronco-baseball-larsen-and-larsen', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Larsen and Larsen' },
+      { id: 'baseball-12u-bronco-baseball-lincoln-rental', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Lincoln Rental' },
+      { id: 'baseball-12u-bronco-baseball-oregon-jhawks', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Oregon Jhawks' },
+      { id: 'baseball-12u-bronco-baseball-reg-ellen-inspire-pt', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Reg Ellen/Inspire PT' },
+      { id: 'baseball-12u-bronco-baseball-rockford-rampage', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Rockford Rampage' },
+      { id: 'baseball-12u-bronco-baseball-stillman-valley', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Stillman Valley' },
+      { id: 'baseball-12u-bronco-baseball-your-pie', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Youngberg Comrades' },
 
-      { id: 'baseball-14u-pony-baseball-american-eagles', sport: 'Baseball', division: '14U Pony Baseball', name: 'American Eagles', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-14u-pony-baseball-kruse-farms', sport: 'Baseball', division: '14U Pony Baseball', name: 'Kruse Farms', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-14u-pony-baseball-oregon-jhawks', sport: 'Baseball', division: '14U Pony Baseball', name: 'Oregon Jhawks', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-14u-pony-baseball-ponds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Ponds', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-14u-pony-baseball-redbirds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Redbirds', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-14u-pony-baseball-rockford-ice-hogs', sport: 'Baseball', division: '14U Pony Baseball', name: 'Rockford Ice Hogs', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'baseball-14u-pony-baseball-these-guys-dad', sport: 'Baseball', division: '14U Pony Baseball', name: 'Byron Tigers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'baseball-14u-pony-baseball-american-eagles', sport: 'Baseball', division: '14U Pony Baseball', name: 'American Eagles' },
+      { id: 'baseball-14u-pony-baseball-kruse-farms', sport: 'Baseball', division: '14U Pony Baseball', name: 'Kruse Farms' },
+      { id: 'baseball-14u-pony-baseball-oregon-jhawks', sport: 'Baseball', division: '14U Pony Baseball', name: 'Oregon Jhawks' },
+      { id: 'baseball-14u-pony-baseball-ponds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Ponds' },
+      { id: 'baseball-14u-pony-baseball-redbirds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Redbirds' },
+      { id: 'baseball-14u-pony-baseball-rockford-ice-hogs', sport: 'Baseball', division: '14U Pony Baseball', name: 'Rockford Ice Hogs' },
+      { id: 'baseball-14u-pony-baseball-these-guys-dad', sport: 'Baseball', division: '14U Pony Baseball', name: 'Byron Tigers' },
 
-      { id: 'softball-8u-pinto-softball-bs-greenville-llc', sport: 'Softball', division: '8U Pinto Softball', name: 'Greenville LLC', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'softball-8u-pinto-softball-bs-reflections-hair-salon', sport: 'Softball', division: '8U Pinto Softball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'softball-8u-pinto-softball-bs-greenville-llc', sport: 'Softball', division: '8U Pinto Softball', name: 'Greenville LLC' },
+      { id: 'softball-8u-pinto-softball-bs-reflections-hair-salon', sport: 'Softball', division: '8U Pinto Softball', name: 'Reflections Hair Salon' },
 
-      { id: 'softball-10u-mustang-softball-kruse-farm-krushers', sport: 'Softball', division: '10U Mustang Softball', name: 'Kruse Farm Krushers', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'softball-10u-mustang-softball-top-notch-building-supply', sport: 'Softball', division: '10U Mustang Softball', name: 'Top Notch Building Supply', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'softball-10u-mustang-softball-kruse-farm-krushers', sport: 'Softball', division: '10U Mustang Softball', name: 'Kruse Farm Krushers' },
+      { id: 'softball-10u-mustang-softball-top-notch-building-supply', sport: 'Softball', division: '10U Mustang Softball', name: 'Top Notch Building Supply' },
 
-      { id: 'softball-12u-bronco-girls-softball-bs-bax-tees', sport: 'Softball', division: '12U Bronco Girls Softball', name: "Bax Tee's", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'softball-12u-bronco-girls-softball-bs-mbs-makos', sport: 'Softball', division: '12U Bronco Girls Softball', name: "MBS Mako's", paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'softball-12u-bronco-girls-softball-bs-oregon-avalanche-anderson', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Anderson', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'softball-12u-bronco-girls-softball-bs-oregon-avalanche-spangler', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Spangler', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'softball-12u-bronco-girls-softball-bs-pm-sports', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'PM Sports', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
+      { id: 'softball-12u-bronco-girls-softball-bs-bax-tees', sport: 'Softball', division: '12U Bronco Girls Softball', name: "Bax Tee's" },
+      { id: 'softball-12u-bronco-girls-softball-bs-mbs-makos', sport: 'Softball', division: '12U Bronco Girls Softball', name: "MBS Mako's" },
+      { id: 'softball-12u-bronco-girls-softball-bs-oregon-avalanche-anderson', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Anderson' },
+      { id: 'softball-12u-bronco-girls-softball-bs-oregon-avalanche-spangler', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Spangler' },
+      { id: 'softball-12u-bronco-girls-softball-bs-pm-sports', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'PM Sports' },
 
-      { id: 'softball-14u-pony-softball-pysb-firefighters', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - Firefighters', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL },
-      { id: 'softball-14u-pony-softball-pysb-pbpa', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - PBPA', paymentUrl: PAYPAL_DONATE_URL, venmoUrl: VENMO_DONATE_URL }
+      { id: 'softball-14u-pony-softball-pysb-firefighters', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - Firefighters' },
+      { id: 'softball-14u-pony-softball-pysb-pbpa', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - PBPA' }
     ];
 
 
@@ -1721,8 +1745,9 @@
     let selectedSpotId = null;
     let db;
     let remoteState = {};
-    let adminMode = false;
     let lastCelebratedTeam = null;
+    let paypalSdkReady = false;
+    let paypalButtonsRendered = false;
     let explicitTeamFromUrl = false;
     let teamViewMode = false;
 
@@ -1737,11 +1762,11 @@
     const progressPct = document.getElementById('progressPct');
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
-    const checkoutButton = document.getElementById('checkoutButton');
-    const venmoButton = document.getElementById('venmoButton');
-    const markPaidButton = document.getElementById('markPaidButton');
-    const unmarkPaidButton = document.getElementById('unmarkPaidButton');
-    const resetTeamButton = document.getElementById('resetTeamButton');
+    const paypalButtonShell = document.getElementById('paypalButtonShell');
+    const venmoButtonShell = document.getElementById('venmoButtonShell');
+    const paypalButtonContainer = document.getElementById('paypalButtonContainer');
+    const venmoButtonContainer = document.getElementById('venmoButtonContainer');
+    const paymentStatus = document.getElementById('paymentStatus');
     const syncStatus = document.getElementById('syncStatus');
     const leaderboardList = document.getElementById('leaderboardList');
     const divisionLeaderboardList = document.getElementById('divisionLeaderboardList');
@@ -1749,11 +1774,6 @@
     const copyLinkButton = document.getElementById('copyLinkButton');
     const shareMessage = document.getElementById('shareMessage');
     const fillCelebration = document.getElementById('fillCelebration');
-    const adminToggle = document.getElementById('adminToggle');
-    const adminPanel = document.getElementById('adminPanel');
-    const adminPassword = document.getElementById('adminPassword');
-    const adminUnlockButton = document.getElementById('adminUnlockButton');
-    const adminStatus = document.getElementById('adminStatus');
     const homeModeButton = document.getElementById('homeModeButton');
     const copyTeamLinkTop = document.getElementById('copyTeamLinkTop');
     const copyTeamLinkBottom = document.getElementById('copyTeamLinkBottom');
@@ -2164,6 +2184,16 @@
       });
     }
 
+    function setPaymentButtonsDisabled(disabled) {
+      paypalButtonShell.classList.toggle('disabled', disabled);
+      venmoButtonShell.classList.toggle('disabled', disabled);
+    }
+
+    function setPaymentStatus(message, isError = false) {
+      paymentStatus.textContent = message;
+      paymentStatus.style.color = isError ? '#991b1b' : '#0f4c81';
+    }
+
     function renderSelection() {
       const team = getActiveTeam();
       const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
@@ -2173,10 +2203,8 @@
         selectedHelper.textContent = teamViewMode
           ? `You are supporting ${team.name}. Select an open spot on the glove below.`
           : 'Select an open spot on the glove.';
-        checkoutButton.disabled = true;
-        venmoButton.disabled = true;
-        markPaidButton.disabled = true;
-        unmarkPaidButton.disabled = true;
+        setPaymentButtonsDisabled(true);
+        setPaymentStatus('Select an open spot to activate checkout.');
         return;
       }
 
@@ -2184,34 +2212,115 @@
       selectedAmount.textContent = `$${selectedSpot.amount}`;
 
       if (isFilled) {
-        selectedHelper.textContent = adminMode
-          ? `${team.name} spot is already filled. Admin mode can reopen it.`
-          : `${team.name} spot is already filled.`;
-        checkoutButton.disabled = true;
-        venmoButton.disabled = true;
-        markPaidButton.disabled = true;
-        unmarkPaidButton.disabled = !adminMode;
+        selectedHelper.textContent = `${team.name} spot is already filled. Choose another open amount.`;
+        setPaymentButtonsDisabled(true);
+        setPaymentStatus('That glove spot is already taken.', true);
       } else {
-        selectedHelper.textContent = `${team.name} donation selected. Use PayPal or Venmo to donate, then click the button below to fill the spot for everyone.`;
-        checkoutButton.disabled = false;
-        venmoButton.disabled = false;
-        markPaidButton.disabled = false;
-        unmarkPaidButton.disabled = true;
+        selectedHelper.textContent = `${team.name} donation selected. Complete checkout with PayPal or Venmo and the board will update automatically.`;
+        setPaymentButtonsDisabled(false);
+        setPaymentStatus('Checkout is ready for this selected spot.');
       }
     }
 
-    function renderAdminState() {
-      adminPanel.classList.toggle('show', adminMode || adminPanel.classList.contains('show'));
-      unmarkPaidButton.style.display = adminMode ? 'block' : 'none';
-      resetTeamButton.style.display = adminMode ? 'block' : 'none';
-      resetTeamButton.disabled = !adminMode;
 
-      if (adminMode) {
-        adminStatus.textContent = 'Admin mode unlocked.';
-        adminStatus.style.color = '#0f4c81';
-        adminUnlockButton.textContent = 'Admin Mode Unlocked';
-        adminUnlockButton.disabled = true;
+    async function apiPost(url, payload) {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || 'Payment request failed.');
       }
+      return data;
+    }
+
+    async function createOrderForSelectedSpot() {
+      const team = getActiveTeam();
+      const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
+      if (!team || !selectedSpot) {
+        throw new Error('Select an open spot before checking out.');
+      }
+
+      const filled = getFilledForTeam(team.id);
+      if (filled.includes(selectedSpot.id)) {
+        throw new Error('That spot has already been filled. Please choose another one.');
+      }
+
+      const data = await apiPost(CREATE_ORDER_URL, {
+        teamId: team.id,
+        teamName: team.name,
+        division: team.division,
+        sport: team.sport,
+        spotId: selectedSpot.id,
+        amount: selectedSpot.amount
+      });
+
+      return data.id;
+    }
+
+    async function captureApprovedOrder(orderID) {
+      const data = await apiPost(CAPTURE_ORDER_URL, { orderID });
+      setPaymentStatus('Donation received. Updating the board now.');
+      return data;
+    }
+
+    function renderStandaloneButton(fundingSource, container) {
+      const button = window.paypal.Buttons({
+        fundingSource,
+        style: {
+          layout: 'horizontal',
+          height: 48,
+          shape: 'pill',
+          label: 'pay'
+        },
+        createOrder: () => createOrderForSelectedSpot(),
+        onApprove: async (data) => {
+          await captureApprovedOrder(data.orderID);
+        },
+        onCancel: () => {
+          setPaymentStatus('Checkout was canceled.');
+        },
+        onError: (error) => {
+          console.error(error);
+          setPaymentStatus(error?.message || 'Checkout failed. Please try again.', true);
+        }
+      });
+
+      if (button.isEligible()) {
+        button.render(container);
+      } else {
+        container.closest('.pay-button-shell').style.display = 'none';
+      }
+    }
+
+    function renderPayPalButtons() {
+      if (!paypalSdkReady || paypalButtonsRendered || !window.paypal) return;
+      paypalButtonsRendered = true;
+      renderStandaloneButton(window.paypal.FUNDING.PAYPAL, '#paypalButtonContainer');
+      renderStandaloneButton(window.paypal.FUNDING.VENMO, '#venmoButtonContainer');
+    }
+
+    function loadPayPalSdk() {
+      if (window.paypal) {
+        paypalSdkReady = true;
+        renderPayPalButtons();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID)}&currency=USD&components=buttons&enable-funding=venmo`;
+      script.async = true;
+      script.onload = () => {
+        paypalSdkReady = true;
+        renderPayPalButtons();
+      };
+      script.onerror = () => {
+        setPaymentStatus('PayPal checkout failed to load.', true);
+      };
+      document.head.appendChild(script);
     }
 
     function maybeCelebrate(teamId) {
@@ -2226,11 +2335,6 @@
       if (raised < 500 && lastCelebratedTeam === teamId) {
         lastCelebratedTeam = null;
       }
-    }
-
-    async function saveTeamFilled(teamId, filled) {
-      if (!db) return;
-      await update(ref(db, `fillMyGlove/teams/${teamId}`), { filled });
     }
 
     async function copyTeamLink(mode = 'team') {
@@ -2270,61 +2374,6 @@
     copyTeamLinkTop.addEventListener('click', () => copyTeamLink('team'));
     copyTeamLinkBottom.addEventListener('click', () => copyTeamLink('team'));
 
-    adminToggle.addEventListener('click', () => {
-      adminPanel.classList.toggle('show');
-    });
-
-    adminUnlockButton.addEventListener('click', () => {
-      if (adminPassword.value === ADMIN_PASSWORD) {
-        adminMode = true;
-        adminStatus.textContent = 'Admin mode unlocked.';
-        adminStatus.style.color = '#0f4c81';
-        renderAll();
-      } else {
-        adminStatus.textContent = 'Password incorrect.';
-        adminStatus.style.color = '#991b1b';
-      }
-    });
-
-    checkoutButton.addEventListener('click', () => {
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const url = team.paymentUrl || PAYPAL_DONATE_URL;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    });
-
-    venmoButton.addEventListener('click', () => {
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const url = team.venmoUrl || VENMO_DONATE_URL;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    });
-
-    markPaidButton.addEventListener('click', async () => {
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const filled = getFilledForTeam(team.id);
-      if (!filled.includes(selectedSpotId)) {
-        const updated = [...filled, selectedSpotId].sort((a, b) => a - b);
-        await saveTeamFilled(team.id, updated);
-      }
-    });
-
-    unmarkPaidButton.addEventListener('click', async () => {
-      if (!adminMode) return;
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const updated = getFilledForTeam(team.id).filter(id => id !== selectedSpotId);
-      await saveTeamFilled(team.id, updated);
-    });
-
-    resetTeamButton.addEventListener('click', async () => {
-      if (!adminMode) return;
-      const team = getActiveTeam();
-      await saveTeamFilled(team.id, []);
-      selectedSpotId = null;
-    });
-
     homeModeButton.addEventListener('click', () => {
       setViewMode(false);
       renderAll();
@@ -2348,34 +2397,16 @@
       renderTeamHero();
       renderSpots();
       renderSelection();
-      renderAdminState();
       maybeCelebrate(activeTeamId);
-    }
-
-    async function seedDatabaseIfEmpty() {
-      const snapshot = await get(ref(db, 'fillMyGlove/teams'));
-      if (!snapshot.exists()) {
-        const seed = {};
-        teams.forEach(team => {
-          seed[team.id] = {
-            sport: team.sport,
-            division: team.division,
-            name: team.name,
-            filled: []
-          };
-        });
-        await update(ref(db, 'fillMyGlove'), { teams: seed });
-      }
     }
 
     async function startFirebase() {
       try {
         const app = initializeApp(firebaseConfig);
         db = getDatabase(app);
-        await seedDatabaseIfEmpty();
         onValue(ref(db, 'fillMyGlove/teams'), (snapshot) => {
           remoteState = snapshot.val() || {};
-          setStatus('Live sync connected. Everyone sees the same updated spots.');
+          setStatus('Live sync connected. Successful payments update the board automatically.');
           renderAll();
         });
       } catch (error) {
@@ -2387,6 +2418,7 @@
 
     applySelectionFromUrl();
     renderAll();
+    loadPayPalSdk();
     startFirebase();
   </script>
 </body>
