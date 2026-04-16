@@ -3,6 +3,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1148,13 +1149,26 @@
       letter-spacing: .05em;
     }
 
-    .admin-panel input {
+    .admin-panel input,
+    .admin-panel select {
       width: 100%;
       border: 1px solid #cbd5e1;
       border-radius: 12px;
       padding: 10px 12px;
       margin-bottom: 10px;
       font-size: 14px;
+      background: #ffffff;
+    }
+
+    .admin-meta {
+      font-size: 12px;
+      text-align: center;
+      color: #475569;
+      margin: 2px 0 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      line-height: 1.5;
     }
 
     .admin-status {
@@ -1487,8 +1501,13 @@
           <input type="password" id="adminPassword" placeholder="Enter admin password" />
           <div class="admin-status" id="adminStatus"></div>
           <button class="secondary" id="adminUnlockButton">Unlock Admin Mode</button>
+          <div class="admin-meta" id="adminMeta">Locked. Unlock admin mode to fix team spots.</div>
+          <select id="adminTeamSelect" disabled>
+            <option value="">Choose a team</option>
+          </select>
           <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
           <button class="secondary" id="resetTeamButton" disabled>Reset Current Team</button>
+          <button class="secondary hidden" id="adminLockButton">Lock Admin Mode</button>
         </div>
 
         <div class="legend">
@@ -1711,7 +1730,7 @@
     let selectedSpotId = null;
     let db;
     let remoteState = {};
-    let adminMode = false;
+    let adminMode = window.localStorage.getItem('royGayleAdminMode') === 'true';
     let lastCelebratedTeam = null;
     let explicitTeamFromUrl = false;
     let teamViewMode = false;
@@ -1743,6 +1762,9 @@
     const adminPassword = document.getElementById('adminPassword');
     const adminUnlockButton = document.getElementById('adminUnlockButton');
     const adminStatus = document.getElementById('adminStatus');
+    const adminMeta = document.getElementById('adminMeta');
+    const adminTeamSelect = document.getElementById('adminTeamSelect');
+    const adminLockButton = document.getElementById('adminLockButton');
     const homeModeButton = document.getElementById('homeModeButton');
     const copyTeamLinkTop = document.getElementById('copyTeamLinkTop');
     const copyTeamLinkBottom = document.getElementById('copyTeamLinkBottom');
@@ -2153,6 +2175,36 @@
       });
     }
 
+
+    function populateAdminTeamSelect() {
+      adminTeamSelect.innerHTML = '<option value="">Choose a team</option>';
+      teams.forEach(team => {
+        const option = document.createElement('option');
+        option.value = team.id;
+        option.textContent = `${team.sport} | ${team.division} | ${team.name}`;
+        if (team.id === activeTeamId) option.selected = true;
+        adminTeamSelect.appendChild(option);
+      });
+    }
+
+    function updateAdminMeta() {
+      const team = getActiveTeam();
+      const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
+      const filled = selectedSpot ? getFilledForTeam(team.id).includes(selectedSpot.id) : false;
+
+      if (!adminMode) {
+        adminMeta.textContent = 'Locked. Unlock admin mode to fix team spots.';
+        return;
+      }
+
+      if (!selectedSpot) {
+        adminMeta.textContent = `Editing ${team.name}. Select a spot to mark or unmark it.`;
+        return;
+      }
+
+      adminMeta.textContent = `Editing ${team.name}. Selected spot: $${selectedSpot.amount} (${filled ? 'filled' : 'open'}).`;
+    }
+
     function renderSelection() {
       const team = getActiveTeam();
       const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
@@ -2261,7 +2313,7 @@
     });
 
     adminUnlockButton.addEventListener('click', () => {
-      if (adminPassword.value === ADMIN_PASSWORD) {
+      if (adminPassword.value.trim() === ADMIN_PASSWORD) {
         adminMode = true;
         adminStatus.textContent = 'Admin mode unlocked.';
         adminStatus.style.color = '#0f4c81';
@@ -2270,6 +2322,30 @@
         adminStatus.textContent = 'Password incorrect.';
         adminStatus.style.color = '#991b1b';
       }
+    });
+
+    adminPassword.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        adminUnlockButton.click();
+      }
+    });
+
+    adminTeamSelect.addEventListener('change', () => {
+      if (!adminMode || !adminTeamSelect.value) return;
+      const selectedTeam = teams.find(team => team.id === adminTeamSelect.value);
+      if (!selectedTeam) return;
+      activeSport = selectedTeam.sport;
+      divisions = getDivisionsForSport(activeSport);
+      activeDivision = selectedTeam.division;
+      activeTeamId = selectedTeam.id;
+      selectedSpotId = null;
+      renderAll();
+    });
+
+    adminLockButton.addEventListener('click', () => {
+      adminMode = false;
+      renderAll();
     });
 
     checkoutButton.addEventListener('click', () => {
