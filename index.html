@@ -4,7 +4,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1476,7 +1475,8 @@
         <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
 
         <button class="checkout" id="checkoutButton" disabled>Donate with PayPal</button>
-        <div class="payment-note">Donate with PayPal. Filled spots are updated by the webhook or by admin tools only.</div>
+                <div class="payment-note">Donate with PayPal, then mark the spot filled below.</div>
+        <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
         <button class="secondary hidden" id="copyTeamLinkBottom">Copy Team Link</button>
 
         <div class="admin-toggle-wrap">
@@ -1488,8 +1488,7 @@
           <input type="password" id="adminPassword" placeholder="Enter admin password" />
           <div class="admin-status" id="adminStatus"></div>
           <button class="secondary" id="adminUnlockButton">Unlock Admin Mode</button>
-          <button class="secondary" id="adminMarkButton" disabled>Mark Selected Spot Filled</button>
-          <button class="secondary" id="unmarkPaidButton" disabled>Unmark Selected Spot</button>
+          <button class="secondary" id="unmarkPaidButton" disabled>Unmark Paid Spot</button>
           <button class="secondary" id="resetTeamButton" disabled>Reset Current Team</button>
         </div>
 
@@ -1503,23 +1502,9 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js';
-    import { getDatabase, ref, onValue, update, get } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js';
-
-    const firebaseConfig = {
-      apiKey: 'AIzaSyAKs9v1U5PNWRL3gpPoyDf2SbGHo5JVDc0',
-      authDomain: 'roy-gayle-fill-my-glove.firebaseapp.com',
-      databaseURL: 'https://roy-gayle-fill-my-glove-default-rtdb.firebaseio.com',
-      projectId: 'roy-gayle-fill-my-glove',
-      storageBucket: 'roy-gayle-fill-my-glove.firebasestorage.app',
-      messagingSenderId: '384975579344',
-      appId: '1:384975579344:web:c01043101d475e7ffe56d5',
-      measurementId: 'G-7RYJJ54D4S'
-    };
-
+  
+  <script>
     const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
-    const ADMIN_PASSWORD = 'roygayle2026';
 
     const baseSpots = [
       { id: 1, amount: 10, x: 295, y: 132 }, { id: 2, amount: 10, x: 372, y: 132 },
@@ -1609,30 +1594,6 @@
       { id: 'pony-softball-14u-pbpa', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - PBPA', paymentUrl: PAYPAL_DONATE_URL }
     ];
 
-
-
-    const firebaseTeamAliases = {
-      'bronco-baseball-12u-425-manufacturing': 'bronco-baseball-12u-425',
-      'bronco-baseball-12u-hawkins': 'bronco-baseball-12u-hawkins-kids',
-      'softball-12u-bronco-girls-softball-bs-bax-tees': 'bronco-softball-12u-bax-tees',
-      'softball-12u-bronco-girls-softball-bs-mbs-makos': 'bronco-softball-12u-mbs-makos',
-      'mustang-baseball-10u-byron-tigers': 'mustang-baseball-10u-byron',
-      'mustang-baseball-10u-firefighters-local-413': 'mustang-baseball-10u-crown-ff',
-      'mustang-baseball-10u-lonnies-sluggers': 'mustang-baseball-10u-lonnies',
-      'pinto-baseball-8u-control': 'pinto-baseball-8u-815-control',
-      'pinto-softball-8u-reflections-hair-salon': 'softball-8u-pinto-softball-bs-reflections-hair-salon',
-      'pony-baseball-14u-oregon-jhawks': 'pony-baseball-14u-oregon-j-hawks',
-      'pony-baseball-14u-redbirds': 'pony-baseball-14u-red-birds',
-      'pony-baseball-14u-rockford-ice-hogs': 'pony-baseball-14u-rockford-icehogs',
-      'shetland-baseball-6u-reflections-hair-salon': 'shetland-baseball-6u-reflections',
-      'shetland-baseball-6u-team-name-05': 'shetland-baseball-6u-team-5',
-      'shetland-baseball-6u-team-verfuerth': 'shetland-baseball-6u-team-6'
-    };
-
-    function getFirebaseTeamId(teamId) {
-      return firebaseTeamAliases[teamId] || teamId;
-    }
-
     const teamThemes = {
       'mustang-softball-10u-kruse-farm-krushers': {
         primary: '#0f3d56',
@@ -1708,6 +1669,13 @@
       }
     };
 
+    const hardcodedFilledSpots = {
+      'pinto-softball-8u-reflections-hair-salon': [1, 2],
+      'mustang-softball-10u-kruse-farm-krushers': [1, 2],
+      'pony-baseball-14u-kruse-farms': [1],
+      'pony-softball-14u-firefighters': []
+    };
+
     function applyTeamTheme(teamId) {
       const root = document.documentElement;
       const theme = teamThemes[teamId] || {};
@@ -1734,19 +1702,6 @@
     let activeDivision = divisions[0];
     let activeTeamId = teams.find(team => team.sport === activeSport && team.division === activeDivision).id;
     let selectedSpotId = null;
-    let db;
-    let remoteState = {};
-    const LOCAL_STORAGE_KEY = 'royGayleFillMyGloveLocalState';
-
-    const hardcodedFilledSpots = {
-      'pinto-softball-8u-reflections-hair-salon': [1, 2],
-      'mustang-softball-10u-kruse-farm-krushers': [1, 2],
-      'pony-baseball-14u-kruse-farms': [1],
-      'pony-softball-14u-firefighters': []
-    };
-    let adminMode = false;
-    let lastCelebratedTeam = null;
-    let explicitTeamFromUrl = false;
     let teamViewMode = false;
 
     const sportButtons = document.getElementById('sportButtons');
@@ -1761,21 +1716,12 @@
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
-        const adminMarkButton = document.getElementById('adminMarkButton');
-    const unmarkPaidButton = document.getElementById('unmarkPaidButton');
-    const resetTeamButton = document.getElementById('resetTeamButton');
     const syncStatus = document.getElementById('syncStatus');
     const leaderboardList = document.getElementById('leaderboardList');
     const divisionLeaderboardList = document.getElementById('divisionLeaderboardList');
     const shareButton = document.getElementById('shareButton');
     const copyLinkButton = document.getElementById('copyLinkButton');
     const shareMessage = document.getElementById('shareMessage');
-    const fillCelebration = document.getElementById('fillCelebration');
-    const adminToggle = document.getElementById('adminToggle');
-    const adminPanel = document.getElementById('adminPanel');
-    const adminPassword = document.getElementById('adminPassword');
-    const adminUnlockButton = document.getElementById('adminUnlockButton');
-    const adminStatus = document.getElementById('adminStatus');
     const homeModeButton = document.getElementById('homeModeButton');
     const copyTeamLinkTop = document.getElementById('copyTeamLinkTop');
     const copyTeamLinkBottom = document.getElementById('copyTeamLinkBottom');
@@ -1798,88 +1744,22 @@
     const teamPageNote = document.getElementById('teamPageNote');
     const actionCardTitle = document.getElementById('actionCardTitle');
 
-
-    function cloneState(value) {
-      return JSON.parse(JSON.stringify(value || {}));
-    }
-
-    function ensureTeamEntry(teamId) {
-      if (!remoteState[teamId]) {
-        const team = teams.find(item => item.id === teamId);
-        remoteState[teamId] = {
-          sport: team?.sport || '',
-          division: team?.division || '',
-          name: team?.name || '',
-          filled: []
-        };
-      }
-      if (!Array.isArray(remoteState[teamId].filled)) remoteState[teamId].filled = [];
-    }
-
-    function buildSeedState() {
-      const seed = {};
-      teams.forEach(team => {
-        const firebaseTeamId = getFirebaseTeamId(team.id);
-        seed[firebaseTeamId] = {
-          sport: team.sport,
-          division: team.division,
-          name: team.name,
-          filled: [...(hardcodedFilledSpots[team.id] || [])]
-        };
-      });
-      return seed;
-    }
-
-    function loadLocalState() {
-      try {
-        const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (!raw) return buildSeedState();
-        const parsed = JSON.parse(raw);
-        const seed = buildSeedState();
-        Object.keys(parsed || {}).forEach(teamId => {
-          seed[teamId] = {
-            ...(seed[teamId] || {}),
-            ...(parsed[teamId] || {})
-          };
-          if (!Array.isArray(seed[teamId].filled)) seed[teamId].filled = [];
-        });
-        return seed;
-      } catch (error) {
-        console.error('Local state load failed', error);
-        return buildSeedState();
-      }
-    }
-
-    function saveLocalState() {
-      try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(remoteState));
-      } catch (error) {
-        console.error('Local state save failed', error);
-      }
-    }
-
-    function mergeSnapshot(snapshotVal) {
-      const merged = loadLocalState();
-      const incoming = snapshotVal || {};
-      Object.keys(incoming).forEach(teamId => {
-        merged[teamId] = {
-          ...(merged[teamId] || {}),
-          ...(incoming[teamId] || {})
-        };
-        if (!Array.isArray(merged[teamId].filled)) merged[teamId].filled = [];
-      });
-      remoteState = merged;
-      saveLocalState();
-    }
-
     function getActiveTeam() {
       return teams.find(team => team.id === activeTeamId);
     }
 
     function getFilledForTeam(teamId) {
-      const firebaseTeamId = getFirebaseTeamId(teamId);
-      ensureTeamEntry(firebaseTeamId);
-      return Array.isArray(remoteState[firebaseTeamId]?.filled) ? remoteState[firebaseTeamId].filled : [];
+      return hardcodedFilledSpots[teamId] || [];
+    }
+
+    function calcGoal() {
+      return 500;
+    }
+
+    function calcRaised(teamId) {
+      return baseSpots
+        .filter(spot => getFilledForTeam(teamId).includes(spot.id))
+        .reduce((sum, spot) => sum + spot.amount, 0);
     }
 
     function getAllRankedTeams() {
@@ -1906,8 +1786,6 @@
     function getRankCallout(teamId) {
       const overallRank = getTeamRank(teamId);
       const divisionRank = getDivisionRank(teamId);
-      const totalTeams = teams.length;
-
       if (divisionRank === 1) return 'Division Leader';
       if (overallRank === 1) return '#1 Overall';
       if (overallRank <= 3) return `Top ${overallRank} Overall`;
@@ -1915,7 +1793,6 @@
       if (overallRank <= 10) return `#${overallRank} Overall`;
       return `#${divisionRank} in Division`;
     }
-
 
     function getStatusForTeam(teamId) {
       const goal = calcGoal();
@@ -1932,16 +1809,6 @@
       syncStatus.textContent = message;
       syncStatus.style.background = isError ? '#fee2e2' : '#e8f1fa';
       syncStatus.style.color = isError ? '#991b1b' : '#0f4c81';
-    }
-
-    function calcGoal() {
-      return 500;
-    }
-
-    function calcRaised(teamId) {
-      return baseSpots
-        .filter(spot => getFilledForTeam(teamId).includes(spot.id))
-        .reduce((sum, spot) => sum + spot.amount, 0);
     }
 
     function getTeamUrl(team, mode = 'team') {
@@ -1977,32 +1844,19 @@
       const teamParam = url.searchParams.get('team');
       const viewParam = url.searchParams.get('view');
 
-      explicitTeamFromUrl = Boolean(teamParam);
-      teamViewMode = viewParam === 'team' || (Boolean(teamParam) && viewParam !== 'home');
+      teamViewMode = viewParam === 'team';
 
-      if (sportParam && sports.includes(sportParam)) {
-        activeSport = sportParam;
-      }
-
+      if (sportParam && sports.includes(sportParam)) activeSport = sportParam;
       divisions = getDivisionsForSport(activeSport);
+      if (divisionParam && divisions.includes(divisionParam)) activeDivision = divisionParam;
+      else activeDivision = divisions[0];
 
-      if (divisionParam && divisions.includes(divisionParam)) {
-        activeDivision = divisionParam;
-      } else {
-        activeDivision = divisions[0];
-      }
-
-      if (
-        teamParam &&
-        teams.some(team => team.id === teamParam && team.sport)
-      ) {
+      if (teamParam && teams.some(team => team.id === teamParam)) {
         activeTeamId = teamParam;
         const matchedTeam = teams.find(team => team.id === teamParam);
-        if (matchedTeam) {
-          activeSport = matchedTeam.sport;
-          divisions = getDivisionsForSport(activeSport);
-          activeDivision = matchedTeam.division;
-        }
+        activeSport = matchedTeam.sport;
+        divisions = getDivisionsForSport(activeSport);
+        activeDivision = matchedTeam.division;
       } else {
         const firstTeam = teams.find(team => team.sport === activeSport && team.division === activeDivision);
         activeTeamId = firstTeam ? firstTeam.id : null;
@@ -2018,7 +1872,6 @@
       actionCardTitle.textContent = isTeamMode ? 'Support This Team' : 'Selected Donation';
     }
 
-    
     function formatDivisionLabel(division) {
       return division
         .replace(/ Girls Softball$/i, ' Girls')
@@ -2054,22 +1907,13 @@
         if (division === activeDivision) button.classList.add('active');
         button.addEventListener('click', () => {
           activeDivision = division;
-          const firstTeamInDivision = teams.find(team => team.sport === activeSport && team.division === division);
-          activeTeamId = firstTeamInDivision ? firstTeamInDivision.id : null;
+          const firstTeam = teams.find(team => team.sport === activeSport && team.division === division);
+          activeTeamId = firstTeam ? firstTeam.id : null;
           selectedSpotId = null;
           renderAll();
         });
         divisionButtons.appendChild(button);
       });
-    }
-
-    function getTeamStatus(raised, goal = 500) {
-      const pct = Math.min(100, Math.round((raised / goal) * 100));
-      if (pct >= 100) return 'Goal Reached';
-      if (pct >= 80) return 'Almost Full';
-      if (pct >= 50) return 'Halfway There';
-      if (pct >= 1) return 'Getting There';
-      return 'Just Started';
     }
 
     function renderTeamButtons() {
@@ -2079,21 +1923,18 @@
         const card = document.createElement('button');
         card.type = 'button';
         card.className = 'team-card';
-
         const raised = calcRaised(team.id);
         const goal = calcGoal();
         const pct = Math.min(100, Math.round((raised / goal) * 100));
         const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
         const rankCallout = getRankCallout(team.id);
-
         if (team.id === activeTeamId) card.classList.add('active');
-
         card.innerHTML = `
           <div class="team-card-head">
             <div class="team-card-name">${team.name}</div>
             <div class="team-card-pill">${team.sport}</div>
           </div>
-          <div class="team-card-division">${team.division}</div>
+          <div class="team-card-division">${formatDivisionLabel(team.division)}</div>
           <div class="team-card-status">${rankCallout}</div>
           <div class="team-card-progress">
             <div class="team-card-progress-bar" style="width:${pct}%"></div>
@@ -2103,7 +1944,6 @@
             <span>${spotsLeft} left</span>
           </div>
         `;
-
         card.addEventListener('click', () => {
           activeTeamId = team.id;
           selectedSpotId = null;
@@ -2118,34 +1958,19 @@
     function createLeaderboardRow(rankText, name, subtext, amount) {
       const row = document.createElement('div');
       row.className = 'top-team-row';
-
-      const rank = document.createElement('div');
-      rank.className = 'top-team-rank';
-      rank.textContent = rankText;
-
-      const nameWrap = document.createElement('div');
-      const teamName = document.createElement('div');
-      teamName.className = 'top-team-name';
-      teamName.textContent = name;
-      const sub = document.createElement('div');
-      sub.className = 'top-team-sub';
-      sub.textContent = subtext;
-      nameWrap.appendChild(teamName);
-      nameWrap.appendChild(sub);
-
-      const amt = document.createElement('div');
-      amt.className = 'top-team-amount';
-      amt.textContent = `$${amount}`;
-
-      row.appendChild(rank);
-      row.appendChild(nameWrap);
-      row.appendChild(amt);
+      row.innerHTML = `
+        <div class="top-team-rank">${rankText}</div>
+        <div>
+          <div class="top-team-name">${name}</div>
+          <div class="top-team-sub">${subtext}</div>
+        </div>
+        <div class="top-team-amount">$${amount}</div>
+      `;
       return row;
     }
 
     function renderLeaderboard() {
       const ranked = getAllRankedTeams().slice(0, 5);
-
       leaderboardList.innerHTML = '';
       ranked.forEach((team, index) => {
         leaderboardList.appendChild(
@@ -2160,13 +1985,11 @@
 
       divisionLeaderboardList.innerHTML = '';
       const allDivisions = [...new Set(teams.map(team => team.division))];
-
       allDivisions.forEach((division) => {
         const teamsInDivision = teams
           .filter(team => team.division === division)
           .map(team => ({ ...team, raised: calcRaised(team.id) }))
           .sort((a, b) => b.raised - a.raised || a.name.localeCompare(b.name));
-
         const leader = teamsInDivision[0];
         if (leader) {
           divisionLeaderboardList.appendChild(
@@ -2182,7 +2005,6 @@
       const raised = calcRaised(team.id);
       const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
       const pct = Math.min(100, Math.round((raised / goal) * 100));
-
       goalValue.textContent = `$${goal}`;
       raisedValue.textContent = `$${raised}`;
       spotsLeftValue.textContent = spotsLeft;
@@ -2194,8 +2016,7 @@
       const team = getActiveTeam();
       const goal = calcGoal();
       const raised = calcRaised(team.id);
-      const filledCount = getFilledForTeam(team.id).length;
-      const spotsLeft = baseSpots.length - filledCount;
+      const spotsLeft = baseSpots.length - getFilledForTeam(team.id).length;
       const pct = Math.min(100, Math.round((raised / goal) * 100));
       const rank = getTeamRank(team.id);
       const status = getStatusForTeam(team.id);
@@ -2203,7 +2024,7 @@
       teamSportTag.textContent = `${team.sport} Team Page`;
       teamHeroName.textContent = team.name;
       teamSupportLine.textContent = `${formatDivisionLabel(team.division)} • Roy Gayle Fill My Glove Fundraiser`;
-      teamHeroCopy.textContent = `You are supporting ${team.name}. Choose an open spot below, donate through PayPal, and help this team reach its $500 goal.`;
+      teamHeroCopy.textContent = `You are supporting ${team.name}. Choose an open spot below, then donate through PayPal.`;
       teamDivisionBadge.textContent = formatDivisionLabel(team.division);
       teamRankBadge.textContent = `Overall Rank #${rank}`;
       teamSpotsBadge.textContent = `${spotsLeft} Spots Left`;
@@ -2213,58 +2034,42 @@
       teamHeroRank.textContent = `#${rank}`;
       teamHeroProgressLabel.textContent = `${pct}% Filled`;
       teamHeroProgressBar.style.width = `${pct}%`;
-
       teamStatusPill.className = `status-pill ${status.key}`;
       teamStatusPill.textContent = status.label;
-
-      if (pct >= 100) {
-        teamHeroNote.textContent = `${team.name} has reached its goal. Share the page anyway so supporters can celebrate the team and see the filled glove.`;
-      } else if (pct >= 75) {
-        teamHeroNote.textContent = `${team.name} is getting close. This is a great time to share the direct team page with family and friends.`;
-      } else if (pct >= 40) {
-        teamHeroNote.textContent = `${team.name} has momentum. A few more shares could really help keep this fundraiser moving.`;
-      } else {
-        teamHeroNote.textContent = `Share this team page with family and friends so supporters can land directly on the team they want to help.`;
-      }
-
-      teamPageNote.textContent = `You are on ${team.name}'s team page. Supporters can donate right here without hunting for the correct team.`;
+      teamHeroNote.textContent = `Share this team page with family and friends so supporters can land directly on the team they want to help.`;
+      teamPageNote.textContent = `You are on ${team.name}'s page. This clean version keeps the fundraiser easy to browse and share.`;
     }
 
     function renderSpots() {
       const team = getActiveTeam();
       const filled = getFilledForTeam(team.id);
       const isSoftball = team.sport.toLowerCase() === 'softball';
-
       spotsLayer.innerHTML = '';
-
       baseSpots.forEach(spot => {
         const div = document.createElement('button');
         div.className = `spot ${isSoftball ? 'ball-softball' : 'ball-baseball'}`;
         div.style.left = `${spot.x}px`;
         div.style.top = `${spot.y}px`;
         div.type = 'button';
-
         const label = document.createElement('span');
         label.className = 'spot-label';
         label.textContent = `$${spot.amount}`;
         div.appendChild(label);
 
-        const isFilled = filled.includes(spot.id);
-        const isSelected = selectedSpotId === spot.id;
-
-        if (isFilled) {
+        if (filled.includes(spot.id)) {
           div.classList.add('filled');
-          div.setAttribute('aria-label', `$${spot.amount} donation spot filled`);
-        } else {
-          div.setAttribute('aria-label', `$${spot.amount} donation spot available`);
+        }
+
+        if (selectedSpotId === spot.id) {
+          div.classList.add('selected');
         }
 
         div.addEventListener('click', () => {
+          if (filled.includes(spot.id)) return;
           selectedSpotId = spot.id;
-          renderAll();
+          renderSelection();
+          renderSpots();
         });
-
-        if (isSelected) div.classList.add('selected');
 
         spotsLayer.appendChild(div);
       });
@@ -2273,97 +2078,17 @@
     function renderSelection() {
       const team = getActiveTeam();
       const selectedSpot = baseSpots.find(spot => spot.id === selectedSpotId);
-
       if (!selectedSpot) {
         selectedAmount.textContent = '--';
         selectedHelper.textContent = teamViewMode
           ? `You are supporting ${team.name}. Select an open spot on the glove below.`
           : 'Select an open spot on the glove.';
         checkoutButton.disabled = true;
-        adminMarkButton.disabled = true;
-        unmarkPaidButton.disabled = true;
         return;
       }
-
-      const isFilled = getFilledForTeam(team.id).includes(selectedSpot.id);
       selectedAmount.textContent = `$${selectedSpot.amount}`;
-
-      if (isFilled) {
-        selectedHelper.textContent = adminMode
-          ? `${team.name} spot is filled. Admin can unmark it below.`
-          : `${team.name} spot is already filled.`;
-        checkoutButton.disabled = true;
-        adminMarkButton.disabled = true;
-        unmarkPaidButton.disabled = !adminMode;
-      } else {
-        selectedHelper.textContent = adminMode
-          ? `${team.name} spot is open. Admin can mark it filled below, or you can donate through PayPal.`
-          : `${team.name} donation selected. Use PayPal to donate.`;
-        checkoutButton.disabled = false;
-        adminMarkButton.disabled = !adminMode;
-        unmarkPaidButton.disabled = true;
-      }
-    }
-
-    function renderAdminState() {
-      const selectedIsFilled = Boolean(selectedSpotId) && getFilledForTeam(activeTeamId).includes(selectedSpotId);
-      const selectedIsOpen = Boolean(selectedSpotId) && !selectedIsFilled;
-
-      adminPanel.classList.toggle('show', adminMode || adminPanel.classList.contains('show'));
-      adminMarkButton.style.display = 'block';
-      unmarkPaidButton.style.display = 'block';
-      resetTeamButton.style.display = 'block';
-      adminMarkButton.disabled = !adminMode || !selectedIsOpen;
-      unmarkPaidButton.disabled = !adminMode || !selectedIsFilled;
-      resetTeamButton.disabled = !adminMode;
-
-      if (adminMode) {
-        if (!selectedSpotId) {
-          adminStatus.textContent = 'Admin unlocked. Select a spot to mark or unmark it.';
-        } else if (selectedIsFilled) {
-          adminStatus.textContent = 'Selected spot is filled. Use unmark to reopen it.';
-        } else {
-          adminStatus.textContent = 'Selected spot is open. Use mark to fill it.';
-        }
-        adminStatus.style.color = '#0f4c81';
-        adminUnlockButton.textContent = 'Admin Mode Unlocked';
-        adminUnlockButton.disabled = true;
-      } else {
-        adminStatus.textContent = '';
-        adminUnlockButton.textContent = 'Unlock Admin Mode';
-        adminUnlockButton.disabled = false;
-      }
-    }
-
-    function maybeCelebrate(teamId) {
-      const raised = calcRaised(teamId);
-      if (raised >= 500 && lastCelebratedTeam !== teamId) {
-        lastCelebratedTeam = teamId;
-        fillCelebration.classList.remove('show');
-        void fillCelebration.offsetWidth;
-        fillCelebration.classList.add('show');
-        setTimeout(() => fillCelebration.classList.remove('show'), 2400);
-      }
-      if (raised < 500 && lastCelebratedTeam === teamId) {
-        lastCelebratedTeam = null;
-      }
-    }
-
-    async function saveTeamFilled(teamId, filled) {
-      const firebaseTeamId = getFirebaseTeamId(teamId);
-      ensureTeamEntry(firebaseTeamId);
-      remoteState[firebaseTeamId].filled = [...filled].sort((a, b) => a - b);
-      saveLocalState();
-      renderAll();
-
-      if (!db) return;
-      try {
-        await update(ref(db, `fillMyGlove/teams/${firebaseTeamId}`), { filled: remoteState[firebaseTeamId].filled });
-        setStatus('Saved successfully.');
-      } catch (error) {
-        console.error(error);
-        setStatus('Saved on this browser. Firebase sync failed.', true);
-      }
+      selectedHelper.textContent = `You selected a $${selectedSpot.amount} glove spot for ${team.name}.`;
+      checkoutButton.disabled = false;
     }
 
     async function copyTeamLink(mode = 'team') {
@@ -2380,8 +2105,7 @@
     shareButton.addEventListener('click', async () => {
       const team = getActiveTeam();
       const url = getTeamUrl(team, 'team');
-      const text = `Support ${team.name} in the Roy Gayle Fill My Glove Fundraiser. Help us reach our $500 team goal. ${url}`;
-
+      const text = `Support ${team.name} in the Roy Gayle Fill My Glove Fundraiser. ${url}`;
       if (navigator.share) {
         try {
           await navigator.share({ title: `Support ${team.name}`, text, url });
@@ -2402,62 +2126,10 @@
     copyLinkButton.addEventListener('click', () => copyTeamLink('team'));
     copyTeamLinkTop.addEventListener('click', () => copyTeamLink('team'));
     copyTeamLinkBottom.addEventListener('click', () => copyTeamLink('team'));
-
-    adminToggle.addEventListener('click', () => {
-      adminPanel.classList.toggle('show');
-    });
-
-    adminPassword.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') adminUnlockButton.click();
-    });
-
-    adminUnlockButton.addEventListener('click', () => {
-      if (adminPassword.value === ADMIN_PASSWORD) {
-        adminMode = true;
-        sessionStorage.setItem('royGayleAdminMode', 'true');
-        adminPanel.classList.add('show');
-        adminStatus.textContent = 'Admin mode unlocked.';
-        adminStatus.style.color = '#0f4c81';
-        renderAll();
-      } else {
-        adminStatus.textContent = 'Password incorrect.';
-        adminStatus.style.color = '#991b1b';
-      }
-    });
-
     checkoutButton.addEventListener('click', () => {
-      const team = getActiveTeam();
       if (!selectedSpotId) return;
-      const url = team.paymentUrl || PAYPAL_DONATE_URL;
-      window.open(url, '_blank', 'noopener,noreferrer');
+      window.open(PAYPAL_DONATE_URL, '_blank', 'noopener,noreferrer');
     });
-
-    adminMarkButton.addEventListener('click', async () => {
-      if (!adminMode) return;
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const filled = getFilledForTeam(team.id);
-      if (!filled.includes(selectedSpotId)) {
-        const updated = [...filled, selectedSpotId].sort((a, b) => a - b);
-        await saveTeamFilled(team.id, updated);
-      }
-    });
-
-    unmarkPaidButton.addEventListener('click', async () => {
-      if (!adminMode) return;
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const updated = getFilledForTeam(team.id).filter(id => id !== selectedSpotId);
-      await saveTeamFilled(team.id, updated);
-    });
-
-    resetTeamButton.addEventListener('click', async () => {
-      if (!adminMode) return;
-      const team = getActiveTeam();
-      await saveTeamFilled(team.id, []);
-      selectedSpotId = null;
-    });
-
     homeModeButton.addEventListener('click', () => {
       setViewMode(false);
       renderAll();
@@ -2481,41 +2153,12 @@
       renderTeamHero();
       renderSpots();
       renderSelection();
-      renderAdminState();
-      maybeCelebrate(activeTeamId);
-    }
-
-    async function seedDatabaseIfEmpty() {
-      const snapshot = await get(ref(db, 'fillMyGlove/teams'));
-      if (!snapshot.exists()) {
-        await update(ref(db, 'fillMyGlove'), { teams: buildSeedState() });
-      }
-    }
-
-    async function startFirebase() {
-      remoteState = loadLocalState();
-      adminMode = sessionStorage.getItem('royGayleAdminMode') === 'true';
-      setStatus('Using local saved fundraiser data.');
-      renderAll();
-
-      try {
-        const app = initializeApp(firebaseConfig);
-        db = getDatabase(app);
-        await seedDatabaseIfEmpty();
-        onValue(ref(db, 'fillMyGlove/teams'), (snapshot) => {
-          mergeSnapshot(snapshot.val());
-          setStatus('Live sync connected.');
-          renderAll();
-        });
-      } catch (error) {
-        console.error(error);
-        setStatus('Using local saved fundraiser data. Firebase sync is off.', true);
-        renderAll();
-      }
     }
 
     applySelectionFromUrl();
-    startFirebase();
+    setStatus('Clean visual version loaded.');
+    renderAll();
   </script>
+
 </body>
 </html>
