@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1045,7 +1046,6 @@
     }
 
     .checkout,
-    .venmo-button,
     .secondary {
       width: 100%;
       border-radius: 16px;
@@ -1072,8 +1072,7 @@
     }
 
     .checkout:disabled,
-    .secondary:disabled,
-    .venmo-button:disabled {
+    .secondary:disabled {
       background: #9ca3af;
       color: #ffffff;
       cursor: not-allowed;
@@ -1081,14 +1080,6 @@
       box-shadow: none;
     }
 
-    .venmo-button {
-      border:none;
-      padding: 16px 20px;
-      font-size: 18px;
-      color: #ffffff;
-      background: linear-gradient(180deg, var(--venmo) 0%, var(--venmo-dark) 100%);
-      box-shadow: 0 12px 20px rgba(0,140,255,0.20);
-    }
 
     .secondary {
       border: 2px solid #d1d5db;
@@ -1307,7 +1298,7 @@
         </div>
 
         <h1>Fill My Glove Fundraiser</h1>
-        <p>A live, shareable fundraiser for Roy Gayle teams. Supporters can choose a spot on the glove, donate through PayPal, and watch team progress update in real time.</p>
+        <p>A live, shareable fundraiser for Roy Gayle teams. Supporters can choose a spot on the glove, donate through PayPal and watch team progress update in real time.</p>
         <div class="hero-badges">
           <div class="hero-badge">Live Team Tracking</div>
           <div class="hero-badge">Division Leaderboards</div>
@@ -1483,8 +1474,7 @@
         <div class="helper" id="selectedHelper">Select an open spot on the glove.</div>
 
         <button class="checkout" id="checkoutButton" disabled>Donate with PayPal</button>
-        <button class="venmo-button" id="venmoButton" disabled>Donate with Venmo</button>
-        <div class="payment-note">Use whichever option is easiest, then mark the spot filled below.</div>
+                <div class="payment-note">Donate with PayPal, then mark the spot filled below.</div>
         <button class="secondary" id="markPaidButton" disabled>I Donated — Mark Spot Filled</button>
         <button class="secondary hidden" id="copyTeamLinkBottom">Copy Team Link</button>
 
@@ -1527,7 +1517,6 @@
     };
 
     const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
-    const VENMO_DONATE_URL = 'https://www.venmo.com/u/RoyGayle';
     const ADMIN_PASSWORD = 'roygayle2026';
 
     const baseSpots = [
@@ -1739,7 +1728,6 @@
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
-    const venmoButton = document.getElementById('venmoButton');
     const markPaidButton = document.getElementById('markPaidButton');
     const unmarkPaidButton = document.getElementById('unmarkPaidButton');
     const resetTeamButton = document.getElementById('resetTeamButton');
@@ -2175,8 +2163,7 @@
           ? `You are supporting ${team.name}. Select an open spot on the glove below.`
           : 'Select an open spot on the glove.';
         checkoutButton.disabled = true;
-        venmoButton.disabled = true;
-        markPaidButton.disabled = true;
+            markPaidButton.disabled = true;
         unmarkPaidButton.disabled = true;
         return;
       }
@@ -2189,13 +2176,11 @@
           ? `${team.name} spot is already filled. Admin mode can reopen it.`
           : `${team.name} spot is already filled.`;
         checkoutButton.disabled = true;
-        venmoButton.disabled = true;
-        markPaidButton.disabled = true;
+            markPaidButton.disabled = true;
         unmarkPaidButton.disabled = !adminMode;
       } else {
-        selectedHelper.textContent = `${team.name} donation selected. Use PayPal or Venmo to donate, then click the button below to fill the spot for everyone.`;
+        selectedHelper.textContent = `${team.name} donation selected. Use PayPal to donate, then click the button below to fill the spot for everyone.`;
         checkoutButton.disabled = false;
-        venmoButton.disabled = false;
         markPaidButton.disabled = false;
         unmarkPaidButton.disabled = true;
       }
@@ -2291,13 +2276,6 @@
       const team = getActiveTeam();
       if (!selectedSpotId) return;
       const url = team.paymentUrl || PAYPAL_DONATE_URL;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    });
-
-    venmoButton.addEventListener('click', () => {
-      const team = getActiveTeam();
-      if (!selectedSpotId) return;
-      const url = team.venmoUrl || VENMO_DONATE_URL;
       window.open(url, '_blank', 'noopener,noreferrer');
     });
 
