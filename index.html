@@ -1101,6 +1101,14 @@
       letter-spacing: .04em;
     }
 
+    #paypalButtonWrap {
+      margin-bottom: 12px;
+    }
+
+    #paypalButtonContainer {
+      min-height: 46px;
+    }
+
     .team-page-note {
       margin: 0 0 14px;
       padding: 14px;
@@ -1503,8 +1511,11 @@
   </div>
 
   
+  <script src="https://www.paypal.com/sdk/js?client-id=AbCVwS_P2D-sg9wO3-pHQcobbEu5uJz_C1iHUW_XuuAAuoPvUoefqEyX6jOA4J2OpkKJgqLyNuSebcAs&currency=USD&intent=capture"></script>
   <script>
-    const PAYPAL_DONATE_URL = 'https://www.paypal.com/US/fundraiser/charity/149695';
+    const CREATE_PAYPAL_ORDER_URL = 'https://us-central1-roy-gayle-fill-my-glove.cloudfunctions.net/createPayPalOrder';
+    const CAPTURE_PAYPAL_ORDER_URL = 'https://us-central1-roy-gayle-fill-my-glove.cloudfunctions.net/capturePayPalOrder';
+    const FIREBASE_DB_URL = 'https://roy-gayle-fill-my-glove-default-rtdb.firebaseio.com';
 
     const baseSpots = [
       { id: 1, amount: 10, x: 295, y: 132 }, { id: 2, amount: 10, x: 372, y: 132 },
@@ -1528,70 +1539,70 @@
     ];
 
     const teams = [
-      { id: 'shetland-baseball-6u-control-baseball', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Control Baseball', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'shetland-baseball-6u-mark-binder-reds', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Mark Binder Reds', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'shetland-baseball-6u-north-team', sport: 'Baseball', division: '6U Shetland Baseball', name: 'North Team', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'shetland-baseball-6u-reflections-hair-salon', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'shetland-baseball-6u-team-name-05', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Name 05', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'shetland-baseball-6u-team-verfuerth', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Verfuerth', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'shetland-baseball-6u-control-baseball', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Control Baseball', paymentUrl: null },
+      { id: 'shetland-baseball-6u-mark-binder-reds', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Mark Binder Reds', paymentUrl: null },
+      { id: 'shetland-baseball-6u-north-team', sport: 'Baseball', division: '6U Shetland Baseball', name: 'North Team', paymentUrl: null },
+      { id: 'shetland-baseball-6u-reflections-hair-salon', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Reflections Hair Salon', paymentUrl: null },
+      { id: 'shetland-baseball-6u-team-name-05', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Name 05', paymentUrl: null },
+      { id: 'shetland-baseball-6u-team-verfuerth', sport: 'Baseball', division: '6U Shetland Baseball', name: 'Team Verfuerth', paymentUrl: null },
 
-      { id: 'pinto-baseball-8u-coach-hill', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Hill', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-coach-wallen', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Wallen', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-control', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Control', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-convey-all', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-convey-all-2', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All 2', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-dickerson-nieman', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters-413', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-firefighters-413-red', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413 Red', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-golden-oak-sluggers', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Golden Oak Sluggers', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'baseball-8u-pinto-baseball-randees-music', sport: 'Baseball', division: '8U Pinto Baseball', name: "Randee's Music", paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-the-knights', sport: 'Baseball', division: '8U Pinto Baseball', name: 'The Knights', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-baseball-8u-vixen-productions', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Vixen Productions', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pinto-baseball-8u-coach-hill', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Hill', paymentUrl: null },
+      { id: 'pinto-baseball-8u-coach-wallen', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Coach Wallen', paymentUrl: null },
+      { id: 'pinto-baseball-8u-control', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Control', paymentUrl: null },
+      { id: 'pinto-baseball-8u-convey-all', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All', paymentUrl: null },
+      { id: 'pinto-baseball-8u-convey-all-2', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Convey All 2', paymentUrl: null },
+      { id: 'pinto-baseball-8u-dickerson-nieman', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Dickerson Nieman', paymentUrl: null },
+      { id: 'pinto-baseball-8u-firefighters-413', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters-413', paymentUrl: null },
+      { id: 'pinto-baseball-8u-firefighters-413-red', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Firefighters 413 Red', paymentUrl: null },
+      { id: 'pinto-baseball-8u-golden-oak-sluggers', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Golden Oak Sluggers', paymentUrl: null },
+      { id: 'baseball-8u-pinto-baseball-randees-music', sport: 'Baseball', division: '8U Pinto Baseball', name: "Randee's Music", paymentUrl: null },
+      { id: 'pinto-baseball-8u-the-knights', sport: 'Baseball', division: '8U Pinto Baseball', name: 'The Knights', paymentUrl: null },
+      { id: 'pinto-baseball-8u-vixen-productions', sport: 'Baseball', division: '8U Pinto Baseball', name: 'Vixen Productions', paymentUrl: null },
 
-      { id: 'mustang-baseball-10u-byron-tigers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Byron Tigers', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-cherry-valley-feed', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cherry Valley Feed', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-cubbies', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cubbies', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-firefighters-local-413', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Firefighters Local 413', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-lil-gators', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lil Gators', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-lombardi-club', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lombardi Club', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-lonnies-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lonnies Sluggers', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-medlux-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Medlux Sluggers', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-oregon-j-hawks', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Oregon J-Hawks', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'baseball-10u-mustang-baseball-pbpa-k9s', sport: 'Baseball', division: '10U Mustang Baseball', name: "PBPA K9's", paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-baseball-10u-reflections-hair-salon', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-baseball-10u-byron-tigers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Byron Tigers', paymentUrl: null },
+      { id: 'mustang-baseball-10u-cherry-valley-feed', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cherry Valley Feed', paymentUrl: null },
+      { id: 'mustang-baseball-10u-cubbies', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Cubbies', paymentUrl: null },
+      { id: 'mustang-baseball-10u-firefighters-local-413', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Firefighters Local 413', paymentUrl: null },
+      { id: 'mustang-baseball-10u-lil-gators', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lil Gators', paymentUrl: null },
+      { id: 'mustang-baseball-10u-lombardi-club', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lombardi Club', paymentUrl: null },
+      { id: 'mustang-baseball-10u-lonnies-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Lonnies Sluggers', paymentUrl: null },
+      { id: 'mustang-baseball-10u-medlux-sluggers', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Medlux Sluggers', paymentUrl: null },
+      { id: 'mustang-baseball-10u-oregon-j-hawks', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Oregon J-Hawks', paymentUrl: null },
+      { id: 'baseball-10u-mustang-baseball-pbpa-k9s', sport: 'Baseball', division: '10U Mustang Baseball', name: "PBPA K9's", paymentUrl: null },
+      { id: 'mustang-baseball-10u-reflections-hair-salon', sport: 'Baseball', division: '10U Mustang Baseball', name: 'Reflections Hair Salon', paymentUrl: null },
 
-      { id: 'bronco-baseball-12u-425-manufacturing', sport: 'Baseball', division: '12U Bronco Baseball', name: '425 Manufacturing', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-hawkins', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Hawkins', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-larsen-and-larsen', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Larsen and Larsen', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-lincoln-rental', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Lincoln Rental', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-oregon-jhawks', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Oregon Jhawks', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-reg-ellen-inspire-pt', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Reg Ellen/Inspire PT', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-rockford-rampage', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Rockford Rampage', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-stillman-valley', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Stillman Valley', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-baseball-12u-youngberg-comrades', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Youngberg Comrades', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'bronco-baseball-12u-425-manufacturing', sport: 'Baseball', division: '12U Bronco Baseball', name: '425 Manufacturing', paymentUrl: null },
+      { id: 'bronco-baseball-12u-hawkins', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Hawkins', paymentUrl: null },
+      { id: 'bronco-baseball-12u-larsen-and-larsen', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Larsen and Larsen', paymentUrl: null },
+      { id: 'bronco-baseball-12u-lincoln-rental', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Lincoln Rental', paymentUrl: null },
+      { id: 'bronco-baseball-12u-oregon-jhawks', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Oregon Jhawks', paymentUrl: null },
+      { id: 'bronco-baseball-12u-reg-ellen-inspire-pt', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Reg Ellen/Inspire PT', paymentUrl: null },
+      { id: 'bronco-baseball-12u-rockford-rampage', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Rockford Rampage', paymentUrl: null },
+      { id: 'bronco-baseball-12u-stillman-valley', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Stillman Valley', paymentUrl: null },
+      { id: 'bronco-baseball-12u-youngberg-comrades', sport: 'Baseball', division: '12U Bronco Baseball', name: 'Youngberg Comrades', paymentUrl: null },
 
-      { id: 'pony-baseball-14u-american-eagles', sport: 'Baseball', division: '14U Pony Baseball', name: 'American Eagles', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pony-baseball-14u-kruse-farms', sport: 'Baseball', division: '14U Pony Baseball', name: 'Kruse Farms', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pony-baseball-14u-oregon-jhawks', sport: 'Baseball', division: '14U Pony Baseball', name: 'Oregon Jhawks', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pony-baseball-14u-ponds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Ponds', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pony-baseball-14u-redbirds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Redbirds', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pony-baseball-14u-rockford-ice-hogs', sport: 'Baseball', division: '14U Pony Baseball', name: 'Rockford Ice Hogs', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pony-baseball-14u-byron-tigers', sport: 'Baseball', division: '14U Pony Baseball', name: 'Byron Tigers', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pony-baseball-14u-american-eagles', sport: 'Baseball', division: '14U Pony Baseball', name: 'American Eagles', paymentUrl: null },
+      { id: 'pony-baseball-14u-kruse-farms', sport: 'Baseball', division: '14U Pony Baseball', name: 'Kruse Farms', paymentUrl: null },
+      { id: 'pony-baseball-14u-oregon-jhawks', sport: 'Baseball', division: '14U Pony Baseball', name: 'Oregon Jhawks', paymentUrl: null },
+      { id: 'pony-baseball-14u-ponds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Ponds', paymentUrl: null },
+      { id: 'pony-baseball-14u-redbirds', sport: 'Baseball', division: '14U Pony Baseball', name: 'Redbirds', paymentUrl: null },
+      { id: 'pony-baseball-14u-rockford-ice-hogs', sport: 'Baseball', division: '14U Pony Baseball', name: 'Rockford Ice Hogs', paymentUrl: null },
+      { id: 'pony-baseball-14u-byron-tigers', sport: 'Baseball', division: '14U Pony Baseball', name: 'Byron Tigers', paymentUrl: null },
 
-      { id: 'pinto-softball-8u-greenville-llc', sport: 'Softball', division: '8U Pinto Softball', name: 'Greenville LLC', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pinto-softball-8u-reflections-hair-salon', sport: 'Softball', division: '8U Pinto Softball', name: 'Reflections Hair Salon', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'pinto-softball-8u-greenville-llc', sport: 'Softball', division: '8U Pinto Softball', name: 'Greenville LLC', paymentUrl: null },
+      { id: 'pinto-softball-8u-reflections-hair-salon', sport: 'Softball', division: '8U Pinto Softball', name: 'Reflections Hair Salon', paymentUrl: null },
 
-      { id: 'mustang-softball-10u-kruse-farm-krushers', sport: 'Softball', division: '10U Mustang Softball', name: 'Kruse Farm Krushers', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'mustang-softball-10u-top-notch-building-supply', sport: 'Softball', division: '10U Mustang Softball', name: 'Top Notch Building Supply', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'mustang-softball-10u-kruse-farm-krushers', sport: 'Softball', division: '10U Mustang Softball', name: 'Kruse Farm Krushers', paymentUrl: null },
+      { id: 'mustang-softball-10u-top-notch-building-supply', sport: 'Softball', division: '10U Mustang Softball', name: 'Top Notch Building Supply', paymentUrl: null },
 
-      { id: 'softball-12u-bronco-girls-softball-bs-bax-tees', sport: 'Softball', division: '12U Bronco Girls Softball', name: "Bax Tee's", paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'softball-12u-bronco-girls-softball-bs-mbs-makos', sport: 'Softball', division: '12U Bronco Girls Softball', name: "MBS Mako's", paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-softball-12u-oregon-avalanche-anderson', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Anderson', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-softball-12u-oregon-avalanche-spangler', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Spangler', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'bronco-softball-12u-pm-sports', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'PM Sports', paymentUrl: PAYPAL_DONATE_URL },
+      { id: 'softball-12u-bronco-girls-softball-bs-bax-tees', sport: 'Softball', division: '12U Bronco Girls Softball', name: "Bax Tee's", paymentUrl: null },
+      { id: 'softball-12u-bronco-girls-softball-bs-mbs-makos', sport: 'Softball', division: '12U Bronco Girls Softball', name: "MBS Mako's", paymentUrl: null },
+      { id: 'bronco-softball-12u-oregon-avalanche-anderson', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Anderson', paymentUrl: null },
+      { id: 'bronco-softball-12u-oregon-avalanche-spangler', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'BS - Oregon Avalanche Spangler', paymentUrl: null },
+      { id: 'bronco-softball-12u-pm-sports', sport: 'Softball', division: '12U Bronco Girls Softball', name: 'PM Sports', paymentUrl: null },
 
-      { id: 'pony-softball-14u-firefighters', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - Firefighters', paymentUrl: PAYPAL_DONATE_URL },
-      { id: 'pony-softball-14u-pbpa', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - PBPA', paymentUrl: PAYPAL_DONATE_URL }
+      { id: 'pony-softball-14u-firefighters', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - Firefighters', paymentUrl: null },
+      { id: 'pony-softball-14u-pbpa', sport: 'Softball', division: '14U Pony Softball', name: 'PySB - PBPA', paymentUrl: null }
     ];
 
     const teamThemes = {
@@ -1676,6 +1687,40 @@
       'pony-softball-14u-firefighters': []
     };
 
+    let remoteState = {};
+    let lastSnapshotJson = '';
+    let currentOrderContext = null;
+
+    function buildSeedState() {
+      const seed = {};
+      teams.forEach(team => {
+        seed[team.id] = {
+          sport: team.sport,
+          division: team.division,
+          name: team.name,
+          filled: [...(hardcodedFilledSpots[team.id] || [])]
+        };
+      });
+      return seed;
+    }
+
+    async function fetchLiveState() {
+      try {
+        const response = await fetch(`${FIREBASE_DB_URL}/fillMyGlove/teams.json`, { cache: 'no-store' });
+        if (!response.ok) return;
+        const data = await response.json();
+        const nextState = { ...buildSeedState(), ...(data || {}) };
+        const nextJson = JSON.stringify(nextState);
+        if (nextJson !== lastSnapshotJson) {
+          remoteState = nextState;
+          lastSnapshotJson = nextJson;
+          renderAll();
+        }
+      } catch (error) {
+        console.error('Could not fetch live team data', error);
+      }
+    }
+
     function applyTeamTheme(teamId) {
       const root = document.documentElement;
       const theme = teamThemes[teamId] || {};
@@ -1716,6 +1761,9 @@
     const selectedAmount = document.getElementById('selectedAmount');
     const selectedHelper = document.getElementById('selectedHelper');
     const checkoutButton = document.getElementById('checkoutButton');
+    const paypalButtonWrap = document.getElementById('paypalButtonWrap');
+    const paypalButtonContainer = document.getElementById('paypalButtonContainer');
+    const paymentNote = document.getElementById('paymentNote');
     const syncStatus = document.getElementById('syncStatus');
     const leaderboardList = document.getElementById('leaderboardList');
     const divisionLeaderboardList = document.getElementById('divisionLeaderboardList');
@@ -1749,6 +1797,8 @@
     }
 
     function getFilledForTeam(teamId) {
+      const liveFilled = remoteState[teamId]?.filled;
+      if (Array.isArray(liveFilled)) return liveFilled;
       return hardcodedFilledSpots[teamId] || [];
     }
 
@@ -1825,6 +1875,50 @@
       setTimeout(() => {
         if (shareMessage.textContent === message) shareMessage.textContent = '';
       }, 2500);
+    }
+
+    function renderPayPalButtons() {
+      if (!currentOrderContext || !window.paypal) return;
+
+      paypalButtonContainer.innerHTML = '';
+      window.paypal.Buttons({
+        style: { layout: 'vertical', shape: 'rect', label: 'paypal' },
+        createOrder: async () => {
+          const response = await fetch(CREATE_PAYPAL_ORDER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentOrderContext)
+          });
+          const data = await response.json();
+          if (!response.ok || !data.id) {
+            throw new Error(data?.error || 'Could not create PayPal order.');
+          }
+          return data.id;
+        },
+        onApprove: async (data) => {
+          const response = await fetch(CAPTURE_PAYPAL_ORDER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderID: data.orderID })
+          });
+          const captureData = await response.json();
+          if (!response.ok) {
+            throw new Error(captureData?.error || 'Could not capture PayPal order.');
+          }
+          selectedHelper.textContent = 'Payment completed. Waiting for the glove to update...';
+          paymentNote.textContent = 'The page checks Firebase every few seconds. Refresh once if needed.';
+          paypalButtonWrap.classList.add('hidden');
+          setTimeout(fetchLiveState, 1200);
+          return captureData;
+        },
+        onCancel: () => {
+          selectedHelper.textContent = 'PayPal checkout was canceled.';
+        },
+        onError: (error) => {
+          console.error(error);
+          selectedHelper.textContent = 'PayPal checkout hit an error. Please try again.';
+        }
+      }).render('#paypalButtonContainer');
     }
 
     function updateUrlForSelection() {
